@@ -1,7 +1,7 @@
 package org.ernest.applications.trampoline;
 
 /**
- * Hello world!
+ * Hello world! 2
  *
  */
 public class App 
