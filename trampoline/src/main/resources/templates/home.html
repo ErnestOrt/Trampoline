@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Trampoline Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+<link th:href="@{/css/main.css}" rel="stylesheet" />
+<link th:href="@{/css/table.css}" rel="stylesheet" />
+<style type="text/css">
+body {
+	padding-top: 60px;
+}
+</style>
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
+<script type="text/javascript" th:src="@{/js/admin.js}"></script>
+<script type="text/javascript" th:src="@{/js/backend.requests.js}"></script>
+
+<link rel="shortcut icon" href="assets/ico/favicon.ico" />
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png" />
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png" />
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png" />
+<link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png" />
+
+<!-- Google Fonts call. Font Used Open Sans -->
+<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+	<div class="navbar-nav navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="index.html"><img
+					th:src="@{/img/logo30.png}" alt="" /> Trampoline</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="#"><i class="icon-home icon-white"></i> Home</a></li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li><a href="#" th:text="${workingDirectory}"/></li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<h4>
+				<strong>Trampoline Settings</strong>
+			</h4>
+			   <div class="form-group">
+			    <label for="inputEmail3" class="col-sm-2 control-label">Working Directory</label>
+			    <div class="col-sm-10">
+			      <input type="email" class="form-control" id="input-workingdirectory" placeholder="Ex: /Users/ernest/Documents"/>
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <div class="col-sm-offset-2 col-sm-10">
+			      <button class="btn btn-default" onclick="setWorkingDirectory()">Set Working Directory</button>
+			    </div>
+			  </div>
+		</div>
+		<div class="row">
+			<h4>
+				<strong>New Microservice</strong>
+			</h4>
+			<form>
+			 <div class="form-group">
+			    <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+			    <div class="col-sm-10">
+			      <input type="email" class="form-control" id="exampleInputEmail1" placeholder="microservice-1"/>
+			    </div>
+			  </div>
+			   <div class="form-group">
+			    <label for="inputEmail3" class="col-sm-2 control-label">Pom Location</label>
+			    <div class="col-sm-10">
+			      <input type="email" class="form-control" id="exampleInputEmail1" placeholder="/Users/ernest/Documents/workarea/microservice-1"/>
+			    </div>
+			  </div>
+			   <div class="form-group">
+			    <label for="inputEmail3" class="col-sm-2 control-label">Default Port</label>
+			    <div class="col-sm-10">
+			      <input type="email" class="form-control" id="exampleInputEmail1" placeholder="9988"/>
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <div class="col-sm-offset-2 col-sm-10">
+			      <button type="submit" class="btn btn-default">Create</button>
+			    </div>
+			  </div>
+			</form>
+		</div>
+	</div>
+	<br/><br/>
+	<div class="container">
+		<div class="row">
+			<h4>
+				<strong>Microservices</strong>
+			</h4>
+
+			<table class="display" id="dt1">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Pom Location</th>
+						<th>Port</th>
+						<th>Start</th>
+						<th>Remove</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="odd gradeA">
+						<td>microservice-1</td>
+						<td>/Users/ernest/Documents/workarea/microservice-1</td>
+						<td class="center">8888</td>
+						<td class="center"><button type="button" class="btn btn-primary btn-sm">Start</button></td>
+						<td class="center"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>
+					</tr>
+					<tr class="even gradeA">
+						<td>microservice-2</td>
+						<td>/Users/ernest/Documents/workarea/microservice-2</td>
+						<td class="center">9988</td>
+						<td class="center"><button type="button" class="btn btn-primary btn-sm">Start</button></td>
+						<td class="center"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>
+					</tr>
+					<tr class="odd gradeA">
+						<td>microservice-3</td>
+						<td>/Users/ernest/Documents/workarea/microservice-3</td>
+						<td class="center">7777</td>
+						<td class="center"><button type="button" class="btn btn-primary btn-sm">Start</button></td>
+						<td class="center"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>
+					</tr>
+					<tr class="even gradeA">
+						<td>microservice-4</td>
+						<td>/Users/ernest/Documents/workarea/microservice-4</td>
+						<td class="center">9977</td>
+						<td class="center"><button type="button" class="btn btn-primary btn-sm">Start</button></td>
+						<td class="center"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>
+					</tr>
+				</tbody>
+			</table>
+			<!--/END SECOND TABLE -->
+		</div>
+		<!-- /row -->
+	</div>
+	<br/><br/>
+	<div class="container">
+		<div class="row">
+			<h4>
+				<strong>Started Instances</strong>
+			</h4>
+
+			<table class="display" id="dt1">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Port</th>
+						<th>Status</th>
+						<th>Kill</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="odd gradeA">
+						<td>microservice-1</td>
+						<td class="center">8888</td>
+						<td class="center"><span class="label label-success">Deployed</span></td>
+						<td class="center"><button type="button" class="btn btn-danger btn-sm">Kill</button></td>
+					</tr>
+					<tr class="even gradeA">
+						<td>microservice-1</td>
+						<td class="center">8889</td>
+						<td class="center"><span class="label label-warning">Waiting</span></td>
+						<td class="center"></td>
+					</tr>
+					<tr class="odd gradeA">
+						<td>microservice-2</td>
+						<td class="center">8899</td>
+						<td class="center"><span class="label label-warning">Waiting</span></td>
+						<td class="center"></td>
+					</tr>
+				</tbody>
+			</table>
+			<!--/END SECOND TABLE -->
+		</div>
+		<!-- /row -->
+	</div>
+	
+	<br/><br/><br/>
+	<!-- /container -->
+	<!-- FOOTER -->
+	<div id="footerwrap">
+		<footer class="clearfix"></footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 col-lg-12">
+					<p>
+						<img th:src="@{/img/logo.png}" alt="" />
+					</p>
+					<p>Trampoline - Crafted With Love - Copyright 2015</p>
+				</div>
+
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /footerwrap -->
+</body>
+</html>
