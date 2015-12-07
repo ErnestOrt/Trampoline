@@ -23,43 +23,57 @@ public class HomeController {
 
 	private static final String HOME_VIEW = "home";
 	
-	private static final String WORKING_DIRECTORY_PATH_ATRIBUTTE = "WORKING_DIRECTORY_PATH";
-	
-	private static final String WORKING_DIRECTORY_MESSAGE = "Your working directory is: ";
-	private static final String NOT_WORKING_DIRECTORY_MESSAGE = "Ups... you need to set up the working directory";
-	
 	@Autowired
 	FileManager fileManager;
 
 	@RequestMapping("/trampoline")
-    public String greeting(Model model, HttpServletRequest request) throws IOException {
-		String workingDirectory = ((String)request.getSession().getAttribute(WORKING_DIRECTORY_PATH_ATRIBUTTE));
-		
-		model.addAttribute("workingDirectory", workingDirectory == null ? NOT_WORKING_DIRECTORY_MESSAGE : WORKING_DIRECTORY_MESSAGE + workingDirectory);
-        
-		if(workingDirectory!=null){
-			Ecosystem ecosystem = fileManager.getEcosystem((String)request.getSession().getAttribute(WORKING_DIRECTORY_PATH_ATRIBUTTE));
-			model.addAttribute("microservices", ecosystem.getMicroservices());
-		}
-		
+    public String greeting(Model model) throws IOException {
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		model.addAttribute("microservices", ecosystem.getMicroservices());
+		model.addAttribute("instances", ecosystem.getInstances());
+		model.addAttribute("mavenLocation", ecosystem.getMavenLocation() == null ? "Please set maven Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenLocation());
 		return HOME_VIEW;
     }
 	
-	@RequestMapping(value= "/setworkingdirectory", method = RequestMethod.POST)
+	@RequestMapping(value= "/setmavenlocation", method = RequestMethod.POST)
 	@ResponseBody
-    public void setWorkingDirectory(@RequestParam(value="path") String path, HttpServletRequest request) {
-		request.getSession().setAttribute(WORKING_DIRECTORY_PATH_ATRIBUTTE, path);
+    public void setMavenLocation(@RequestParam(value="path") String path) throws JsonSyntaxException, IOException {
+		fileManager.setMavenLocation(path);
     }
 	
 	@RequestMapping(value= "/setnewmicroservice", method = RequestMethod.POST)
 	@ResponseBody
-    public void setNewMicroservice(@RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation, @RequestParam(value="defaultPort") String defaultPort, HttpServletRequest request) throws JsonSyntaxException, IOException {
-		Microservice microservice = new Microservice();
-		microservice.setId(UUID.randomUUID().toString());
-		microservice.setName(name);
-		microservice.setPomLocation(pomLocation);
-		microservice.setDefaultPort(defaultPort);
-		
-		fileManager.setNewMicroservice((String)request.getSession().getAttribute(WORKING_DIRECTORY_PATH_ATRIBUTTE), microservice);
+    public void setNewMicroservice(@RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation, @RequestParam(value="defaultPort") String defaultPort) throws JsonSyntaxException, IOException {
+		fileManager.setNewMicroservice(name, pomLocation, defaultPort);
+    }
+	
+	@RequestMapping(value= "/removemicroservice", method = RequestMethod.POST)
+	@ResponseBody
+    public void removeMicroservice(@RequestParam(value="id") String id) throws JsonSyntaxException, IOException {
+		fileManager.removeMicroservice(id);
+    }
+	
+	@RequestMapping(value= "/startinstance", method = RequestMethod.POST)
+	@ResponseBody
+    public void startInstance(@RequestParam(value="id") String id, @RequestParam(value="port") String port) throws JsonSyntaxException, IOException {
+		fileManager.startInstance(id, port);
+    }
+	
+	@RequestMapping(value= "/health", method = RequestMethod.POST)
+	@ResponseBody
+    public String checkStatusInstance(@RequestParam(value="id") String id) throws JsonSyntaxException, IOException {
+		return fileManager.getStatusInstance(id);
+    }
+	
+	@RequestMapping(value= "/killinstance", method = RequestMethod.POST)
+	@ResponseBody
+    public void killInstance(@RequestParam(value="id") String id) throws Exception {
+		fileManager.killInstance(id);
+    }
+	
+	@RequestMapping(value= "/removenotdeployedinstances", method = RequestMethod.POST)
+	@ResponseBody
+    public void removeNotDeployedInstances() throws Exception {
+		fileManager.removeNotDeployedInstances();
     }
 }

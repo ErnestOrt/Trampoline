@@ -27,8 +27,6 @@ body {
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png" />
 <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png" />
 <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png" />
-
-<!-- Google Fonts call. Font Used Open Sans -->
 <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css" />
 
 </head>
@@ -36,13 +34,10 @@ body {
 	<div class="navbar-nav navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target=".navbar-collapse">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="index.html"><img
-					th:src="@{/img/logo30.png}" alt="" /> Trampoline</a>
+				<a class="navbar-brand" href="index.html"><img th:src="@{/img/logo30.png}" alt="" /> Trampoline</a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
@@ -52,7 +47,6 @@ body {
 					<li><a href="#" th:text="${workingDirectory}"/></li>
 				</ul>
 			</div>
-			<!--/.nav-collapse -->
 		</div>
 	</div>
 
@@ -62,14 +56,14 @@ body {
 				<strong>Trampoline Settings</strong>
 			</h4>
 			   <div class="form-group">
-			    <label for="inputEmail3" class="col-sm-2 control-label">Working Directory</label>
+			    <label for="inputEmail3" class="col-sm-2 control-label">Maven Location</label>
 			    <div class="col-sm-10">
-			      <input type="email" class="form-control" id="input-workingdirectory" placeholder="Ex: /Users/ernest/Documents"/>
+			      <input type="email" class="form-control" id="input-mavenlocation" th:value="${mavenLocation}"/>
 			    </div>
 			  </div>
 			  <div class="form-group">
 			    <div class="col-sm-offset-2 col-sm-10">
-			      <button class="btn btn-default" onclick="setWorkingDirectory()">Set Working Directory</button>
+			      <button class="btn btn-default" onclick="setMavenLocation()">Set Maven Location</button>
 			    </div>
 			  </div>
 		</div>
@@ -110,7 +104,6 @@ body {
 			<h4>
 				<strong>Registered Microservices</strong>
 			</h4>
-
 			<table class="display" id="dt1">
 				<thead>
 					<tr>
@@ -122,85 +115,48 @@ body {
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="odd gradeA">
-						<td>microservice-1</td>
-						<td>/Users/ernest/Documents/workarea/microservice-1</td>
-						<td class="center">8888</td>
-						<td class="center"><button type="button" class="btn btn-primary btn-sm">Start</button></td>
-						<td class="center"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>
-					</tr>
-					<tr class="even gradeA">
-						<td>microservice-2</td>
-						<td>/Users/ernest/Documents/workarea/microservice-2</td>
-						<td class="center">9988</td>
-						<td class="center"><button type="button" class="btn btn-primary btn-sm">Start</button></td>
-						<td class="center"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>
-					</tr>
-					<tr class="odd gradeA">
-						<td>microservice-3</td>
-						<td>/Users/ernest/Documents/workarea/microservice-3</td>
-						<td class="center">7777</td>
-						<td class="center"><button type="button" class="btn btn-primary btn-sm">Start</button></td>
-						<td class="center"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>
-					</tr>
-					<tr class="even gradeA">
-						<td>microservice-4</td>
-						<td>/Users/ernest/Documents/workarea/microservice-4</td>
-						<td class="center">9977</td>
-						<td class="center"><button type="button" class="btn btn-primary btn-sm">Start</button></td>
-						<td class="center"><button type="button" class="btn btn-danger btn-sm">Remove</button></td>
+					<tr th:each="microservice : ${microservices}" class="odd gradeA">
+						<td th:text="${microservice.name}"></td>
+						<td th:text="${microservice.pomLocation}"></td>
+						<td class="center"><input type="email" class="form-control" th:value="${microservice.defaultPort}" th:id="'input-port-' + ${microservice.id}"/></td>
+						<td class="center"><button type="button" th:onclick="'startInstance(\'' + ${microservice.id} + '\')'" class="btn btn-primary btn-sm">Start</button></td>
+						<td class="center"><button type="button" th:onclick="'removeMicroservice(\'' + ${microservice.id} + '\')'" class="btn btn-danger btn-sm">Remove</button></td>
 					</tr>
 				</tbody>
 			</table>
-			<!--/END SECOND TABLE -->
 		</div>
-		<!-- /row -->
 	</div>
 	<br/><br/>
 	<div class="container">
 		<div class="row">
 			<h4>
 				<strong>Started Instances</strong>
-			</h4>
-
+			</h4>		
+			<button type="button" class="btn btn-primary btn-xs" onclick="removeNotDeployedInstances()">Remove Not Deployed Instances</button>
+			<br/><br/>
 			<table class="display" id="dt1">
 				<thead>
 					<tr>
 						<th>Name</th>
+						<th>Pom Location</th>
 						<th>Port</th>
 						<th>Status</th>
 						<th>Kill</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="odd gradeA">
-						<td>microservice-1</td>
-						<td class="center">8888</td>
-						<td class="center"><span class="label label-success">Deployed</span></td>
-						<td class="center"><button type="button" class="btn btn-danger btn-sm">Kill</button></td>
-					</tr>
-					<tr class="even gradeA">
-						<td>microservice-1</td>
-						<td class="center">8889</td>
-						<td class="center"><span class="label label-warning">Waiting</span></td>
-						<td class="center"></td>
-					</tr>
-					<tr class="odd gradeA">
-						<td>microservice-2</td>
-						<td class="center">8899</td>
-						<td class="center"><span class="label label-warning">Waiting</span></td>
-						<td class="center"></td>
+					<tr th:each="instance : ${instances}" class="even gradeA">
+						<td th:text="${instance.name}"></td>
+						<td th:text="${instance.pomLocation}"></td>
+						<td class="center" th:text="${instance.port}"></td>
+						<td class="center"><span class="label label-warning" th:id="'label-status-' + ${instance.id}">Waiting</span></td>
+						<td class="center"><button type="button" th:onclick="'killInstance(\'' + ${instance.id} + '\')'" class="btn btn-danger btn-sm">Kill</button></td>
 					</tr>
 				</tbody>
 			</table>
-			<!--/END SECOND TABLE -->
 		</div>
-		<!-- /row -->
 	</div>
-	
 	<br/><br/><br/>
-	<!-- /container -->
-	<!-- FOOTER -->
 	<div id="footerwrap">
 		<footer class="clearfix"></footer>
 		<div class="container">
@@ -211,12 +167,8 @@ body {
 					</p>
 					<p>Trampoline - Crafted With Love - Copyright 2015</p>
 				</div>
-
 			</div>
-			<!-- /row -->
 		</div>
-		<!-- /container -->
 	</div>
-	<!-- /footerwrap -->
 </body>
 </html>
