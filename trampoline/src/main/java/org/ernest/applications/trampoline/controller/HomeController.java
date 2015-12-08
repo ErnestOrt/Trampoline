@@ -1,8 +1,12 @@
 package org.ernest.applications.trampoline.controller;
 
-import java.io.IOException;
-
 import org.ernest.applications.trampoline.entities.Ecosystem;
+import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
+import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
+import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
+import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptException;
+import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
+import org.ernest.applications.trampoline.exceptions.ShuttingDownInstanceException;
 import org.ernest.applications.trampoline.services.EcosystemManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.google.gson.JsonSyntaxException;
 
 @Controller
 public class HomeController {
@@ -23,7 +25,7 @@ public class HomeController {
 	EcosystemManager ecosystemManager;
 
 	@RequestMapping("/trampoline")
-    public String greeting(Model model) throws IOException {
+    public String greeting(Model model) throws CreatingSettingsFolderException, ReadingEcosystemException{
 		Ecosystem ecosystem = ecosystemManager.getEcosystem();
 		model.addAttribute("microservices", ecosystem.getMicroservices());
 		model.addAttribute("instances", ecosystem.getInstances());
@@ -34,43 +36,43 @@ public class HomeController {
 	
 	@RequestMapping(value= "/setmavenlocation", method = RequestMethod.POST)
 	@ResponseBody
-    public void setMavenLocation(@RequestParam(value="path") String path) throws JsonSyntaxException, IOException {
+    public void setMavenLocation(@RequestParam(value="path") String path) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
 		ecosystemManager.setMavenLocation(path);
     }
 	
 	@RequestMapping(value= "/setnewmicroservice", method = RequestMethod.POST)
 	@ResponseBody
-    public void setNewMicroservice(@RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation, @RequestParam(value="defaultPort") String defaultPort) throws JsonSyntaxException, IOException {
+    public void setNewMicroservice(@RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation, @RequestParam(value="defaultPort") String defaultPort) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
 		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort);
     }
 	
 	@RequestMapping(value= "/removemicroservice", method = RequestMethod.POST)
 	@ResponseBody
-    public void removeMicroservice(@RequestParam(value="id") String id) throws JsonSyntaxException, IOException {
+    public void removeMicroservice(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException{
 		ecosystemManager.removeMicroservice(id);
     }
 	
 	@RequestMapping(value= "/startinstance", method = RequestMethod.POST)
 	@ResponseBody
-    public void startInstance(@RequestParam(value="id") String id, @RequestParam(value="port") String port) throws JsonSyntaxException, IOException {
+    public void startInstance(@RequestParam(value="id") String id, @RequestParam(value="port") String port) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException {
 		ecosystemManager.startInstance(id, port);
     }
 	
 	@RequestMapping(value= "/health", method = RequestMethod.POST)
 	@ResponseBody
-    public String checkStatusInstance(@RequestParam(value="id") String id) throws JsonSyntaxException, IOException {
+    public String checkStatusInstance(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException {
 		return ecosystemManager.getStatusInstance(id);
     }
 	
 	@RequestMapping(value= "/killinstance", method = RequestMethod.POST)
 	@ResponseBody
-    public void killInstance(@RequestParam(value="id") String id) throws Exception {
+    public void killInstance(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, ShuttingDownInstanceException {
 		ecosystemManager.killInstance(id);
     }
 	
 	@RequestMapping(value= "/removenotdeployedinstances", method = RequestMethod.POST)
 	@ResponseBody
-    public void removeNotDeployedInstances() throws Exception {
+    public void removeNotDeployedInstances() throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
 		ecosystemManager.removeNotDeployedInstances();
     }
 }
