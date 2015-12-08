@@ -1,13 +1,9 @@
 package org.ernest.applications.trampoline.controller;
 
 import java.io.IOException;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.ernest.applications.trampoline.entities.Ecosystem;
-import org.ernest.applications.trampoline.entities.Microservice;
-import org.ernest.applications.trampoline.services.FileManager;
+import org.ernest.applications.trampoline.services.EcosystemManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,11 +20,11 @@ public class HomeController {
 	private static final String HOME_VIEW = "home";
 	
 	@Autowired
-	FileManager fileManager;
+	EcosystemManager ecosystemManager;
 
 	@RequestMapping("/trampoline")
     public String greeting(Model model) throws IOException {
-		Ecosystem ecosystem = fileManager.getEcosystem();
+		Ecosystem ecosystem = ecosystemManager.getEcosystem();
 		model.addAttribute("microservices", ecosystem.getMicroservices());
 		model.addAttribute("instances", ecosystem.getInstances());
 		model.addAttribute("mavenLocation", ecosystem.getMavenLocation());
@@ -39,42 +35,42 @@ public class HomeController {
 	@RequestMapping(value= "/setmavenlocation", method = RequestMethod.POST)
 	@ResponseBody
     public void setMavenLocation(@RequestParam(value="path") String path) throws JsonSyntaxException, IOException {
-		fileManager.setMavenLocation(path);
+		ecosystemManager.setMavenLocation(path);
     }
 	
 	@RequestMapping(value= "/setnewmicroservice", method = RequestMethod.POST)
 	@ResponseBody
     public void setNewMicroservice(@RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation, @RequestParam(value="defaultPort") String defaultPort) throws JsonSyntaxException, IOException {
-		fileManager.setNewMicroservice(name, pomLocation, defaultPort);
+		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort);
     }
 	
 	@RequestMapping(value= "/removemicroservice", method = RequestMethod.POST)
 	@ResponseBody
     public void removeMicroservice(@RequestParam(value="id") String id) throws JsonSyntaxException, IOException {
-		fileManager.removeMicroservice(id);
+		ecosystemManager.removeMicroservice(id);
     }
 	
 	@RequestMapping(value= "/startinstance", method = RequestMethod.POST)
 	@ResponseBody
     public void startInstance(@RequestParam(value="id") String id, @RequestParam(value="port") String port) throws JsonSyntaxException, IOException {
-		fileManager.startInstance(id, port);
+		ecosystemManager.startInstance(id, port);
     }
 	
 	@RequestMapping(value= "/health", method = RequestMethod.POST)
 	@ResponseBody
     public String checkStatusInstance(@RequestParam(value="id") String id) throws JsonSyntaxException, IOException {
-		return fileManager.getStatusInstance(id);
+		return ecosystemManager.getStatusInstance(id);
     }
 	
 	@RequestMapping(value= "/killinstance", method = RequestMethod.POST)
 	@ResponseBody
     public void killInstance(@RequestParam(value="id") String id) throws Exception {
-		fileManager.killInstance(id);
+		ecosystemManager.killInstance(id);
     }
 	
 	@RequestMapping(value= "/removenotdeployedinstances", method = RequestMethod.POST)
 	@ResponseBody
     public void removeNotDeployedInstances() throws Exception {
-		fileManager.removeNotDeployedInstances();
+		ecosystemManager.removeNotDeployedInstances();
     }
 }
