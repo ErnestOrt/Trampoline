@@ -1,19 +1,50 @@
 function setMavenLocation(){
-	$.ajax({
-	    url : "/setmavenlocation",
-	    type: "POST",
-	    data : {path: $("#input-mavenlocation").val()},
-	    success: function(data, textStatus, jqXHR) { location.reload(); }
-	});
+	if($("#input-mavenlocation").val() == ''){
+		$("#form-group-mavenlocation").addClass("has-error");
+	}else{
+		$.ajax({
+		    url : "/setmavenlocation",
+		    type: "POST",
+		    data : {path: $("#input-mavenlocation").val()},
+		    success: function(data, textStatus, jqXHR) { location.reload(); }
+		});
+	}
 }
 
 function setNewMicroservice(){
-	$.ajax({
-	    url : "/setnewmicroservice",
-	    type: "POST",
-	    data : {name: $("#input-newmicroservice-name").val(), pomLocation: $("#input-newmicroservice-pomlocation").val(), defaultPort: $("#input-newmicroservice-defaultport").val()},
-	    success: function(data, textStatus, jqXHR) { location.reload(); }
-	});
+	if($("#input-hidden-mavenlocation").val() == ''){
+		$("#form-group-mavenlocation").addClass("has-error");
+	}else{
+		cleaningNewMicroserviceFrom();
+		if($("#input-newmicroservice-name").val() == '' || $("#input-newmicroservice-pomlocation").val() == '' || $("#input-newmicroservice-defaultport").val() == ''){
+			checkEachNewMicroserviceFromField();
+		}else{
+			$.ajax({
+			    url : "/setnewmicroservice",
+			    type: "POST",
+			    data : {name: $("#input-newmicroservice-name").val(), pomLocation: $("#input-newmicroservice-pomlocation").val(), defaultPort: $("#input-newmicroservice-defaultport").val()},
+			    success: function(data, textStatus, jqXHR) { location.reload(); }
+			});
+		}
+	}
+}
+
+function cleaningNewMicroserviceFrom(){
+	$("#form-newmicroservice-name").removeClass("has-error");
+	$("#form-newmicroservice-pomlocation").removeClass("has-error");
+	$("#form-newmicroservice-defaultport").removeClass("has-error");
+}
+
+function checkEachNewMicroserviceFromField(){
+	if($("#input-newmicroservice-name").val() == ''){
+		$("#form-newmicroservice-name").addClass("has-error");
+	}
+	if($("#input-newmicroservice-pomlocation").val() == ''){
+		$("#form-newmicroservice-pomlocation").addClass("has-error");
+	}
+	if($("#input-newmicroservice-defaultport").val() == ''){
+		$("#form-newmicroservice-defaultport").addClass("has-error");
+	}
 }
 
 function removeMicroservice(microserviceId){
@@ -60,12 +91,11 @@ function updateStatusInstances(){
 		    type: "POST",
 		    data : {id: item.id.replace("label-status-", "")},
 		    success: function(data, textStatus, jqXHR) { 
-		    	if(data == "deployed"){
-		    		 $("#"+item.id).removeClass("label-warning");
+		    	$("#"+item.id).removeClass("label-warning");
+		    	if(data == "deployed"){		    		 
 		    		 $("#"+item.id).addClass("label-success");
 		    		 $("#"+item.id).text("Deployed");
 		    	}else{
-		    		$("#"+item.id).removeClass("label-warning");
 		    		$("#"+item.id).addClass("label-danger");
 		    		$("#"+item.id).text("Not Deployed")
 		    	}

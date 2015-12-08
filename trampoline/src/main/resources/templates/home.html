@@ -31,6 +31,7 @@ body {
 
 </head>
 <body>
+	<input type="hidden" th:value="${mavenLocation}" id="input-hidden-mavenlocation"/>
 	<div class="navbar-nav navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
@@ -43,9 +44,6 @@ body {
 				<ul class="nav navbar-nav">
 					<li><a href="#"><i class="icon-home icon-white"></i> Home</a></li>
 				</ul>
-				<ul class="nav navbar-nav">
-					<li><a href="#" th:text="${workingDirectory}"/></li>
-				</ul>
 			</div>
 		</div>
 	</div>
@@ -55,10 +53,10 @@ body {
 			<h4>
 				<strong>Trampoline Settings</strong>
 			</h4>
-			   <div class="form-group">
+			   <div class="form-group" id="form-group-mavenlocation">
 			    <label for="inputEmail3" class="col-sm-2 control-label">Maven Location</label>
 			    <div class="col-sm-10">
-			      <input type="email" class="form-control" id="input-mavenlocation" th:value="${mavenLocation}"/>
+			      <input type="email" class="form-control" id="input-mavenlocation" th:placeholder="${mavenLocationMessage}"/>
 			    </div>
 			  </div>
 			  <div class="form-group">
@@ -71,20 +69,19 @@ body {
 			<h4>
 				<strong>New Microservice</strong>
 			</h4>
-			<form>
-			 <div class="form-group">
+			 <div class="form-group" id="form-newmicroservice-name">
 			    <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
 			    <div class="col-sm-10">
 			      <input type="email" class="form-control" id="input-newmicroservice-name" placeholder="microservice-1"/>
 			    </div>
 			  </div>
-			   <div class="form-group">
+			   <div class="form-group" id="form-newmicroservice-pomlocation">
 			    <label for="inputEmail3" class="col-sm-2 control-label">Pom Location</label>
 			    <div class="col-sm-10">
 			      <input type="email" class="form-control" id="input-newmicroservice-pomlocation" placeholder="/Users/ernest/Documents/workarea/microservice-1"/>
 			    </div>
 			  </div>
-			   <div class="form-group">
+			   <div class="form-group" id="form-newmicroservice-defaultport">
 			    <label for="inputEmail3" class="col-sm-2 control-label">Default Port</label>
 			    <div class="col-sm-10">
 			      <input type="email" class="form-control" id="input-newmicroservice-defaultport" placeholder="9988"/>
@@ -95,7 +92,6 @@ body {
 			      <button class="btn btn-default" onclick="setNewMicroservice()">Create</button>
 			    </div>
 			  </div>
-			</form>
 		</div>
 	</div>
 	<br/><br/>

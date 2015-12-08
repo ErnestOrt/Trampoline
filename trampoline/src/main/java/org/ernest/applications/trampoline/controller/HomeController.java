@@ -31,7 +31,8 @@ public class HomeController {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		model.addAttribute("microservices", ecosystem.getMicroservices());
 		model.addAttribute("instances", ecosystem.getInstances());
-		model.addAttribute("mavenLocation", ecosystem.getMavenLocation() == null ? "Please set maven Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenLocation());
+		model.addAttribute("mavenLocation", ecosystem.getMavenLocation());
+		model.addAttribute("mavenLocationMessage", ecosystem.getMavenLocation() == null ? "Please set maven Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenLocation());
 		return HOME_VIEW;
     }
 	

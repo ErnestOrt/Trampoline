@@ -78,14 +78,6 @@ public class FileManager {
 		ecosystem.setInstances(ecosystem.getInstances().stream().filter(i -> !i.getId().equals(id)).collect(Collectors.toList()));
 		FileUtils.writeStringToFile(new File(TRAMPOLINE_SETTINGS_PATH), new Gson().toJson(ecosystem));
 	}
-	
-	private void checkIfFileExistsAndCreatedIfNeeded() throws IOException {
-		File file = new File(TRAMPOLINE_FOLDER);
-		if(!file.exists()){			
-			file.mkdirs();
-			FileUtils.writeStringToFile(new File(TRAMPOLINE_SETTINGS_PATH), new Gson().toJson(new Ecosystem()));
-		}
-	}
 
 	public String getStatusInstance(String id) throws JsonSyntaxException, IOException {
 		Ecosystem ecosystem = new Gson().fromJson(FileUtils.readFileToString(new File(TRAMPOLINE_SETTINGS_PATH)), Ecosystem.class);
@@ -102,6 +94,14 @@ public class FileManager {
 		Ecosystem ecosystem = new Gson().fromJson(FileUtils.readFileToString(new File(TRAMPOLINE_SETTINGS_PATH)), Ecosystem.class);
 		ecosystem.setInstances(ecosystem.getInstances().stream().filter(i -> isDeployed(i)).collect(Collectors.toList()));
 		FileUtils.writeStringToFile(new File(TRAMPOLINE_SETTINGS_PATH), new Gson().toJson(ecosystem));
+	}
+	
+	private void checkIfFileExistsAndCreatedIfNeeded() throws IOException {
+		File file = new File(TRAMPOLINE_FOLDER);
+		if(!file.exists()){			
+			file.mkdirs();
+			FileUtils.writeStringToFile(new File(TRAMPOLINE_SETTINGS_PATH), new Gson().toJson(new Ecosystem()));
+		}
 	}
 
 	private boolean isDeployed(Instance instance) {
