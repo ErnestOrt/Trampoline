@@ -82,12 +82,11 @@ public class FileManager {
 	public String getStatusInstance(String id) throws JsonSyntaxException, IOException {
 		Ecosystem ecosystem = new Gson().fromJson(FileUtils.readFileToString(new File(TRAMPOLINE_SETTINGS_PATH)), Ecosystem.class);
 		Instance instance = ecosystem.getInstances().stream().filter(i -> i.getId().equals(id)).collect(Collectors.toList()).get(0);
-		try{
-			new ClientRequest("http://localhost:" + instance.getPort() + "/env").get(String.class);
-		}catch(Exception e){
-			return "not deployed";
+		
+		if(isDeployed(instance)){
+			return "deployed";
 		}
-		return "deployed";
+		return "not deployed";
 	}
 
 	public void removeNotDeployedInstances() throws JsonSyntaxException, IOException {
