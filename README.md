@@ -25,6 +25,10 @@ The aim is to **help during the course of developing an application based on the
 ####FAQ
 * Will I have to enter data all the time?.
 
-No, information introduced will be stored in a settings file, next to the script to launch each microservices :)
+No, information introduced will be stored in a settings file, next to the script to launch each microservices :grin:
+
+* How does the UI look like?
+
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/ScreenshotTrampoline.png)
 
 ####Enjoy & Clone it Folks!
