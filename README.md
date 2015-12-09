@@ -10,10 +10,9 @@ The aim is to **help during the course of developing an application based on the
 
 ####Requirements
 
-* Being in a MAC os
-* java 8
-* apache maven (v3.2.1)
-* enable shutdown endpoint on your spring boot microservices
+* Java 8
+* Apache Maven (v3.2.1)
+* Enable shutdown endpoint on your spring boot microservices
 
 ####How do I make it work?
 
@@ -23,6 +22,10 @@ The aim is to **help during the course of developing an application based on the
 4. Finally you just have to declare your microservices and to start and/or to stop them as you wish.
 
 ####FAQ
+* Can I run it on any OS?.
+
+Theoretically yes, but only has been fully tested on Mac OS.
+
 * Will I have to enter data all the time?.
 
 No, information introduced will be stored in a settings file, next to the script to launch each microservices :grin:
