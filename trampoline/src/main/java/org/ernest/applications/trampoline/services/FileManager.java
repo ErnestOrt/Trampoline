@@ -25,7 +25,7 @@ public class FileManager {
 	@Value("${settings.folder.path.linux}")
 	private String settingsFolderPathLinux;
 	
-	@Value("${settings.folder.path.linux}")
+	@Value("${settings.folder.path.windows}")
 	private String settingsFolderPathWindows;
 	
 	@Value("${settings.file.name}")
