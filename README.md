@@ -24,7 +24,7 @@ The aim is to **help during the course of developing an application based on the
 ### FAQ
 * Can I run it on any OS?.
 
-Theoretically yes, but only has been fully tested on Mac OS.
+Theoretically yes, but only has been fully tested on Windows and Mac OS.
 
 * Will I have to enter data all the time?.
 
