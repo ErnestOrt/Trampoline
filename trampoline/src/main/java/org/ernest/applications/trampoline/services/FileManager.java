@@ -54,9 +54,14 @@ public class FileManager {
 	}
 
 	public void runScript(String id, String mavenLocation, String port) throws RunningMicroserviceScriptException {
+		System.out.println(mavenLocation + " " + port);
 		try {
 			if(System.getProperties().getProperty("os.name").contains("Windows")){
-				new ProcessBuilder("cmd", "/c", "start", getSettingsFolder() + "/" + id + ".bat", mavenLocation, port).start();
+				String commands = FileUtils.readFileToString(new File(getSettingsFolder() +"/"+ id +".txt"));
+				commands = commands.replaceAll("#mavenLocation", mavenLocation);
+				commands = commands.replaceAll("#port", port);
+				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \""+commands+"\"");
+
 			}else{
 				new ProcessBuilder("sh", getSettingsFolder() + "/" + id + ".sh", mavenLocation, port).start();
 			}
@@ -70,7 +75,7 @@ public class FileManager {
 	public void createScript(String id, String pomLocation) throws CreatingMicroserviceScriptException {
 		try {
 			if(System.getProperties().getProperty("os.name").contains("Windows")){
-				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".bat"), "set M2_HOME=$1; set PATH=$PATH:$M2_HOME/bin; cd " + pomLocation + "; mvn spring-boot:run -Dserver.port=$2;");
+				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".txt"), "cd C:\\Users\\Ernest\\Documents\\GitHub\\Trampoline\\microservice-example && mvn spring-boot:run -Dserver.port=#port");
 			}else{
 				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".sh"), "export M2_HOME=$1; export PATH=$PATH:$M2_HOME/bin; cd " + pomLocation + "; mvn spring-boot:run -Dserver.port=$2;");
 			}

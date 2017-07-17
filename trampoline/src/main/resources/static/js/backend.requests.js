@@ -84,18 +84,22 @@ function removeNotDeployedInstances(){
 
 function updateStatusInstances(){
 	$("span[id^='label-status-']").each(function(i, item) {
-		$("#"+item.id).removeClass("label-success");
-		$("#"+item.id).removeClass("label-danger");
 		$.ajax({
 		    url : "/health",
 		    type: "POST",
 		    data : {id: item.id.replace("label-status-", "")},
 		    success: function(data, textStatus, jqXHR) { 
 		    	$("#"+item.id).removeClass("label-warning");
-		    	if(data == "deployed"){		    		 
+		    	if(data == "deployed"){
+		    		 $("#"+item.id).removeClass("label-success");
+                     $("#"+item.id).removeClass("label-danger");
+
 		    		 $("#"+item.id).addClass("label-success");
 		    		 $("#"+item.id).text("Deployed");
 		    	}else{
+		    	    $("#"+item.id).removeClass("label-success");
+                	$("#"+item.id).removeClass("label-danger");
+
 		    		$("#"+item.id).addClass("label-danger");
 		    		$("#"+item.id).text("Not Deployed")
 		    	}
@@ -104,7 +108,7 @@ function updateStatusInstances(){
   });
 }
 
-setInterval(updateStatusInstances, 5000);
+setInterval(updateStatusInstances, 15000);
 
 $( document ).ready(function() {
 	updateStatusInstances();
