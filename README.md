@@ -8,11 +8,14 @@ Are you developing an application based on the _paradigm of microservices_ using
 
 The aim is to **help during the course of developing an application based on the paradigm of microservices with _spring boot nature_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **starting instances** and **kill them**.
 
+Also you will be able to monitor memory usage for each instance, capturomg their metrics every 30 seconds.
+
 ### Requirements
 
 * Java 8
-* Apache Maven (v3.2.1)
-* Enable shutdown endpoint on your spring boot microservices
+* Apache Maven
+* Enable shutdown endpoint on your Spring Boot microservices
+* Start actuator sub-project of Spring Boot on your microservices
 
 ### How do I make it work?
 
@@ -22,6 +25,12 @@ The aim is to **help during the course of developing an application based on the
 4. Finally you just have to declare your microservices and to start and/or to stop them as you wish.
 
 ### FAQ
+* How does the UI look like?
+
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/ScreenshotTrampoline.png)
+
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/ScreenshotTrampolineMetrics.png)
+
 * Can I run it on any OS?.
 
 Theoretically yes, but only has been fully tested on Windows and Mac OS.
@@ -29,10 +38,6 @@ Theoretically yes, but only has been fully tested on Windows and Mac OS.
 * Will I have to enter data all the time?.
 
 No, information introduced will be stored in a settings file, next to the script to launch each microservices :grin:
-
-* How does the UI look like?
-
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/ScreenshotTrampoline.png)
 
 ### Contributing
 Start with clicking the star button to make the author and his neighbors happy :blush:. Then fork the repository and submit a pull request for whatever change you want to be added to this project.
