@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
 <title>Trampoline Home</title>
@@ -21,6 +21,7 @@ body {
 <script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
 <script type="text/javascript" th:src="@{/js/admin.js}"></script>
 <script type="text/javascript" th:src="@{/js/backend.requests.js}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js" />
 
 <link rel="shortcut icon" href="assets/ico/favicon.ico" />
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png" />
@@ -137,6 +138,7 @@ body {
 						<th>Pom Location</th>
 						<th>Port</th>
 						<th>Status</th>
+						<th>Metrics</th>
 						<th>Kill</th>
 					</tr>
 				</thead>
@@ -146,10 +148,29 @@ body {
 						<td th:text="${instance.pomLocation}"></td>
 						<td class="center" th:text="${instance.port}"></td>
 						<td class="center"><span class="label label-warning" th:id="'label-status-' + ${instance.id}">Waiting</span></td>
+						<td class="center"><button type="button" th:onclick="'showMetrics(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-info btn-sm">Metrics</button></td>
 						<td class="center"><button type="button" th:onclick="'killInstance(\'' + ${instance.id} + '\')'" class="btn btn-danger btn-sm">Kill</button></td>
 					</tr>
 				</tbody>
 			</table>
+		</div>
+	</div>
+	<div id="modal-metrics" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-lg">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title"><span id="metrics-title"></span></h4>
+				</div>
+				<div class="modal-body">
+					<canvas id="myChart" width="400" height="400"></canvas>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
 		</div>
 	</div>
 	<br/><br/><br/>
@@ -161,7 +182,7 @@ body {
 					<p>
 						<img th:src="@{/img/logo.png}" alt="" />
 					</p>
-					<p>Trampoline - Crafted With Love - Copyright 2015</p>
+					<p>Trampoline - Crafted With Love - Copyright 2017</p>
 				</div>
 			</div>
 		</div>
