@@ -82,6 +82,52 @@ function removeNotDeployedInstances(){
 	});
 }
 
+function showMetrics(instanceId, name, port){
+    $("#metrics-title").html(name+" : "+port);
+    $("#modal-metrics").modal("show");
+    $.ajax({
+    	    url : "/metrics",
+    	    type: "POST",
+    	    data : {id: instanceId},
+    	    success: function(data, textStatus, jqXHR) {
+    	        dates = [];
+                 dataMemoryFree = [];
+                 usedHeapKB=[];
+              $.each(data, function (index, value) {
+
+                  dates.push(value.date);
+                  dataMemoryFree.push(value.freeMemoryKB);
+                  usedHeapKB.push(value.usedHeapKB)
+                });
+                var ctx = document.getElementById('myChart').getContext('2d');
+                new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: "Memory Free KB",
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        data: dataMemoryFree,
+                    },
+                    {
+                        label: "Heap Used KB",
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        data: usedHeapKB,
+                    }]
+                },
+
+                // Configuration options go here
+                options: {}
+            });
+    	    }
+    	});
+}
+
 function updateStatusInstances(){
 	$("span[id^='label-status-']").each(function(i, item) {
 		$.ajax({

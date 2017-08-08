@@ -1,6 +1,7 @@
 package org.ernest.applications.trampoline.controller;
 
 import org.ernest.applications.trampoline.entities.Ecosystem;
+import org.ernest.applications.trampoline.entities.Metrics;
 import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
@@ -8,6 +9,7 @@ import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptEx
 import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
 import org.ernest.applications.trampoline.exceptions.ShuttingDownInstanceException;
 import org.ernest.applications.trampoline.services.EcosystemManager;
+import org.ernest.applications.trampoline.services.MetricsCollector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Queue;
+
 @Controller
 public class HomeController {
 
@@ -23,6 +27,9 @@ public class HomeController {
 	
 	@Autowired
 	EcosystemManager ecosystemManager;
+
+	@Autowired
+	MetricsCollector metricsCollector;
 
 	@RequestMapping("/trampoline")
     public String greeting(Model model) throws CreatingSettingsFolderException, ReadingEcosystemException{
@@ -75,4 +82,10 @@ public class HomeController {
     public void removeNotDeployedInstances() throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
 		ecosystemManager.removeNotDeployedInstances();
     }
+
+	@RequestMapping(value= "/metrics", method = RequestMethod.POST)
+	@ResponseBody
+	public Queue<Metrics> getMetrics(@RequestParam(value="id") String id) {
+		return metricsCollector.getInstanceMetrics(id);
+	}
 }
