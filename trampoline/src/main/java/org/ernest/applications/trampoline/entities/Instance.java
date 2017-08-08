@@ -6,6 +6,7 @@ public class Instance {
 	private String name;
 	private String pomLocation;
 	private String port;
+	private String actuatorPrefix;
 	
 	public String getId() {
 		return id;
@@ -30,5 +31,11 @@ public class Instance {
 	}
 	public void setPort(String port) {
 		this.port = port;
+	}
+	public String getActuatorPrefix() {
+		return actuatorPrefix;
+	}
+	public void setActuatorPrefix(String actuatorPrefix) {
+		this.actuatorPrefix = actuatorPrefix;
 	}
 }

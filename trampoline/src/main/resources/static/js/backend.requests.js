@@ -1,19 +1,32 @@
-function setMavenLocation(){
-	if($("#input-mavenlocation").val() == ''){
-		$("#form-group-mavenlocation").addClass("has-error");
+function setMavenBinaryLocation(){
+	if($("#input-mavenbinarylocation").val() == ''){
+		$("#form-group-mavenbinarylocation").addClass("has-error");
 	}else{
 		$.ajax({
-		    url : "/setmavenlocation",
+		    url : "/setmavenbinarylocation",
 		    type: "POST",
-		    data : {path: $("#input-mavenlocation").val()},
+		    data : {path: $("#input-mavenbinarylocation").val()},
+		    success: function(data, textStatus, jqXHR) { location.reload(); }
+		});
+	}
+}
+
+function setMavenHomeLocation(){
+	if($("#input-mavenhomelocation").val() == ''){
+		$("#form-group-mavenhomelocation").addClass("has-error");
+	}else{
+		$.ajax({
+		    url : "/setmavenhomelocation",
+		    type: "POST",
+		    data : {path: $("#input-mavenhomelocation").val()},
 		    success: function(data, textStatus, jqXHR) { location.reload(); }
 		});
 	}
 }
 
 function setNewMicroservice(){
-	if($("#input-hidden-mavenlocation").val() == ''){
-		$("#form-group-mavenlocation").addClass("has-error");
+	if($("#input-hidden-mavenbinarylocation").val() == ''){
+		$("#form-group-mavenbinarylocation").addClass("has-error");
 	}else{
 		cleaningNewMicroserviceFrom();
 		if($("#input-newmicroservice-name").val() == '' || $("#input-newmicroservice-pomlocation").val() == '' || $("#input-newmicroservice-defaultport").val() == ''){
@@ -22,7 +35,8 @@ function setNewMicroservice(){
 			$.ajax({
 			    url : "/setnewmicroservice",
 			    type: "POST",
-			    data : {name: $("#input-newmicroservice-name").val(), pomLocation: $("#input-newmicroservice-pomlocation").val(), defaultPort: $("#input-newmicroservice-defaultport").val()},
+			    data : {name: $("#input-newmicroservice-name").val(), pomLocation: $("#input-newmicroservice-pomlocation").val(), defaultPort: $("#input-newmicroservice-defaultport").val(),
+			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val()},
 			    success: function(data, textStatus, jqXHR) { location.reload(); }
 			});
 		}
