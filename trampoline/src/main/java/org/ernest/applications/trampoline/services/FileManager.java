@@ -53,19 +53,20 @@ public class FileManager {
 		}
 	}
 
-	public void runScript(String id, String mavenBinaryLocation, String mavenHomeLocation, String port) throws RunningMicroserviceScriptException {
+	public void runScript(String id, String mavenBinaryLocation, String mavenHomeLocation, String port, String vmArguments) throws RunningMicroserviceScriptException {
 		System.out.println(mavenBinaryLocation + " " + port);
 		try {
+			mavenBinaryLocation = (mavenBinaryLocation != null && mavenBinaryLocation.trim().length() > 0) ? mavenBinaryLocation: mavenHomeLocation + "/bin";
 			if(System.getProperties().getProperty("os.name").contains("Windows")){
 				String commands = FileUtils.readFileToString(new File(getSettingsFolder() +"/"+ id +".txt"));
-				commands = commands.replaceAll("#mavenBinaryLocation", mavenBinaryLocation);
-				commands = commands.replaceAll("#mavenHomeLocation", mavenBinaryLocation);
-				commands = commands.replaceAll("#port", port);
+				commands = commands.replace("#mavenBinaryLocation", mavenBinaryLocation);
+				commands = commands.replace("#mavenHomeLocation", mavenHomeLocation);
+				commands = commands.replace("#port", port);
+				commands = commands.replace("#vmArguments", vmArguments);
 				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \""+commands+"\"");
 
 			}else{
-				mavenBinaryLocation = (mavenBinaryLocation != null && mavenBinaryLocation.trim().length() > 0) ? mavenBinaryLocation: mavenHomeLocation + "/bin";
-				new ProcessBuilder("sh", getSettingsFolder() + "/" + id + ".sh", mavenHomeLocation, mavenBinaryLocation, port).start();
+				new ProcessBuilder("sh", getSettingsFolder() + "/" + id + ".sh", mavenHomeLocation, mavenBinaryLocation, port, vmArguments).start();
 			}
 			
 		} catch (IOException e) {
@@ -74,11 +75,17 @@ public class FileManager {
 		}
 	}
 
-	public void createScript(String id, String pomLocation, String vmArguments) throws CreatingMicroserviceScriptException {
+	public void createScript(String id, String pomLocation) throws CreatingMicroserviceScriptException {
 		try {
-			FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".sh"), 
+			if(System.getProperties().getProperty("os.name").contains("Windows")){
+				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".txt"), 
+					"SET M2_HOME=#mavenHomeLocation&& SET PATH=%PATH%;#mavenBinaryLocation&& cd " + pomLocation + " && mvn spring-boot:run -Dserver.port=#port "
+					+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false #vmArguments");
+			}else{
+				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".sh"), 
 					"export M2_HOME=$1; export PATH=$PATH:$2; cd " + pomLocation + "; mvn spring-boot:run -Dserver.port=$3 "
-					+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false " + vmArguments);
+					+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false $4");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new CreatingMicroserviceScriptException();

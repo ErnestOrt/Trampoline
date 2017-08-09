@@ -50,7 +50,7 @@ public class EcosystemManager {
 		microservice.setDefaultPort(defaultPort);
 		microservice.setActuatorPrefix(actuatorPrefix);
 		microservice.setVmArguments(vmArguments);
-		fileManager.createScript(microservice.getId(), pomLocation, microservice.getVmArguments());
+		fileManager.createScript(microservice.getId(), pomLocation);
 		
 		ecosystem.getMicroservices().add(microservice);
 		fileManager.saveEcosystem(ecosystem);
@@ -66,7 +66,7 @@ public class EcosystemManager {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
 		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).collect(Collectors.toList()).get(0);
-		fileManager.runScript(microservice.getId(), ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port);
+		fileManager.runScript(microservice.getId(), ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
 		
 		Instance instance = new Instance();
 		instance.setId(UUID.randomUUID().toString());
