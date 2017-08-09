@@ -25,8 +25,8 @@ function setMavenHomeLocation(){
 }
 
 function setNewMicroservice(){
-	if($("#input-hidden-mavenbinarylocation").val() == ''){
-		$("#form-group-mavenbinarylocation").addClass("has-error");
+	if($("#input-hidden-mavenhomelocation").val() == ''){
+		$("#form-group-mavenhomelocation").addClass("has-error");
 	}else{
 		cleaningNewMicroserviceFrom();
 		if($("#input-newmicroservice-name").val() == '' || $("#input-newmicroservice-pomlocation").val() == '' || $("#input-newmicroservice-defaultport").val() == ''){
