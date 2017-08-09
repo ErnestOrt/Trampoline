@@ -8,7 +8,10 @@ Are you developing an application based on the _paradigm of microservices_ using
 
 The aim is to **help during the course of developing an application based on the paradigm of microservices with _spring boot nature_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **starting instances** and **kill them**.
 
-Also you will be able to monitor memory usage for each instance, capturomg their metrics every 30 seconds.
+Also you will be able to:
+* Configurable Actuator endpoint & VM arguments
+* Monitor memory usage for each instance, capturing their metrics every 30 seconds.
+* Monitor intances traces any point in time
 
 ### Requirements
 
@@ -30,6 +33,20 @@ Also you will be able to monitor memory usage for each instance, capturomg their
 ![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/ScreenshotTrampoline.png)
 
 ![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/ScreenshotTrampolineMetrics.png)
+
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/ScreenshotTrampolineTraces.png)
+
+* I am working with Spring Boot 1.3 or less and instances do not start.
+
+You should add security starter on your microservices pom.xml:
+
+```
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+```
 
 * Can I run it on any OS?.
 
