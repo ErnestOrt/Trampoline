@@ -31,7 +31,7 @@ public class HomeController {
 		model.addAttribute("instances", ecosystem.getInstances());
 		model.addAttribute("mavenBinaryLocation", ecosystem.getMavenBinaryLocation());
 		model.addAttribute("mavenHomeLocation", ecosystem.getMavenHomeLocation());
-		model.addAttribute("mavenBinaryLocationMessage", ecosystem.getMavenBinaryLocation() == null ? "Please set maven Binary Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenBinaryLocation());
+		model.addAttribute("mavenBinaryLocationMessage", ecosystem.getMavenBinaryLocation() == null ? "Set Maven Binary Location if necessary. Otherwise it will automatically be searched in a bin folder inside your Maven Home Location" : ecosystem.getMavenBinaryLocation());
 		model.addAttribute("mavenHomeLocationMessage", ecosystem.getMavenHomeLocation() == null ? "Please set maven Home Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenHomeLocation());
 		return HOME_VIEW;
     }
