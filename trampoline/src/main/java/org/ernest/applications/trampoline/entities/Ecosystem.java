@@ -5,7 +5,8 @@ import java.util.List;
 
 public class Ecosystem {
 
-	private String mavenLocation;
+	private String mavenBinaryLocation;
+	private String mavenHomeLocation;
 	private List<Microservice> microservices;
 	private List<Instance> instances;
 	
@@ -14,14 +15,22 @@ public class Ecosystem {
 		instances = new ArrayList<Instance>();
 	}
 
-	public String getMavenLocation() {
-		return mavenLocation;
+	public String getMavenBinaryLocation() {
+		return mavenBinaryLocation;
 	}
-	
-	public void setMavenLocation(String mavenLocation) {
-		this.mavenLocation = mavenLocation;
+
+	public void setMavenBinaryLocation(String mavenBinaryLocation) {
+		this.mavenBinaryLocation = mavenBinaryLocation;
 	}
-	
+
+	public String getMavenHomeLocation() {
+		return mavenHomeLocation;
+	}
+
+	public void setMavenHomeLocation(String mavenHomeLocation) {
+		this.mavenHomeLocation = mavenHomeLocation;
+	}
+
 	public List<Microservice> getMicroservices() {
 		return microservices;
 	}

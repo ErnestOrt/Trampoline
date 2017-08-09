@@ -1,5 +1,6 @@
 package org.ernest.applications.trampoline.services;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,13 +28,19 @@ public class EcosystemManager {
 		return fileManager.getEcosystem();
 	}
 	
-	public void setMavenLocation(String path) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
+	public void setMavenBinaryLocation(String path) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
-		ecosystem.setMavenLocation(path);
+		ecosystem.setMavenBinaryLocation(path);
 		fileManager.saveEcosystem(ecosystem);
 	}
 	
-	public void setNewMicroservice(String name, String pomLocation, String defaultPort) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+	public void setMavenHomeLocation(String path) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		ecosystem.setMavenHomeLocation(path);
+		fileManager.saveEcosystem(ecosystem);
+	}
+	
+	public void setNewMicroservice(String name, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
 		Microservice microservice = new Microservice();
@@ -41,6 +48,8 @@ public class EcosystemManager {
 		microservice.setName(name);
 		microservice.setPomLocation(pomLocation);
 		microservice.setDefaultPort(defaultPort);
+		microservice.setActuatorPrefix(actuatorPrefix);
+		microservice.setVmArguments(vmArguments);
 		fileManager.createScript(microservice.getId(), pomLocation);
 		
 		ecosystem.getMicroservices().add(microservice);
@@ -53,17 +62,19 @@ public class EcosystemManager {
 		fileManager.saveEcosystem(ecosystem);
 	}
 
-	public void startInstance(String id, String port) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException{
+	public void startInstance(String id, String port, String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException{
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
 		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).collect(Collectors.toList()).get(0);
-		fileManager.runScript(microservice.getId(), ecosystem.getMavenLocation(), port);
+		fileManager.runScript(microservice.getId(), ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
 		
 		Instance instance = new Instance();
 		instance.setId(UUID.randomUUID().toString());
 		instance.setPort(port);
 		instance.setName(microservice.getName());
 		instance.setPomLocation(microservice.getPomLocation());
+		instance.setActuatorPrefix(microservice.getActuatorPrefix());
+		instance.setVmArguments(vmArguments);
 		ecosystem.getInstances().add(instance);
 		fileManager.saveEcosystem(ecosystem);
 	}
@@ -73,7 +84,7 @@ public class EcosystemManager {
 		Instance instance = ecosystem.getInstances().stream().filter(i -> i.getId().equals(id)).collect(Collectors.toList()).get(0);
 		
 		try {
-			new ClientRequest("http://localhost:" + instance.getPort() + "/shutdown").post(String.class);
+			new ClientRequest("http://localhost:" + instance.getPort() + instance.getActuatorPrefix() + "/shutdown").post(String.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ShuttingDownInstanceException();
@@ -85,8 +96,8 @@ public class EcosystemManager {
 
 	public String getStatusInstance(String id) throws CreatingSettingsFolderException, ReadingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
-		Instance instance = ecosystem.getInstances().stream().filter(i -> i.getId().equals(id)).collect(Collectors.toList()).get(0);
-		if(isDeployed(instance)){
+		List<Instance> instances = ecosystem.getInstances().stream().filter(i -> i.getId().equals(id)).collect(Collectors.toList());
+		if(!instances.isEmpty() && isDeployed(instances.get(0))){
 			return StatusInstance.DEPLOYED.getCode();
 		}
 		return StatusInstance.NOT_DEPLOYED.getCode();
@@ -100,7 +111,7 @@ public class EcosystemManager {
 
 	private boolean isDeployed(Instance instance) {
 		try{
-			new ClientRequest("http://localhost:" + instance.getPort() + "/env").get(String.class);
+			new ClientRequest("http://localhost:" + instance.getPort() + instance.getActuatorPrefix() + "/env").get(String.class);
 		}catch(Exception e){
 			return false;
 		}

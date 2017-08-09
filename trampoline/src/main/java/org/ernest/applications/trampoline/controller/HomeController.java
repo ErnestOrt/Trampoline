@@ -36,21 +36,32 @@ public class HomeController {
 		Ecosystem ecosystem = ecosystemManager.getEcosystem();
 		model.addAttribute("microservices", ecosystem.getMicroservices());
 		model.addAttribute("instances", ecosystem.getInstances());
-		model.addAttribute("mavenLocation", ecosystem.getMavenLocation());
-		model.addAttribute("mavenLocationMessage", ecosystem.getMavenLocation() == null ? "Please set maven Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenLocation());
+		model.addAttribute("mavenBinaryLocation", ecosystem.getMavenBinaryLocation());
+		model.addAttribute("mavenHomeLocation", ecosystem.getMavenHomeLocation());
+		model.addAttribute("mavenBinaryLocationMessage", ecosystem.getMavenBinaryLocation() == null ? "Set Maven Binary Location if necessary. Otherwise it will automatically be searched in a bin folder inside your Maven Home Location" : ecosystem.getMavenBinaryLocation());
+		model.addAttribute("mavenHomeLocationMessage", ecosystem.getMavenHomeLocation() == null ? "Please set maven Home Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenHomeLocation());
 		return HOME_VIEW;
     }
 	
-	@RequestMapping(value= "/setmavenlocation", method = RequestMethod.POST)
+	@RequestMapping(value= "/setmavenbinarylocation", method = RequestMethod.POST)
 	@ResponseBody
-    public void setMavenLocation(@RequestParam(value="path") String path) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
-		ecosystemManager.setMavenLocation(path);
+    public void setMavenBinaryLocation(@RequestParam(value="path") String path) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
+		ecosystemManager.setMavenBinaryLocation(path);
+    }
+	
+	@RequestMapping(value= "/setmavenhomelocation", method = RequestMethod.POST)
+	@ResponseBody
+    public void setMavenHomeLocation(@RequestParam(value="path") String path) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
+		ecosystemManager.setMavenHomeLocation(path);
     }
 	
 	@RequestMapping(value= "/setnewmicroservice", method = RequestMethod.POST)
 	@ResponseBody
-    public void setNewMicroservice(@RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation, @RequestParam(value="defaultPort") String defaultPort) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
-		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort);
+    public void setNewMicroservice(@RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation, 
+    		@RequestParam(value="defaultPort") String defaultPort, @RequestParam(value="actuatorPrefix") String actuatorPrefix, 
+    		@RequestParam(value="vmArguments") String vmArguments) 
+    				throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort, actuatorPrefix, vmArguments);
     }
 	
 	@RequestMapping(value= "/removemicroservice", method = RequestMethod.POST)
@@ -61,8 +72,8 @@ public class HomeController {
 	
 	@RequestMapping(value= "/startinstance", method = RequestMethod.POST)
 	@ResponseBody
-    public void startInstance(@RequestParam(value="id") String id, @RequestParam(value="port") String port) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException {
-		ecosystemManager.startInstance(id, port);
+    public void startInstance(@RequestParam(value="id") String id, @RequestParam(value="port") String port, @RequestParam(value="vmArguments") String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException {
+		ecosystemManager.startInstance(id, port, vmArguments);
     }
 	
 	@RequestMapping(value= "/health", method = RequestMethod.POST)

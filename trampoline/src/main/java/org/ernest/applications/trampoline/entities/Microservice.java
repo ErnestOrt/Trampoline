@@ -6,6 +6,8 @@ public class Microservice {
 	private String name;
 	private String pomLocation;
 	private String defaultPort;
+	private String actuatorPrefix;
+	private String vmArguments;
 	
 	public String getId() {
 		return id;
@@ -30,5 +32,17 @@ public class Microservice {
 	}
 	public void setDefaultPort(String defaultPort) {
 		this.defaultPort = defaultPort;
+	}
+	public String getActuatorPrefix() {
+		return actuatorPrefix;
+	}
+	public String getVmArguments() {
+		return vmArguments;
+	}
+	public void setVmArguments(String vmArguments) {
+		this.vmArguments = vmArguments;
+	}
+	public void setActuatorPrefix(String actuatorPrefix) {
+		this.actuatorPrefix = actuatorPrefix;
 	}
 }
