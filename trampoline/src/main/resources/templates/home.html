@@ -164,6 +164,7 @@ body {
 						<th>Name</th>
 						<th>Pom Location</th>
 						<th>Port</th>
+						<th>VM Arguments</th>
 						<th>Status</th>
 						<th>Kill</th>
 					</tr>
@@ -173,6 +174,7 @@ body {
 						<td th:text="${instance.name}"></td>
 						<td th:text="${instance.pomLocation}"></td>
 						<td class="center" th:text="${instance.port}"></td>
+						<td class="center" th:text="${instance.vmArguments}"></td>
 						<td class="center"><span class="label label-warning" th:id="'label-status-' + ${instance.id}">Waiting</span></td>
 						<td class="center"><button type="button" th:onclick="'killInstance(\'' + ${instance.id} + '\')'" class="btn btn-danger btn-sm">Kill</button></td>
 					</tr>
