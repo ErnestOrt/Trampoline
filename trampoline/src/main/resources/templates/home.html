@@ -10,18 +10,19 @@
 <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
 <link th:href="@{/css/main.css}" rel="stylesheet" />
 <link th:href="@{/css/table.css}" rel="stylesheet" />
+	<link th:href="@{/css/timeline.css}" rel="stylesheet" />
 <style type="text/css">
 body {
 	padding-top: 60px;
 }
 </style>
 
-
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
 <script type="text/javascript" th:src="@{/js/admin.js}"></script>
 <script type="text/javascript" th:src="@{/js/backend.requests.js}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js" />
+	<script src="https://use.fontawesome.com/1cb009c8c5.js"></script>
 
 <link rel="shortcut icon" href="assets/ico/favicon.ico" />
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png" />
@@ -116,8 +117,8 @@ body {
 						<td th:text="${microservice.name}"></td>
 						<td th:text="${microservice.pomLocation}"></td>
 						<td class="center"><input type="email" class="form-control" th:value="${microservice.defaultPort}" th:id="'input-port-' + ${microservice.id}"/></td>
-						<td class="center"><button type="button" th:onclick="'startInstance(\'' + ${microservice.id} + '\')'" class="btn btn-primary btn-sm">Start</button></td>
-						<td class="center"><button type="button" th:onclick="'removeMicroservice(\'' + ${microservice.id} + '\')'" class="btn btn-danger btn-sm">Remove</button></td>
+						<td class="center"><button type="button" th:onclick="'startInstance(\'' + ${microservice.id} + '\')'" class="btn btn-primary btn-sm"><i class="fa fa-lg fa-play-circle" aria-hidden="true"></i></button></td>
+						<td class="center"><button type="button" th:onclick="'removeMicroservice(\'' + ${microservice.id} + '\')'" class="btn btn-danger btn-sm"><i class="fa fa-lg fa-trash-o" aria-hidden="true"></i></button></td>
 					</tr>
 				</tbody>
 			</table>
@@ -138,6 +139,7 @@ body {
 						<th>Pom Location</th>
 						<th>Port</th>
 						<th>Status</th>
+						<th>Traces</th>
 						<th>Metrics</th>
 						<th>Kill</th>
 					</tr>
@@ -148,8 +150,9 @@ body {
 						<td th:text="${instance.pomLocation}"></td>
 						<td class="center" th:text="${instance.port}"></td>
 						<td class="center"><span class="label label-warning" th:id="'label-status-' + ${instance.id}">Waiting</span></td>
-						<td class="center"><button type="button" th:onclick="'showMetrics(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-info btn-sm">Metrics</button></td>
-						<td class="center"><button type="button" th:onclick="'killInstance(\'' + ${instance.id} + '\')'" class="btn btn-danger btn-sm">Kill</button></td>
+						<td class="center"><button type="button" th:onclick="'showTraces(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-warning btn-sm"><i class="fa fa-lg fa-book" aria-hidden="true"></i></button></td>
+						<td class="center"><button type="button" th:onclick="'showMetrics(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-info btn-sm"><i class="fa fa-lg fa-line-chart" aria-hidden="true"></i></button></td>
+						<td class="center"><button type="button" th:onclick="'killInstance(\'' + ${instance.id} + '\')'" class="btn btn-danger btn-sm"><i class="fa fa-lg fa-trash-o" aria-hidden="true"></i></button></td>
 					</tr>
 				</tbody>
 			</table>
@@ -165,6 +168,27 @@ body {
 				</div>
 				<div class="modal-body">
 					<canvas id="myChart" width="400" height="400"></canvas>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div id="modal-traces" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-lg">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title"><span id="traces-title"></span></h4>
+				</div>
+				<div class="modal-body">
+					<div class="timeline" id="timeline-content">
+
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
