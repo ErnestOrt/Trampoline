@@ -2,6 +2,7 @@ package org.ernest.applications.trampoline.controller;
 
 import org.ernest.applications.trampoline.entities.Ecosystem;
 import org.ernest.applications.trampoline.entities.Metrics;
+import org.ernest.applications.trampoline.entities.TraceActuator;
 import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
@@ -10,6 +11,7 @@ import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
 import org.ernest.applications.trampoline.exceptions.ShuttingDownInstanceException;
 import org.ernest.applications.trampoline.services.EcosystemManager;
 import org.ernest.applications.trampoline.services.MetricsCollector;
+import org.ernest.applications.trampoline.services.TraceParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Queue;
 
 @Controller
@@ -30,6 +33,9 @@ public class HomeController {
 
 	@Autowired
 	MetricsCollector metricsCollector;
+
+	@Autowired
+	TraceParser traceParser;
 
 	@RequestMapping("/trampoline")
     public String greeting(Model model) throws CreatingSettingsFolderException, ReadingEcosystemException{
@@ -98,5 +104,11 @@ public class HomeController {
 	@ResponseBody
 	public Queue<Metrics> getMetrics(@RequestParam(value="id") String id) {
 		return metricsCollector.getInstanceMetrics(id);
+	}
+
+	@RequestMapping(value= "/traces", method = RequestMethod.POST)
+	@ResponseBody
+	public List<TraceActuator> getTraces(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException {
+		return traceParser.getTraces(id);
 	}
 }

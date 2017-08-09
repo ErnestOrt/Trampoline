@@ -143,6 +143,32 @@ function showMetrics(instanceId, name, port){
     	});
 }
 
+function showTraces(instanceId, name, port){
+    $("#traces-title").html(name+" : "+port);
+    $("#timeline-content").html("");
+    $("#modal-traces").modal("show");
+    $.ajax({
+    	    url : "/traces",
+    	    type: "POST",
+    	    data : {id: instanceId},
+    	    success: function(data, textStatus, jqXHR) {
+    	        $("#timeline-content").html('<div class="line text-muted"></div>')
+              $.each(data, function (index, value) {
+
+                    $("#timeline-content").append('<article class="panel '+(value.status == '200' ? 'panel-success' : 'panel-danger')+' panel-outline">'+
+                                                    '<div class="panel-heading icon">'+
+                                                    '</div>'+
+                                                    '<div class="panel-body">'+
+                                                        '<strong>'+value.date+'</strong> ' + value.path + ' ' + value.method+ ' ' + value.status+
+                                                    '</div>'+
+                                                '</article>');
+                });
+    	    }
+    	});
+}
+
+
+
 function updateStatusInstances(){
 	$("span[id^='label-status-']").each(function(i, item) {
 		$.ajax({
