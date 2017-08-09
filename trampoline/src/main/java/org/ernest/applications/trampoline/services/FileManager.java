@@ -74,13 +74,14 @@ public class FileManager {
 		}
 	}
 
-	public void createScript(String id, String pomLocation) throws CreatingMicroserviceScriptException {
+	public void createScript(String id, String pomLocation, String vmArguments) throws CreatingMicroserviceScriptException {
 		try {
 			if(System.getProperties().getProperty("os.name").contains("Windows")){
-				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".txt"), "cd " + pomLocation + " && mvn spring-boot:run -Dserver.port=#port");
+				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".txt"), "cd " + pomLocation + " && mvn spring-boot:run -Dserver.port=#port " + vmArguments);
 			}else{
 				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".sh"), 
-						"export M2_HOME=$1; export PATH=$PATH:$2; cd " + pomLocation + "; mvn spring-boot:run -Dserver.port=$3; -Dendpoints.shutdown.enabled=true");
+						"export M2_HOME=$1; export PATH=$PATH:$2; cd " + pomLocation + "; mvn spring-boot:run -Dserver.port=$3 "
+						+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false " + vmArguments);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

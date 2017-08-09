@@ -105,6 +105,12 @@ body {
 			      <input type="email" class="form-control" id="input-newmicroservice-actuatorprefix" placeholder=""/>
 			    </div>
 			  </div>
+			  <div class="form-group" id="form-newmicroservice-vmarguments">
+			    <label for="inputEmail5" class="col-sm-2 control-label">VM Arguments</label>
+			    <div class="col-sm-10">
+			      <input type="email" class="form-control" id="input-newmicroservice-vmarguments" placeholder=""/>
+			    </div>
+			  </div>
 			  <div class="form-group">
 			    <div class="col-sm-offset-2 col-sm-10">
 			      <button class="btn btn-default" onclick="setNewMicroservice()">Create</button>
@@ -125,6 +131,7 @@ body {
 						<th>Pom Location</th>
 						<th>Port</th>
 						<th>Actuator Prefix</th>
+						<th>VM Arguments</th>
 						<th>Start</th>
 						<th>Remove</th>
 					</tr>
@@ -134,7 +141,8 @@ body {
 						<td th:text="${microservice.name}"></td>
 						<td th:text="${microservice.pomLocation}"></td>
 						<td class="center"><input type="email" class="form-control" th:value="${microservice.defaultPort}" th:id="'input-port-' + ${microservice.id}"/></td>
-						<td class="center"><input type="email" class="form-control" th:value="${microservice.actuatorPrefix}" th:id="'input-actuator-' + ${microservice.id}"/></td>
+						<td th:text="${microservice.actuatorPrefix}"></td>
+						<td class="center"><input type="email" class="form-control" th:value="${microservice.vmArguments}" th:id="'input-vmarguments-' + ${microservice.id}"/></td>
 						<td class="center"><button type="button" th:onclick="'startInstance(\'' + ${microservice.id} + '\')'" class="btn btn-primary btn-sm">Start</button></td>
 						<td class="center"><button type="button" th:onclick="'removeMicroservice(\'' + ${microservice.id} + '\')'" class="btn btn-danger btn-sm">Remove</button></td>
 					</tr>

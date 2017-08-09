@@ -40,7 +40,7 @@ public class EcosystemManager {
 		fileManager.saveEcosystem(ecosystem);
 	}
 	
-	public void setNewMicroservice(String name, String pomLocation, String defaultPort, String actuatorPrefix) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+	public void setNewMicroservice(String name, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
 		Microservice microservice = new Microservice();
@@ -49,7 +49,8 @@ public class EcosystemManager {
 		microservice.setPomLocation(pomLocation);
 		microservice.setDefaultPort(defaultPort);
 		microservice.setActuatorPrefix(actuatorPrefix);
-		fileManager.createScript(microservice.getId(), pomLocation);
+		microservice.setVmArguments(vmArguments);
+		fileManager.createScript(microservice.getId(), pomLocation, microservice.getVmArguments());
 		
 		ecosystem.getMicroservices().add(microservice);
 		fileManager.saveEcosystem(ecosystem);
@@ -61,7 +62,7 @@ public class EcosystemManager {
 		fileManager.saveEcosystem(ecosystem);
 	}
 
-	public void startInstance(String id, String port) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException{
+	public void startInstance(String id, String port, String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException{
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
 		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).collect(Collectors.toList()).get(0);
@@ -73,6 +74,7 @@ public class EcosystemManager {
 		instance.setName(microservice.getName());
 		instance.setPomLocation(microservice.getPomLocation());
 		instance.setActuatorPrefix(microservice.getActuatorPrefix());
+		instance.setVmArguments(vmArguments);
 		ecosystem.getInstances().add(instance);
 		fileManager.saveEcosystem(ecosystem);
 	}

@@ -36,7 +36,8 @@ function setNewMicroservice(){
 			    url : "/setnewmicroservice",
 			    type: "POST",
 			    data : {name: $("#input-newmicroservice-name").val(), pomLocation: $("#input-newmicroservice-pomlocation").val(), defaultPort: $("#input-newmicroservice-defaultport").val(),
-			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val()},
+			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val(),
+			    	    vmArguments: $("#input-newmicroservice-vmarguments").val()},
 			    success: function(data, textStatus, jqXHR) { location.reload(); }
 			});
 		}
@@ -74,7 +75,7 @@ function startInstance(microserviceId){
 	$.ajax({
 	    url : "/startinstance",
 	    type: "POST",
-	    data : {id: microserviceId, port: $("#input-port-" + microserviceId).val()},
+	    data : {id: microserviceId, port: $("#input-port-" + microserviceId).val(), vmArguments: $("#input-vmarguments-" + microserviceId).val()},
 	    success: function(data, textStatus, jqXHR) { location.reload(); }
 	});
 }

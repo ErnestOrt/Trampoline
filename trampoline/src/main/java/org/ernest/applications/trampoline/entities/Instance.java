@@ -7,6 +7,7 @@ public class Instance {
 	private String pomLocation;
 	private String port;
 	private String actuatorPrefix;
+	private String vmArguments;
 	
 	public String getId() {
 		return id;
@@ -38,4 +39,11 @@ public class Instance {
 	public void setActuatorPrefix(String actuatorPrefix) {
 		this.actuatorPrefix = actuatorPrefix;
 	}
+	public String getVmArguments() {
+		return vmArguments;
+	}
+	public void setVmArguments(String vmArguments) {
+		this.vmArguments = vmArguments;
+	}
+	
 }
