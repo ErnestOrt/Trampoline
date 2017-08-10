@@ -28,7 +28,7 @@ public class TraceParser {
         List<TraceActuator> traces = new ArrayList<>();
 
         Instance instance = ecosystemManager.getEcosystem().getInstances().stream().filter(i -> i.getId().equals(idInstance)).findAny().get();
-        JSONArray traceArrayJson = new JSONArray(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + "/trace", String.class));
+        JSONArray traceArrayJson = new JSONArray(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/trace", String.class));
 
         for (int i = 0; i < traceArrayJson.length(); i++) {
             JSONObject traceJson = traceArrayJson.getJSONObject(i);
