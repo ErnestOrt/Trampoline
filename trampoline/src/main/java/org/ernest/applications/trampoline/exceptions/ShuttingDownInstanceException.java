@@ -1,5 +1,5 @@
 package org.ernest.applications.trampoline.exceptions;
 
-public class ShuttingDownInstanceException extends Exception {
+public class ShuttingDownInstanceException extends RuntimeException {
 
 }

@@ -41,9 +41,25 @@ public class FileManager {
 			e.printStackTrace();
 			throw new ReadingEcosystemException();
 		}
+
+		updateMicroservicesInformationStored(ecosystem);
+
 		return ecosystem;
 	}
-	
+
+	private void updateMicroservicesInformationStored(Ecosystem ecosystem) {
+		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null)){
+
+			ecosystem.getMicroservices().stream().filter(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null).forEach(m ->{
+				m.setVmArguments("");
+				m.setActuatorPrefix("");
+				createScript(m.getId(), m.getPomLocation());
+			});
+
+			saveEcosystem(ecosystem);
+		}
+	}
+
 	public void saveEcosystem(Ecosystem ecosystem) throws SavingEcosystemException {
 		try {
 			FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + settingsFileName), new Gson().toJson(ecosystem));
@@ -54,9 +70,8 @@ public class FileManager {
 	}
 
 	public void runScript(String id, String mavenBinaryLocation, String mavenHomeLocation, String port, String vmArguments) throws RunningMicroserviceScriptException {
-		System.out.println(mavenBinaryLocation + " " + port);
 		try {
-			mavenBinaryLocation = (mavenBinaryLocation != null && mavenBinaryLocation.trim().length() > 0) ? mavenBinaryLocation: mavenHomeLocation + "/bin";
+			mavenBinaryLocation = (mavenBinaryLocation != null && mavenBinaryLocation.trim().length() > 0) ? mavenBinaryLocation : mavenHomeLocation + "/bin";
 			if(System.getProperties().getProperty("os.name").contains("Windows")){
 				String commands = FileUtils.readFileToString(new File(getSettingsFolder() +"/"+ id +".txt"));
 				commands = commands.replace("#mavenBinaryLocation", mavenBinaryLocation);
@@ -82,7 +97,7 @@ public class FileManager {
 					"SET M2_HOME=#mavenHomeLocation&& SET PATH=%PATH%;#mavenBinaryLocation&& cd " + pomLocation + " && mvn spring-boot:run -Dserver.port=#port "
 					+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false #vmArguments");
 			}else{
-				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".sh"), 
+				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".sh"),
 					"export M2_HOME=$1; export PATH=$PATH:$2; cd " + pomLocation + "; mvn spring-boot:run -Dserver.port=$3 "
 					+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false $4");
 			}

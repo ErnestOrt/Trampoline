@@ -1,3 +1,3 @@
 package org.ernest.applications.trampoline.exceptions;
 
-public class CreatingSettingsFolderException extends Exception{}
+public class CreatingSettingsFolderException extends RuntimeException{}
