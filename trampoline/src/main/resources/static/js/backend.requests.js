@@ -1,3 +1,4 @@
+var metricsCharts;
 function setMavenBinaryLocation(){
 	if($("#input-mavenbinarylocation").val() == ''){
 		$("#form-group-mavenbinarylocation").addClass("has-error");
@@ -114,31 +115,23 @@ function showMetrics(instanceId, name, port){
                   dataMemoryFree.push(value.freeMemoryKB);
                   usedHeapKB.push(value.usedHeapKB)
                 });
-                var ctx = document.getElementById('myChart').getContext('2d');
-                new Chart(ctx, {
-                // The type of chart we want to create
-                type: 'line',
+                metricsCharts.config.data = {
+                                              labels: dates,
+                                              datasets: [{
+                                                  label: "Memory Free KB",
+                                                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                                  borderColor: 'rgba(255, 99, 132, 1)',
+                                                  data: dataMemoryFree,
+                                              },
+                                              {
+                                                  label: "Heap Used KB",
+                                                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                  borderColor: 'rgba(54, 162, 235, 1)',
+                                                  data: usedHeapKB,
+                                              }]
+                                          }
 
-                // The data for our dataset
-                data: {
-                    labels: dates,
-                    datasets: [{
-                        label: "Memory Free KB",
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        data: dataMemoryFree,
-                    },
-                    {
-                        label: "Heap Used KB",
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        data: usedHeapKB,
-                    }]
-                },
-
-                // Configuration options go here
-                options: {}
-            });
+              metricsCharts.update();
     	    }
     	});
 }
@@ -199,4 +192,30 @@ setInterval(updateStatusInstances, 15000);
 
 $( document ).ready(function() {
 	updateStatusInstances();
+
+	var ctx = document.getElementById('myChart').getContext('2d');
+    metricsCharts = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+
+        // The data for our dataset
+        data: {
+            labels: [],
+            datasets: [{
+                label: "Memory Free KB",
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                data: [],
+            },
+            {
+                label: "Heap Used KB",
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                data: [],
+            }]
+        },
+
+        // Configuration options go here
+        options: {}
+    });
 });
