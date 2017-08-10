@@ -32,7 +32,7 @@ public class MetricsCollector {
 
         ecosystemManager.getEcosystem().getInstances().forEach(instance ->{
             try {
-                JSONObject metricsJson = new JSONObject(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + "/metrics", String.class));
+                JSONObject metricsJson = new JSONObject(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/metrics", String.class));
                 Metrics metrics = buildMetricsFromJsonResponse(metricsJson);
 
                 if (metricsMap.containsKey(instance.getId())) {
