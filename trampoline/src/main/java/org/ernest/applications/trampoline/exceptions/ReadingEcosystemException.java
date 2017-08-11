@@ -1,5 +1,5 @@
 package org.ernest.applications.trampoline.exceptions;
 
-public class ReadingEcosystemException extends Exception {
+public class ReadingEcosystemException extends RuntimeException {
 
 }

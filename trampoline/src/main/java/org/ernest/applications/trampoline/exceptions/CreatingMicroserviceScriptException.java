@@ -1,5 +1,5 @@
 package org.ernest.applications.trampoline.exceptions;
 
-public class CreatingMicroserviceScriptException extends Exception {
+public class CreatingMicroserviceScriptException extends RuntimeException {
 
 }
