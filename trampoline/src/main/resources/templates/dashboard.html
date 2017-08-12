@@ -20,6 +20,12 @@
     <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'/>
     <link th:href="@{/v2/css/themify-icons.css}" rel="stylesheet" />
 
+    <style>
+        #logo-img{
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
 
@@ -30,6 +36,7 @@
                 <a href="http://www.creative-tim.com" class="simple-text">
                    Trampoline
                 </a>
+                <img id="logo-img" th:src="@{/img/logo.png}" alt="" />
             </div>
 
             <ul class="nav">
@@ -98,7 +105,7 @@
                                     <div class="col-xs-7">
                                         <div class="numbers">
                                             <p>Ms Registered</p>
-                                            25
+                                            <span th:text="${microservicesRegistered}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -110,14 +117,14 @@
                             <div class="content">
                                 <div class="row">
                                     <div class="col-xs-5">
-                                        <div class="icon-big icon-danger text-center">
+                                        <div class="icon-big icon-warning text-center">
                                             <i class="ti-signal"></i>
                                         </div>
                                     </div>
                                     <div class="col-xs-7">
                                         <div class="numbers">
                                             <p>Maven Introduced</p>
-                                            No
+                                            <span th:text="${mavenHomeLocationMessage}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -131,13 +138,13 @@
                                 <div class="row">
                                     <div class="col-xs-5">
                                         <div class="icon-big icon-success text-center">
-                                            <i class="ti-check-box"></i>
+                                            <i class="ti-flag-alt-2"></i>
                                         </div>
                                     </div>
                                     <div class="col-xs-7">
                                         <div class="numbers">
-                                            <p>Deployed Instances</p>
-                                            12
+                                            <p>Started Instances</p>
+                                            <span th:text="${instancesSize}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -150,14 +157,14 @@
                             <div class="content">
                                 <div class="row">
                                     <div class="col-xs-5">
-                                        <div class="icon-big icon-danger text-center">
-                                            <i class="ti-na"></i>
+                                        <div class="icon-big icon-primary text-center">
+                                            <i class="ti-harddrives"></i>
                                         </div>
                                     </div>
                                     <div class="col-xs-7">
                                         <div class="numbers">
-                                            <p>Not Deployed Instances</p>
-                                            3
+                                            <p>Java Version</p>
+                                            <span th:text="${javaVersion}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -171,21 +178,15 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">Instances Statistics</h4>
-                                <p class="category">Instances Status</p>
+                                <h4 class="title">Memory Statistics</h4>
+                                <p class="category">Memory Status</p>
                             </div>
                             <div class="content">
-                                <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
-
+                                <canvas id="memory-pie" width="850" height="700"></canvas>
                                 <div class="footer">
-                                    <div class="chart-legend">
-                                        <i class="fa fa-circle text-info"></i> Deployed
-                                        <i class="fa fa-circle text-danger"></i> Not Deployed
-                                        <i class="fa fa-circle text-warning"></i> Waiting
-                                    </div>
                                     <hr/>
                                     <div class="stats">
-                                        <i class="ti-check"></i> Data information certified
+                                        <i class="ti-timer"></i> Updating content every 20 seconds
                                     </div>
                                 </div>
                             </div>
@@ -194,20 +195,15 @@
                     <div class="col-md-6">
                         <div class="card ">
                             <div class="header">
-                                <h4 class="title">Instances Statistics</h4>
-                                <p class="category">Instances Status</p>
+                                <h4 class="title">Memory Statistics</h4>
+                                <p class="category">Memory Status</p>
                             </div>
                             <div class="content">
-                                <div id="chartActivity" class="ct-chart"></div>
-
+                                <canvas id="memory-line" width="850" height="700"></canvas>
                                 <div class="footer">
-                                    <div class="chart-legend">
-                                        <i class="fa fa-circle text-info"></i> Deployed
-                                        <i class="fa fa-circle text-warning"></i> Not Deployed
-                                    </div>
                                     <hr/>
                                     <div class="stats">
-                                        <i class="ti-check"></i> Data information certified
+                                        <i class="ti-timer"></i> Updating content every 20 seconds
                                     </div>
                                 </div>
                             </div>
@@ -238,6 +234,9 @@
 <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js" />
+<script type="text/javascript" th:src="@{/v2/js/app/dashboard.js}"></script>
+
 
 
 	<script type="text/javascript">

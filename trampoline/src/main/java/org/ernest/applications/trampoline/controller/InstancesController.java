@@ -6,8 +6,8 @@ import org.ernest.applications.trampoline.entities.Microservice;
 import org.ernest.applications.trampoline.entities.TraceActuator;
 import org.ernest.applications.trampoline.exceptions.*;
 import org.ernest.applications.trampoline.services.EcosystemManager;
-import org.ernest.applications.trampoline.services.MetricsCollector;
-import org.ernest.applications.trampoline.services.TraceParser;
+import org.ernest.applications.trampoline.collectors.MetricsCollector;
+import org.ernest.applications.trampoline.collectors.TraceCollector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +32,7 @@ public class InstancesController {
 	MetricsCollector metricsCollector;
 
 	@Autowired
-	TraceParser traceParser;
+	TraceCollector traceCollector;
 
 	@RequestMapping("")
     public String getInstanceView(Model model) {
@@ -76,6 +76,6 @@ public class InstancesController {
 	@RequestMapping(value= "/traces", method = RequestMethod.POST)
 	@ResponseBody
 	public List<TraceActuator> getTraces(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException {
-		return traceParser.getTraces(id);
+		return traceCollector.getTraces(id);
 	}
 }

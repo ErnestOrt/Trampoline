@@ -10,8 +10,8 @@ import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptEx
 import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
 import org.ernest.applications.trampoline.exceptions.ShuttingDownInstanceException;
 import org.ernest.applications.trampoline.services.EcosystemManager;
-import org.ernest.applications.trampoline.services.MetricsCollector;
-import org.ernest.applications.trampoline.services.TraceParser;
+import org.ernest.applications.trampoline.collectors.MetricsCollector;
+import org.ernest.applications.trampoline.collectors.TraceCollector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +35,7 @@ public class HomeController {
 	MetricsCollector metricsCollector;
 
 	@Autowired
-	TraceParser traceParser;
+	TraceCollector traceCollector;
 
 	@RequestMapping("/trampoline")
     public String greeting(Model model) throws CreatingSettingsFolderException, ReadingEcosystemException{
@@ -104,6 +104,6 @@ public class HomeController {
 	@RequestMapping(value= "/traces", method = RequestMethod.POST)
 	@ResponseBody
 	public List<TraceActuator> getTraces(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException {
-		return traceParser.getTraces(id);
+		return traceCollector.getTraces(id);
 	}
 }

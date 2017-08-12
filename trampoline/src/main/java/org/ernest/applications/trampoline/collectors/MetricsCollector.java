@@ -1,9 +1,10 @@
-package org.ernest.applications.trampoline.services;
+package org.ernest.applications.trampoline.collectors;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.ernest.applications.trampoline.entities.Metrics;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
+import org.ernest.applications.trampoline.services.EcosystemManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;

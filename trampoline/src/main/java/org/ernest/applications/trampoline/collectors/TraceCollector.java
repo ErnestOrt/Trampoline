@@ -1,9 +1,10 @@
-package org.ernest.applications.trampoline.services;
+package org.ernest.applications.trampoline.collectors;
 
 import org.ernest.applications.trampoline.entities.Instance;
 import org.ernest.applications.trampoline.entities.TraceActuator;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
+import org.ernest.applications.trampoline.services.EcosystemManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class TraceParser {
+public class TraceCollector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollector.class);
 
