@@ -1,3 +1,14 @@
+var metricsCharts;
+
+function killInstance(instanceId){
+	$.ajax({
+	    url : "/instances/killinstance",
+	    type: "POST",
+	    data : {id: instanceId},
+	    success: function(data, textStatus, jqXHR) { location.reload(); }
+	});
+}
+
 function updateStartInstanceForm(){
     if($("#input-start-microservice").val() != -1){
         $.ajax({
@@ -20,7 +31,8 @@ function updateStartInstanceForm(){
 }
 
 function startInstance(){
-    if($("#input-start-microservice").val() == "-1" || $("#input-start-port").val() == '' || $("#input-start-prefix").val() == '' || $("#input-start-pom").val() == '' || $("#input-start-arguments").val() == ''){
+    cleaningNewMicroserviceFrom();
+    if($("#input-start-microservice").val() == "-1" || $("#input-start-port").val() == '' || $("#input-start-pom").val() == ''){
     			checkEachNewMicroserviceFromField();
     }else{
         $.ajax({
@@ -35,11 +47,9 @@ function startInstance(){
 function cleaningNewMicroserviceFrom(){
 	$("#form-start-microservice").removeClass("has-error");
 	$("#form-start-port").removeClass("has-error");
-	$("#form-start-arguments").removeClass("has-error");
 
 	$("#form-start-microservice").removeClass("has-success");
     $("#form-start-port").removeClass("has-success");
-    $("#form-start-arguments").removeClass("has-success");
 }
 
 function checkEachNewMicroserviceFromField(){
@@ -53,12 +63,6 @@ function checkEachNewMicroserviceFromField(){
         $("#form-start-port").addClass("has-error");
     }else{
         $("#form-start-port").addClass("has-success");
-    }
-
-    if($("#input-start-arguments").val() == ''){
-        $("#form-start-arguments").addClass("has-error");
-    }else{
-        $("#form-start-arguments").addClass("has-success");
     }
 }
 
@@ -91,6 +95,89 @@ function updateStatusInstances(){
 
 setInterval(updateStatusInstances, 15000);
 
+
+function showMetrics(instanceId, name, port){
+    $("#metrics-title").html(name+" : "+port);
+    $("#modal-metrics").modal("show");
+    $.ajax({
+    	    url : "/instances/metrics",
+    	    type: "POST",
+    	    data : {id: instanceId},
+    	    success: function(data, textStatus, jqXHR) {
+    	        dates = [];
+                 dataMemoryFree = [];
+                 usedHeapKB=[];
+              $.each(data, function (index, value) {
+
+                  dates.push(value.date);
+                  dataMemoryFree.push(value.freeMemoryKB);
+                  usedHeapKB.push(value.usedHeapKB)
+                });
+                metricsCharts.config.data = {
+                                              labels: dates,
+                                              datasets: [{
+                                                  label: "Memory Free KB",
+                                                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                                  borderColor: 'rgba(255, 99, 132, 1)',
+                                                  data: dataMemoryFree,
+                                              },
+                                              {
+                                                  label: "Heap Used KB",
+                                                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                  borderColor: 'rgba(54, 162, 235, 1)',
+                                                  data: usedHeapKB,
+                                              }]
+                                          }
+
+              metricsCharts.update();
+    	    }
+    	});
+}
+
+function showTraces(instanceId, name, port){
+    $("#traces-title").html(name+" : "+port);
+    $("#timeline-content").html("");
+    $("#modal-traces").modal("show");
+    $.ajax({
+    	    url : "/instances/traces",
+    	    type: "POST",
+    	    data : {id: instanceId},
+    	    success: function(data, textStatus, jqXHR) {
+    	        $("#timeline-content").html('<div class="line text-muted"></div>')
+              $.each(data, function (index, value) {
+
+                    $("#timeline-content").append('<article class="panel '+(value.status == '200' ? 'panel-success' : 'panel-danger')+' panel-outline">'+
+                                                    '<div class="panel-heading icon">'+
+                                                    '</div>'+
+                                                    '<div class="panel-body">'+
+                                                        '<strong>'+value.date+'</strong> ' + value.status + ' ' + value.method+ ' ' + value.path+
+                                                    '</div>'+
+                                                '</article>');
+                });
+    	    }
+    	});
+}
+
 $( document ).ready(function() {
 	updateStatusInstances();
+	var ctx = document.getElementById('metrics-chart').getContext('2d');
+        metricsCharts = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "Memory Free KB",
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    data: [],
+                },
+                {
+                    label: "Heap Used KB",
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    data: [],
+                }]
+            },
+            options: {}
+        });
 });

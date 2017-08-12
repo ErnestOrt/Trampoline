@@ -23,7 +23,7 @@ public class SettingsController {
 	@Autowired
 	EcosystemManager ecosystemManager;
 
-	@RequestMapping("/")
+	@RequestMapping("")
     public String getSettingsView(Model model) {
 		Ecosystem ecosystem = ecosystemManager.getEcosystem();
 

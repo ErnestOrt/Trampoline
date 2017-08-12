@@ -15,6 +15,7 @@
     <link th:href="@{/v2/css/animate.min.css}" rel="stylesheet" />
     <link th:href="@{/v2/css/paper-dashboard.css}" rel="stylesheet" />
     <link th:href="@{/v2/css/demo.css}" rel="stylesheet" />
+    <link th:href="@{/v2/css/timeline.css}" rel="stylesheet" />
 
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
     <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'/>
@@ -114,24 +115,22 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group" id="form-start-prefix">
-                                                <label for="exampleInputEmail1">Actuator Prefix</label>
+                                                <label>Actuator Prefix</label>
                                                 <input id="input-start-prefix" type="text" class="form-control border-input" disabled="true" placeholder=""/>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group" id="form-start-pom">
-                                                <label>Pom location</label>
-                                                <input id="input-start-pom" type="text" class="form-control border-input" disabled="true" placeholder=""/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="form-group" id="form-start-arguments">
                                                 <label>VM Arguments</label>
                                                 <input id="input-start-arguments" type="text" class="form-control border-input" placeholder=""/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" id="form-start-pom">
+                                                <label>Pom location</label>
+                                                <input id="input-start-pom" type="text" class="form-control border-input" disabled="true" placeholder=""/>
                                             </div>
                                         </div>
                                     </div>
@@ -183,6 +182,41 @@
 
             </div>
         </div>
+        <div id="modal-metrics" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><span id="metrics-title"></span></h4>
+                    </div>
+                    <div class="modal-body" id="#canvas-wrapper">
+                        <canvas id="metrics-chart" width="850" height="700"></canvas>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="modal-traces" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><span id="traces-title"></span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="timeline" id="timeline-content">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
         <footer class="footer">
             <div class="container-fluid">
@@ -227,6 +261,7 @@
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/app/instances.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js" />
 
 
 </html>

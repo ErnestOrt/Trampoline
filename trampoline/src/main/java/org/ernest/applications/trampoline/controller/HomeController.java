@@ -93,12 +93,7 @@ public class HomeController {
     public void killInstance(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, ShuttingDownInstanceException {
 		ecosystemManager.killInstance(id);
     }
-	
-	@RequestMapping(value= "/removenotdeployedinstances", method = RequestMethod.POST)
-	@ResponseBody
-    public void removeNotDeployedInstances() throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
-		ecosystemManager.removeNotDeployedInstances();
-    }
+
 
 	@RequestMapping(value= "/metrics", method = RequestMethod.POST)
 	@ResponseBody
