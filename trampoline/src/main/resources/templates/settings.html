@@ -26,49 +26,7 @@
 <input type="hidden" th:value="${mavenHomeLocation}" id="input-hidden-mavenhomelocation"/>
 
 <div class="wrapper">
-	<div class="sidebar" data-background-color="white" data-active-color="success">
-
-    	<div class="sidebar-wrapper">
-            <div class="logo">
-                <a href="http://ernestort.github.io/Trampoline/" class="simple-text">
-                   Trampoline
-                </a>
-            </div>
-
-            <ul class="nav">
-                <li>
-                    <a href="/">
-                        <i class="ti-stats-up"></i>
-                        <p>Dashboard</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/instances">
-                        <i class="ti-view-list-alt"></i>
-                        <p>Instances</p>
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="/settings">
-                        <i class="ti-panel"></i>
-                        <p>Settings</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://github.com/ErnestOrt/Trampoline">
-                        <i class="ti-github"></i>
-                        <p>Project Repo</p>
-                    </a>
-                </li>
-                <li class="active-pro">
-                    <a href="mailto:ernest.ort.tor@gmail.com">
-                        <i class="ti-comments"></i>
-                        <p>FeedBack</p>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <div th:include="fragments/menu :: menu-bar(selected='Settings')" ></div>
 
     <div class="main-panel">
 		<nav class="navbar navbar-default">
@@ -199,31 +157,7 @@
         </div>
 
         <footer class="footer">
-            <div class="container-fluid">
-                <nav class="pull-left">
-                    <ul>
-
-                        <li>
-                            <a href="http://www.creative-tim.com">
-                                Creative Tim
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://blog.creative-tim.com">
-                                Blog
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://www.creative-tim.com/license">
-                                Licenses
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="copyright pull-right">
-                    &copy; <script>document.write(new Date().getFullYear())</script>, made with <i class="fa fa-heart heart"></i> by <a href="http://www.creative-tim.com">Creative Tim</a>
-                </div>
-            </div>
+            <div th:include="fragments/footer :: footer-bar" ></div>
         </footer>
 
     </div>
@@ -234,7 +168,6 @@
 
 <script type="text/javascript" th:src="@{/v2/js/jquery-1.10.2.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>
-<script type="text/javascript" th:src="@{/v2/js/chartist.min.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>

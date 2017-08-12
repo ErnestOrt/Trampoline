@@ -33,7 +33,7 @@ function updateLineChart(dataRetrieved){
     lineChart.config.data = {
                                   labels: dates,
                                   datasets: [{
-                                      label: "Memory Free [MB]",
+                                      label: "Free Memory [MB]",
                                       backgroundColor: 'rgba(255, 99, 132, 0.2)',
                                       borderColor: 'rgba(255, 99, 132, 1)',
                                       data: dataMemoryFree,

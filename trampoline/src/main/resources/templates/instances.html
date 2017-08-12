@@ -25,49 +25,7 @@
 <body>
 
 <div class="wrapper">
-	<div class="sidebar" data-background-color="white" data-active-color="success">
-
-    	<div class="sidebar-wrapper">
-            <div class="logo">
-                <a href="http://www.creative-tim.com" class="simple-text">
-                    Trampoline
-                </a>
-            </div>
-
-            <ul class="nav">
-                <li>
-                    <a href="/">
-                        <i class="ti-stats-up"></i>
-                        <p>Dashboard</p>
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="/instances">
-                        <i class="ti-view-list-alt"></i>
-                        <p>Instances</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/settings">
-                        <i class="ti-panel"></i>
-                        <p>Settings</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://github.com/ErnestOrt/Trampoline">
-                        <i class="ti-github"></i>
-                        <p>Project Repo</p>
-                    </a>
-                </li>
-                <li class="active-pro">
-                    <a href="mailto:ernest.ort.tor@gmail.com">
-                        <i class="ti-comments"></i>
-                        <p>FeedBack</p>
-                    </a>
-                </li>
-            </ul>
-    	</div>
-    </div>
+    <div th:include="fragments/menu :: menu-bar(selected='Instances')" ></div>
 
     <div class="main-panel">
 		<nav class="navbar navbar-default">
@@ -164,9 +122,9 @@
                                     <tbody>
                                         <tr th:each="instance, itemIter : ${instances}" class="even gradeA">
                                             <td th:text="${itemIter.count}"></td>
-                                            <td th:text="${instance.name}"></td>
+                                            <td th:id="'td-name-' + ${instance.id}" th:text="${instance.name}"></td>
                                             <td th:text="${instance.pomLocation}"></td>
-                                            <td class="center" th:text="${instance.port}"></td>
+                                            <td th:id="'td-port-' + ${instance.id}"  class="center" th:text="${instance.port}"></td>
                                             <td class="center"><span class="label label-warning" th:id="'label-status-' + ${instance.id}">Waiting</span></td>
                                             <td class="center"><button type="button" th:onclick="'showTraces(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-warning btn-sm"><i class="fa fa-lg fa-book" aria-hidden="true"></i></button></td>
                                             <td class="center"><button type="button" th:onclick="'showMetrics(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-info btn-sm"><i class="fa fa-lg fa-line-chart" aria-hidden="true"></i></button></td>
@@ -219,31 +177,7 @@
         </div>
 
         <footer class="footer">
-            <div class="container-fluid">
-                <nav class="pull-left">
-                    <ul>
-
-                        <li>
-                            <a href="http://www.creative-tim.com">
-                                Creative Tim
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://blog.creative-tim.com">
-                               Blog
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://www.creative-tim.com/license">
-                                Licenses
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-				<div class="copyright pull-right">
-                    &copy; <script>document.write(new Date().getFullYear())</script>, made with <i class="fa fa-heart heart"></i> by <a href="http://www.creative-tim.com">Creative Tim</a>
-                </div>
-            </div>
+            <div th:include="fragments/footer :: footer-bar" ></div>
         </footer>
 
 
@@ -256,7 +190,6 @@
 
 <script type="text/javascript" th:src="@{/v2/js/jquery-1.10.2.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>
-<script type="text/javascript" th:src="@{/v2/js/chartist.min.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>

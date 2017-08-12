@@ -76,17 +76,55 @@ function updateStatusInstances(){
 		    success: function(data, textStatus, jqXHR) {
 		    	$("#"+item.id).removeClass("label-warning");
 		    	if(data == "deployed"){
-		    		 $("#"+item.id).removeClass("label-success");
-                     $("#"+item.id).removeClass("label-danger");
 
-		    		 $("#"+item.id).addClass("label-success");
-		    		 $("#"+item.id).text("Deployed");
+		    	     if( $("#"+item.id).text() != "Deployed"){
+		    	        if( $("#"+item.id).text() == "Not Deployed"){
+                            $.notify({
+                                icon: "ti-check-box",
+                                message: "Microservice has been <b>successfully</b> deployed"
+
+                             },{
+                                 type: 'success',
+                                 timer: 3000,
+                                 placement: {
+                                     from: 'top',
+                                     align: 'right'
+                                 }
+                             });
+                         }
+                         $("#"+item.id).removeClass("label-success");
+                         $("#"+item.id).removeClass("label-danger");
+
+                         $("#"+item.id).addClass("label-success");
+                         $("#"+item.id).text("Deployed");
+                     }
+
+
 		    	}else{
-		    	    $("#"+item.id).removeClass("label-success");
-                	$("#"+item.id).removeClass("label-danger");
 
-		    		$("#"+item.id).addClass("label-danger");
-		    		$("#"+item.id).text("Not Deployed")
+		    	    if( $("#"+item.id).text() != "Not Deployed"){
+		    	         if( $("#"+item.id).text() == "Deployed"){
+                            $.notify({
+                                icon: "ti-more-alt",
+                                message: "Microservice has been <b>stopped</b>"
+
+                             },{
+                                 type: 'danger',
+                                 timer: 3000,
+                                 placement: {
+                                     from: 'top',
+                                     align: 'right'
+                                 }
+                             });
+                         }
+                         $("#"+item.id).removeClass("label-success");
+                         $("#"+item.id).removeClass("label-danger");
+
+                         $("#"+item.id).addClass("label-danger");
+                         $("#"+item.id).text("Not Deployed")
+                     }
+
+
 		    	}
 		    }
 		});

@@ -20,59 +20,11 @@
     <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'/>
     <link th:href="@{/v2/css/themify-icons.css}" rel="stylesheet" />
 
-    <style>
-        #logo-img{
-            display: block;
-            margin: 0 auto;
-        }
-    </style>
 </head>
 <body>
 
 <div class="wrapper">
-    <div class="sidebar" data-background-color="white" data-active-color="success">
-    	<div class="sidebar-wrapper">
-            <div class="logo">
-                <a href="http://www.creative-tim.com" class="simple-text">
-                   Trampoline
-                </a>
-                <img id="logo-img" th:src="@{/img/logo.png}" alt="" />
-            </div>
-
-            <ul class="nav">
-                <li class="active">
-                    <a href="/">
-                        <i class="ti-stats-up"></i>
-                        <p>Dashboard</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/instances">
-                        <i class="ti-view-list-alt"></i>
-                        <p>Instances</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/settings">
-                        <i class="ti-panel"></i>
-                        <p>Settings</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://github.com/ErnestOrt/Trampoline">
-                        <i class="ti-github"></i>
-                        <p>Project Repo</p>
-                    </a>
-                </li>
-                <li class="active-pro">
-                    <a href="mailto:ernest.ort.tor@gmail.com">
-                        <i class="ti-comments"></i>
-                        <p>FeedBack</p>
-                    </a>
-                </li>
-            </ul>
-    	</div>
-    </div>
+    <div th:include="fragments/menu :: menu-bar(selected='Dashboard')" ></div>
 
     <div class="main-panel">
         <nav class="navbar navbar-default">
@@ -215,11 +167,7 @@
 
 
         <footer class="footer">
-            <div class="container-fluid">
-                <div class="copyright pull-right">
-                    &copy; <script>document.write(new Date().getFullYear())</script>, made with <i class="fa fa-heart heart"></i> by <a href="http://ernestort.github.io/Trampoline/">Trampoline Team</a>
-                </div>
-            </div>
+            <div th:include="fragments/footer :: footer-bar" ></div>
         </footer>
 
     </div>
@@ -230,7 +178,6 @@
 
 <script type="text/javascript" th:src="@{/v2/js/jquery-1.10.2.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>
-<script type="text/javascript" th:src="@{/v2/js/chartist.min.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
@@ -241,9 +188,6 @@
 
 	<script type="text/javascript">
     	$(document).ready(function(){
-
-        	demo.initChartist();
-
         	$.notify({
             	icon: 'ti-gift',
             	message: "Welcome to <b>Trampoline</b>, your help during the course of developing an application based on the paradigm of microservices with spring boot nature."

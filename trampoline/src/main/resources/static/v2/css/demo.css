@@ -68,3 +68,8 @@
 .table-upgrade td:nth-child(3){
     text-align: center;
 }
+
+#logo-img{
+    display: block;
+    margin: 0 auto;
+}
