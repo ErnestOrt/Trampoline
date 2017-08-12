@@ -15,6 +15,7 @@
     <link th:href="@{/v2/css/animate.min.css}" rel="stylesheet" />
     <link th:href="@{/v2/css/paper-dashboard.css}" rel="stylesheet" />
     <link th:href="@{/v2/css/demo.css}" rel="stylesheet" />
+    <link th:href="@{/v2/css/loading.css}" rel="stylesheet" />
 
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
     <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'/>
@@ -22,7 +23,12 @@
 
 </head>
 <body>
-
+<div class="front-loading">
+    <div class="spinner">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+    </div>
+</div>
 <input type="hidden" th:value="${mavenHomeLocation}" id="input-hidden-mavenhomelocation"/>
 
 <div class="wrapper">

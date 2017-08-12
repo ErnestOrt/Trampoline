@@ -2,12 +2,17 @@ function setMavenInformation(){
 	if($("#input-mavenhomelocation").val() == ''){
 		$("#form-mavenhomelocation").addClass("has-error");
 	}else{
+	    $('.front-loading').show();
 		$.ajax({
-		    url : "/settings/setmavenhomelocation",
+		    url : "/settings/setmaven",
 		    type: "POST",
 		    data : {mavenHomeLocationPath: $("#input-mavenhomelocation").val(),
 		            mavenBinaryLocationPath: $("#input-mavenbinarylocation").val()},
-		    success: function(data, textStatus, jqXHR) { location.reload(); }
+		    success: function(data, textStatus, jqXHR) { location.reload(); },
+             error: function (request, status, error) {
+                  $('.front-loading').hide();
+                   alert(request.responseText);
+               }
 		});
 	}
 }
@@ -20,13 +25,18 @@ function setNewMicroservice(){
 		if($("#input-newmicroservice-name").val() == '' || $("#input-newmicroservice-pomlocation").val() == '' || $("#input-newmicroservice-defaultport").val() == ''){
 			checkEachNewMicroserviceFromField();
 		}else{
+		    $('.front-loading').show();
 			$.ajax({
 			    url : "/settings/setnewmicroservice",
 			    type: "POST",
 			    data : {name: $("#input-newmicroservice-name").val(), pomLocation: $("#input-newmicroservice-pomlocation").val(), defaultPort: $("#input-newmicroservice-defaultport").val(),
 			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val(),
 			    	    vmArguments: $("#input-newmicroservice-vmarguments").val()},
-			    success: function(data, textStatus, jqXHR) { location.reload(); }
+			    success: function(data, textStatus, jqXHR) { location.reload(); },
+                 error: function (request, status, error) {
+                      $('.front-loading').hide();
+                       alert(request.responseText);
+                   }
 			});
 		}
 	}
@@ -61,10 +71,20 @@ function checkEachNewMicroserviceFromField(){
 }
 
 function removeMicroservice(microserviceId){
+    $('.front-loading').show();
 	$.ajax({
 	    url : "/settings/removemicroservice",
 	    type: "POST",
 	    data : {id: microserviceId},
-	    success: function(data, textStatus, jqXHR) { location.reload(); }
+	    success: function(data, textStatus, jqXHR) { location.reload(); },
+        error: function (request, status, error) {
+              $('.front-loading').hide();
+               alert(request.responseText);
+           }
 	});
 }
+
+$( document ).ready(function() {
+    $(".front-loading").hide();
+    $(".front-loading").height($("body").height());
+});

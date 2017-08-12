@@ -1,16 +1,22 @@
 var metricsCharts;
 
 function killInstance(instanceId){
+    $('.front-loading').show();
 	$.ajax({
 	    url : "/instances/killinstance",
 	    type: "POST",
 	    data : {id: instanceId},
-	    success: function(data, textStatus, jqXHR) { location.reload(); }
+	    success: function(data, textStatus, jqXHR) { location.reload(); },
+	    error: function (request, status, error) {
+            $('.front-loading').hide();
+             alert(request.responseText);
+         }
 	});
 }
 
 function updateStartInstanceForm(){
     if($("#input-start-microservice").val() != -1){
+        $('.front-loading').show();
         $.ajax({
         	    url : "/instances/instanceinfo",
         	    type: "POST",
@@ -20,7 +26,12 @@ function updateStartInstanceForm(){
         	        $("#input-start-prefix").val(data.actuatorPrefix);
         	        $("#input-start-pom").val(data.pomLocation);
         	        $("#input-start-arguments").val(data.vmArguments);
-        	    }
+        	        $('.front-loading').hide();
+        	    },
+        	    error: function (request, status, error) {
+                    $('.front-loading').hide();
+                     alert(request.responseText);
+                 }
         	});
     }else{
         $("#input-start-port").val("");
@@ -35,11 +46,16 @@ function startInstance(){
     if($("#input-start-microservice").val() == "-1" || $("#input-start-port").val() == '' || $("#input-start-pom").val() == ''){
     			checkEachNewMicroserviceFromField();
     }else{
+        $('.front-loading').show();
         $.ajax({
             url : "/instances/startinstance",
             type: "POST",
             data : {id: $("#input-start-microservice").val(), port: $("#input-start-port").val(), vmArguments: $("#input-start-arguments").val()},
-            success: function(data, textStatus, jqXHR) { location.reload(); }
+            success: function(data, textStatus, jqXHR) { location.reload(); },
+            error: function (request, status, error) {
+                 $('.front-loading').hide();
+                  alert(request.responseText);
+              }
         });
 	}
 }
@@ -197,6 +213,8 @@ function showTraces(instanceId, name, port){
 }
 
 $( document ).ready(function() {
+    $(".front-loading").hide();
+    $(".front-loading").height($("body").height());
 	updateStatusInstances();
 	var ctx = document.getElementById('metrics-chart').getContext('2d');
         metricsCharts = new Chart(ctx, {
