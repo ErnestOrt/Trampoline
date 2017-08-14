@@ -87,7 +87,6 @@ public class EcosystemManager {
 			new ClientRequest("http://localhost:" + instance.getPort() + instance.getActuatorPrefix() + "/shutdown").post(String.class);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new ShuttingDownInstanceException();
 		}
 		
 		ecosystem.setInstances(ecosystem.getInstances().stream().filter(i -> !i.getId().equals(id)).collect(Collectors.toList()));
@@ -101,12 +100,6 @@ public class EcosystemManager {
 			return StatusInstance.DEPLOYED.getCode();
 		}
 		return StatusInstance.NOT_DEPLOYED.getCode();
-	}
-
-	public void removeNotDeployedInstances() throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
-		Ecosystem ecosystem = fileManager.getEcosystem();
-		ecosystem.setInstances(ecosystem.getInstances().stream().filter(i -> isDeployed(i)).collect(Collectors.toList()));
-		fileManager.saveEcosystem(ecosystem);
 	}
 
 	private boolean isDeployed(Instance instance) {

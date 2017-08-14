@@ -1,0 +1,203 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png"/>
+	<link rel="icon" type="image/png" sizes="96x96" href="assets/img/favicon.png"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<title>Trampoline - Manage local Spring Boot instances</title>
+
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+    <link th:href="@{/v2/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/v2/css/animate.min.css}" rel="stylesheet" />
+    <link th:href="@{/v2/css/paper-dashboard.css}" rel="stylesheet" />
+    <link th:href="@{/v2/css/demo.css}" rel="stylesheet" />
+
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'/>
+    <link th:href="@{/v2/css/themify-icons.css}" rel="stylesheet" />
+
+</head>
+<body>
+
+<div class="wrapper">
+    <div th:include="fragments/menu :: menu-bar(selected='Dashboard')" ></div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Dashboard</a>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-info text-center">
+                                            <i class="ti-server"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+                                            <p>Ms Registered</p>
+                                            <span th:text="${microservicesRegistered}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-warning text-center">
+                                            <i class="ti-signal"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+                                            <p>Maven Introduced</p>
+                                            <span th:text="${mavenHomeLocationMessage}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-success text-center">
+                                            <i class="ti-flag-alt-2"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+                                            <p>Started Instances</p>
+                                            <span th:text="${instancesSize}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-primary text-center">
+                                            <i class="ti-harddrives"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+                                            <p>Java Version</p>
+                                            <span th:text="${javaVersion}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Memory Statistics</h4>
+                                <p class="category">Memory Status</p>
+                            </div>
+                            <div class="content">
+                                <canvas id="memory-pie" width="850" height="700"></canvas>
+                                <div class="footer">
+                                    <hr/>
+                                    <div class="stats">
+                                        <i class="ti-timer"></i> Updating content every 20 seconds
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card ">
+                            <div class="header">
+                                <h4 class="title">Memory Statistics</h4>
+                                <p class="category">Memory Status</p>
+                            </div>
+                            <div class="content">
+                                <canvas id="memory-line" width="850" height="700"></canvas>
+                                <div class="footer">
+                                    <hr/>
+                                    <div class="stats">
+                                        <i class="ti-timer"></i> Updating content every 20 seconds
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <footer class="footer">
+            <div th:include="fragments/footer :: footer-bar" ></div>
+        </footer>
+
+    </div>
+</div>
+
+
+</body>
+
+<script type="text/javascript" th:src="@{/v2/js/jquery-1.10.2.js}"></script>
+<script type="text/javascript" th:src="@{/v2/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.js}"></script>
+<script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
+<script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
+<script type="text/javascript" th:src="@{/v2/js/Chart.min.js}"></script>
+<script type="text/javascript" th:src="@{/v2/js/app/dashboard.js}"></script>
+
+
+
+	<script type="text/javascript">
+    	$(document).ready(function(){
+        	$.notify({
+            	icon: 'ti-gift',
+            	message: "Welcome to <b>Trampoline</b>, your help during the course of developing an application based on the paradigm of microservices with spring boot nature."
+
+            },{
+                type: 'success',
+                timer: 4000
+            });
+
+    	});
+	</script>
+
+</html>

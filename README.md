@@ -11,7 +11,7 @@ The aim is to **help during the course of developing an application based on the
 Also you will be able to:
 * Configurable Actuator endpoint & VM arguments
 * Monitor memory usage for each instance, capturing their metrics every 30 seconds.
-* Monitor intances traces any point in time
+* Monitor intances trace information any point in time
 
 ### Requirements
 
@@ -23,7 +23,7 @@ Also you will be able to:
 ### How do I make it work?
 
 1. You just have to start the project trampoline and start it with the well known command mvn spring-boot:run. 
-2. Once started, go to [localhost:8080/trampoline](http://localhost:8080/trampoline). 
+2. Once started, go to [localhost:8080](http://localhost:8080). 
 3. Once there, the only thing you should do is enter the path to your apache maven. 
 4. Finally you just have to declare your microservices and to start and/or to stop them as you wish.
 
