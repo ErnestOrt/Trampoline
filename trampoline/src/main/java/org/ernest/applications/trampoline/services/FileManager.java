@@ -1,7 +1,10 @@
 package org.ernest.applications.trampoline.services;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
 import org.ernest.applications.trampoline.entities.Ecosystem;
@@ -78,8 +81,8 @@ public class FileManager {
 				commands = commands.replace("#mavenHomeLocation", mavenHomeLocation);
 				commands = commands.replace("#port", port);
 				commands = commands.replace("#vmArguments", vmArguments);
-				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \""+commands+"\"");
 
+				new ProcessBuilder("cmd.exe", "/c", commands).start();
 			}else{
 				new ProcessBuilder("sh", getSettingsFolder() + "/" + id + ".sh", mavenHomeLocation, mavenBinaryLocation, port, vmArguments).start();
 			}
