@@ -15,10 +15,9 @@ Also you will be able to:
 
 ### Requirements
 
-* Java 8
-* Apache Maven
-* Enable shutdown endpoint on your Spring Boot microservices
+* Java 8 & Apache Maven
 * Start actuator sub-project of Spring Boot on your microservices
+* Set up logging.path property your microservices in order to be able to visulize them
 
 ### How do I make it work?
 
@@ -30,11 +29,7 @@ Also you will be able to:
 ### FAQ
 * How does the UI look like?
 
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/ScreenshotTrampoline.png)
-
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/ScreenshotTrampolineMetrics.png)
-
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/ScreenshotTrampolineTraces.png)
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI.png)
 
 * I am working with Spring Boot 1.3 or less and instances do not start.
 
