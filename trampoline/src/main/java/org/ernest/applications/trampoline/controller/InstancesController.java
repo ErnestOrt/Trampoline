@@ -8,6 +8,7 @@ import org.ernest.applications.trampoline.exceptions.*;
 import org.ernest.applications.trampoline.services.EcosystemManager;
 import org.ernest.applications.trampoline.collectors.MetricsCollector;
 import org.ernest.applications.trampoline.collectors.TraceCollector;
+import org.ernest.applications.trampoline.utils.PortsChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,5 +78,13 @@ public class InstancesController {
 	@ResponseBody
 	public List<TraceActuator> getTraces(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException {
 		return traceCollector.getTraces(id);
+	}
+
+	@RequestMapping(value= "/checkport", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean checkPort(@RequestParam(value="port") int port) throws CreatingSettingsFolderException, ReadingEcosystemException {
+		boolean declaredInstanceOnPort = ecosystemManager.getEcosystem().getInstances().stream().anyMatch(i -> i.getPort().equals(String.valueOf(port)));
+
+		return declaredInstanceOnPort == false ? PortsChecker.available(port) : false;
 	}
 }

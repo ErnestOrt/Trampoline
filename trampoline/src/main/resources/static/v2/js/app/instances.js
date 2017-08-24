@@ -41,23 +41,57 @@ function updateStartInstanceForm(){
     }
 }
 
-function startInstance(){
+function validateNewInstance(){
     cleaningNewMicroserviceFrom();
     if($("#input-start-microservice").val() == "-1" || $("#input-start-port").val() == '' || $("#input-start-pom").val() == ''){
     			checkEachNewMicroserviceFromField();
     }else{
-        $('.front-loading').show();
         $.ajax({
-            url : "/instances/startinstance",
+            url : "/instances/checkport",
             type: "POST",
-            data : {id: $("#input-start-microservice").val(), port: $("#input-start-port").val(), vmArguments: $("#input-start-arguments").val()},
-            success: function(data, textStatus, jqXHR) { location.reload(); },
+            data : {port: $("#input-start-port").val()},
+            success: function(data, textStatus, jqXHR) {
+                if(data == true){
+                    startInstance();
+                }else{
+                    $("#form-start-port").removeClass("has-error");
+                    $("#form-start-port").removeClass("has-success");
+                    $("#form-start-port").addClass("has-error");
+
+                     $.notify({
+                        icon: "ti-more-alt",
+                        message: "PORT <b>"+$("#input-start-port").val()+"</b> is already used by other instances or other process. Remove old instance before creating a new instance on this port."
+
+                     },{
+                         type: 'danger',
+                         timer: 3000,
+                         placement: {
+                             from: 'top',
+                             align: 'right'
+                         }
+                     });
+                }
+            },
             error: function (request, status, error) {
                  $('.front-loading').hide();
                   alert(request.responseText);
               }
         });
 	}
+}
+
+function startInstance(){
+    $('.front-loading').show();
+    $.ajax({
+        url : "/instances/startinstance",
+        type: "POST",
+        data : {id: $("#input-start-microservice").val(), port: $("#input-start-port").val(), vmArguments: $("#input-start-arguments").val()},
+        success: function(data, textStatus, jqXHR) { location.reload(); },
+        error: function (request, status, error) {
+             $('.front-loading').hide();
+              alert(request.responseText);
+          }
+    });
 }
 
 function cleaningNewMicroserviceFrom(){
