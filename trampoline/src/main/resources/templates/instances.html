@@ -66,7 +66,7 @@
                                             <div class="form-group" id="form-start-microservice">
                                                 <label>Microservice</label>
                                                 <select id="input-start-microservice" onchange="updateStartInstanceForm()" class="form-control border-input">
-                                                    <option text="Select one service..." value="-1"></option>
+                                                    <option value="-1">Select one service...</option>
                                                     <option th:each="microservice : ${microservices}" th:text="${microservice.name}" th:value="${microservice.id}"></option>
                                                </select>
                                             </div>

@@ -82,7 +82,7 @@ public class FileManager {
 				commands = commands.replace("#port", port);
 				commands = commands.replace("#vmArguments", vmArguments);
 
-				new ProcessBuilder("cmd.exe", "/c", commands).start();
+				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \""+commands+"\"");
 			}else{
 				new ProcessBuilder("sh", getSettingsFolder() + "/" + id + ".sh", mavenHomeLocation, mavenBinaryLocation, port, vmArguments).start();
 			}
