@@ -26,6 +26,7 @@ function updateStartInstanceForm(){
         	        $("#input-start-prefix").val(data.actuatorPrefix);
         	        $("#input-start-pom").val(data.pomLocation);
         	        $("#input-start-arguments").val(data.vmArguments);
+        	        $("#input-start-buildtool").val(data.buildTool)
         	        $('.front-loading').hide();
         	    },
         	    error: function (request, status, error) {

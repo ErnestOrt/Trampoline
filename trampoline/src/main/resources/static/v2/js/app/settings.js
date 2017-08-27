@@ -30,8 +30,8 @@ function setNewMicroservice(){
 			    url : "/settings/setnewmicroservice",
 			    type: "POST",
 			    data : {name: $("#input-newmicroservice-name").val(), pomLocation: $("#input-newmicroservice-pomlocation").val(), defaultPort: $("#input-newmicroservice-defaultport").val(),
-			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val(),
-			    	    vmArguments: $("#input-newmicroservice-vmarguments").val()},
+			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val(), vmArguments: $("#input-newmicroservice-vmarguments").val(),
+			    	    buildTool: $("#input-newmicroservice-build-tool").val()},
 			    success: function(data, textStatus, jqXHR) { location.reload(); },
                  error: function (request, status, error) {
                       $('.front-loading').hide();
