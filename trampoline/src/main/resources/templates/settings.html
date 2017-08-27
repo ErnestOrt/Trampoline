@@ -63,13 +63,9 @@
                                                 <div class="row">
                                                     <div class="col-xs-8">
                                                         <span th:text="${microservice.name}"></span>
-                                                        <br />
-                                                        <span class="text-success"><small th:text="${microservice.pomLocation}"></small></span>
-                                                        <span class="text-primary"><small th:text="${microservice.defaultPort}"></small></span>
-                                                        <span class="text-success"><small th:text="${microservice.actuatorPrefix}"></small></span>
-                                                        <span class="text-primary"><small th:text="${microservice.vmArguments}"></small></span>
                                                     </div>
                                                     <div class="col-xs-4 text-right">
+                                                        <btn class="btn btn-sm btn-primary btn-icon" th:onclick="'showMicroserviceInformation(\'' + ${microservice.id} + '\')'"><i class="fa fa-info"></i></btn>
                                                         <btn class="btn btn-sm btn-danger btn-icon" th:onclick="'removeMicroservice(\'' + ${microservice.id} + '\')'"><i class="fa fa-trash"></i></btn>
                                                     </div>
                                                 </div>
@@ -168,6 +164,28 @@
 
 
                 </div>
+            </div>
+        </div>
+
+        <div id="modal-microservice-information" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Microservices Registered Information</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Name:<br/><span class="text-success" id="modal-microservice-name"></span></p>
+                        <p>Pom or Build File Location:<br/><span class="text-success" id="modal-microservice-pomLocation"></span></p>
+                        <p>Build Tool:<br/><span class="text-success" id="modal-microservice-buildTool"></span></p>
+                        <p>Default Port:<br/><span class="text-success" id="modal-microservice-defaultPort"></span></p>
+                        <p>Actuator Prefix:<br/><span class="text-success" id="modal-microservice-actuatorPrefix"></span></p>
+                        <p>VM Arguments:<br/><span class="text-success" id="modal-microservice-vmArguments"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
             </div>
         </div>
 

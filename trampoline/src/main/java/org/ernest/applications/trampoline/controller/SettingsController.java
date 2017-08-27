@@ -1,6 +1,7 @@
 package org.ernest.applications.trampoline.controller;
 
 import org.ernest.applications.trampoline.entities.Ecosystem;
+import org.ernest.applications.trampoline.entities.Microservice;
 import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
@@ -55,4 +56,11 @@ public class SettingsController {
 	public void removeMicroservice(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException{
 		ecosystemManager.removeMicroservice(id);
 	}
+
+	@RequestMapping(value= "/microserviceinfo", method = RequestMethod.POST)
+	@ResponseBody
+	public Microservice getMicroserviceInfo(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+		return ecosystemManager.getEcosystem().getMicroservices().stream().filter(m-> m.getId().equals(id)).findFirst().get();
+	}
+
 }

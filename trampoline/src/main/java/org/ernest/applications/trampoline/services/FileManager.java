@@ -95,7 +95,6 @@ public class FileManager {
 				}else{
 					commands = commands.replace("#vmArguments", vmArguments.replaceAll("-D", "&& SET "));
 				}
-				System.out.println(commands);
 				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \""+commands+"\"");
 			}else{
 				new ProcessBuilder("sh", getSettingsFolder() + "/" + microservice.getId() + ".sh", mavenHomeLocation, mavenBinaryLocation, port, vmArguments).start();
