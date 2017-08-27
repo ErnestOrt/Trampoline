@@ -8,3 +8,4 @@ target
 *.class
 .idea
 *.iml
+*.log
