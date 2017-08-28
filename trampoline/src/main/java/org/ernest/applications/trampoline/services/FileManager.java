@@ -15,6 +15,7 @@ import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderExcep
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
 import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
+import org.ernest.applications.trampoline.utils.VMParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -97,7 +98,12 @@ public class FileManager {
 				}
 				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \""+commands+"\"");
 			}else{
-				new ProcessBuilder("sh", getSettingsFolder() + "/" + microservice.getId() + ".sh", mavenHomeLocation, mavenBinaryLocation, port, vmArguments).start();
+				if(microservice.getBuildTool().equals(BuildTools.MAVEN)){
+					new ProcessBuilder("sh", getSettingsFolder() + "/" + microservice.getId() + ".sh", mavenHomeLocation, mavenBinaryLocation, port, vmArguments).start();
+				}else{
+					Runtime.getRuntime().exec("chmod 777 "+microservice.getPomLocation()+"//gradlew");
+					new ProcessBuilder("sh", getSettingsFolder() + "/" + microservice.getId() + ".sh", port, VMParser.toUnixEnviromentVariables(vmArguments)).start();
+				}
 			}
 			
 		} catch (IOException e) {
@@ -118,9 +124,15 @@ public class FileManager {
 							"SET server.port=#port&& SET endpoints.shutdown.enabled=true&& SET management.security.enabled=false #vmArguments&& cd "+microservice.getPomLocation()+" && gradlew.bat bootRun ");
 				}
 			}else{
-				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ microservice.getId() +".sh"),
-					"export M2_HOME=$1; export PATH=$PATH:$2; cd " + microservice.getPomLocation() + "; mvn spring-boot:run -Dserver.port=$3 "
-					+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false $4");
+				if(microservice.getBuildTool().equals(BuildTools.MAVEN)) {
+					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"),
+							"export M2_HOME=$1; export PATH=$PATH:$2; cd " + microservice.getPomLocation() + "; mvn spring-boot:run -Dserver.port=$3 "
+									+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false $4");
+				}else{
+					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"),
+							"export SERVER_PORT=$1; export ENDPOINTS_SHUTDOWN_ENABLED=true; export MANAGEMENT_SECURITY_ENABLED=false $2;  " +
+									"cd " + microservice.getPomLocation() + "; ./gradlew bootRun");
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
