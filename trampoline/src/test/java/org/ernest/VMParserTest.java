@@ -11,7 +11,6 @@ public class VMParserTest {
     public void givenVMArgsWhenParsingToWindowsEnvVariableThemThenResultExpected(){
         Assert.assertEquals("&& SET server.port=true", VMParser.toWindowsEnviromentVariables("-Dserver.port=true"));
         Assert.assertEquals("&& SET server.port=true && SET argument=false", VMParser.toWindowsEnviromentVariables("-Dserver.port=true -Dargument=false"));
-        System.out.println(VMParser.toWindowsEnviromentVariables("-Dserver.port=true -Dargument=false"));
     }
 
     @Test
