@@ -23,4 +23,8 @@ public class VMParser {
         strResult = strResult.replaceAll("\\.", "_");
         return strResult;
     }
+
+    public static String toWindowsEnviromentVariables(String vmArguments){
+        return vmArguments.replaceAll("-D", "&& SET ");
+    }
 }

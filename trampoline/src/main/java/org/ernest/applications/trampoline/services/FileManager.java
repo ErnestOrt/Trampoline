@@ -1,10 +1,7 @@
 package org.ernest.applications.trampoline.services;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
 import org.ernest.applications.trampoline.entities.BuildTools;
@@ -15,6 +12,7 @@ import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderExcep
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
 import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
+import org.ernest.applications.trampoline.utils.ScriptContentsProvider;
 import org.ernest.applications.trampoline.utils.VMParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -66,9 +64,7 @@ public class FileManager {
 		}
 
 		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getBuildTool() == null)){
-			ecosystem.getMicroservices().stream().filter(m -> m.getBuildTool() == null).forEach(m -> {
-				m.setBuildTool(BuildTools.MAVEN);
-			});
+			ecosystem.getMicroservices().stream().filter(m -> m.getBuildTool() == null).forEach(m -> m.setBuildTool(BuildTools.MAVEN));
 			saveEcosystem(ecosystem);
 		}
 	}
@@ -94,7 +90,7 @@ public class FileManager {
 				if(microservice.getBuildTool().equals(BuildTools.MAVEN)){
 					commands = commands.replace("#vmArguments", vmArguments);
 				}else{
-					commands = commands.replace("#vmArguments", vmArguments.replaceAll("-D", "&& SET "));
+					commands = commands.replace("#vmArguments", VMParser.toWindowsEnviromentVariables(vmArguments));
 				}
 				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \""+commands+"\"");
 			}else{
@@ -116,22 +112,15 @@ public class FileManager {
 		try {
 			if(System.getProperties().getProperty("os.name").contains("Windows")){
 				if(microservice.getBuildTool().equals(BuildTools.MAVEN)) {
-					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"),
-							"SET M2_HOME=#mavenHomeLocation&& SET PATH=%PATH%;#mavenBinaryLocation&& cd " + microservice.getPomLocation() + " && mvn spring-boot:run -Dserver.port=#port "
-									+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false #vmArguments");
+					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"), ScriptContentsProvider.getMavenWindows(microservice.getPomLocation()));
 				}else{
-					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"),
-							"SET server.port=#port&& SET endpoints.shutdown.enabled=true&& SET management.security.enabled=false #vmArguments&& cd "+microservice.getPomLocation()+" && gradlew.bat bootRun ");
+					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"), ScriptContentsProvider.getGradleWindows(microservice.getPomLocation()));
 				}
 			}else{
 				if(microservice.getBuildTool().equals(BuildTools.MAVEN)) {
-					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"),
-							"export M2_HOME=$1; export PATH=$PATH:$2; cd " + microservice.getPomLocation() + "; mvn spring-boot:run -Dserver.port=$3 "
-									+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false $4");
+					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"),ScriptContentsProvider.getMavenUnix(microservice.getPomLocation()));
 				}else{
-					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"),
-							"export SERVER_PORT=$1; export ENDPOINTS_SHUTDOWN_ENABLED=true; export MANAGEMENT_SECURITY_ENABLED=false $2;  " +
-									"cd " + microservice.getPomLocation() + "; ./gradlew bootRun");
+					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"), ScriptContentsProvider.getGradleUnix(microservice.getPomLocation()));
 				}
 			}
 		} catch (IOException e) {
