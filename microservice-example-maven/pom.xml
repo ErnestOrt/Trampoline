@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.ernest.applications</groupId>
-	<artifactId>microservice-example</artifactId>
+	<artifactId>microservice-example-maven</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>microservice-example</name>
+	<name>microservice-example-maven</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
