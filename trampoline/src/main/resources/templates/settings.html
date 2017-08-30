@@ -63,13 +63,9 @@
                                                 <div class="row">
                                                     <div class="col-xs-8">
                                                         <span th:text="${microservice.name}"></span>
-                                                        <br />
-                                                        <span class="text-success"><small th:text="${microservice.pomLocation}"></small></span>
-                                                        <span class="text-primary"><small th:text="${microservice.defaultPort}"></small></span>
-                                                        <span class="text-success"><small th:text="${microservice.actuatorPrefix}"></small></span>
-                                                        <span class="text-primary"><small th:text="${microservice.vmArguments}"></small></span>
                                                     </div>
                                                     <div class="col-xs-4 text-right">
+                                                        <btn class="btn btn-sm btn-primary btn-icon" th:onclick="'showMicroserviceInformation(\'' + ${microservice.id} + '\')'"><i class="fa fa-info"></i></btn>
                                                         <btn class="btn btn-sm btn-danger btn-icon" th:onclick="'removeMicroservice(\'' + ${microservice.id} + '\')'"><i class="fa fa-trash"></i></btn>
                                                     </div>
                                                 </div>
@@ -119,15 +115,24 @@
                                                 <input id="input-newmicroservice-name" type="text" class="form-control border-input" placeholder="microservice-1"/>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
+                                            <div class="form-group" id="form-newmicroservice-build-tool">
+                                                <label>Build Tool *</label>
+                                                <select id="input-newmicroservice-build-tool" class="form-control border-input">
+                                                    <option value="maven">Maven</option>
+                                                    <option value="gradle">Gradle</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
                                             <div class="form-group" id="form-newmicroservice-defaultport">
                                                 <label>Default Port *</label>
                                                 <input  id="input-newmicroservice-defaultport" type="text" class="form-control border-input" placeholder="9988"/>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group" id="form-newmicroservice-actuatorprefix">
-                                                <label for="exampleInputEmail1">Actuator Prefix</label>
+                                                <label>Actuator Prefix</label>
                                                 <input  id="input-newmicroservice-actuatorprefix" type="email" class="form-control border-input" placeholder="Leave it empty or Ex: /service-one"/>
                                             </div>
                                         </div>
@@ -135,7 +140,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group" id="form-newmicroservice-pomlocation">
-                                                <label>Pom Location *</label>
+                                                <label>Pom or Build File Location *</label>
                                                 <input  id="input-newmicroservice-pomlocation" type="text" class="form-control border-input"  placeholder="/Users/ernest/Documents/workarea/microservice-1" />
                                             </div>
                                         </div>
@@ -159,6 +164,28 @@
 
 
                 </div>
+            </div>
+        </div>
+
+        <div id="modal-microservice-information" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Microservices Registered Information</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Name:<br/><span class="text-success" id="modal-microservice-name"></span></p>
+                        <p>Pom or Build File Location:<br/><span class="text-success" id="modal-microservice-pomLocation"></span></p>
+                        <p>Build Tool:<br/><span class="text-success" id="modal-microservice-buildTool"></span></p>
+                        <p>Default Port:<br/><span class="text-success" id="modal-microservice-defaultPort"></span></p>
+                        <p>Actuator Prefix:<br/><span class="text-success" id="modal-microservice-actuatorPrefix"></span></p>
+                        <p>VM Arguments:<br/><span class="text-success" id="modal-microservice-vmArguments"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
             </div>
         </div>
 

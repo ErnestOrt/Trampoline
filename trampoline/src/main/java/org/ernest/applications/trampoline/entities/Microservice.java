@@ -8,6 +8,7 @@ public class Microservice {
 	private String defaultPort;
 	private String actuatorPrefix;
 	private String vmArguments;
+	private BuildTools buildTool;
 	
 	public String getId() {
 		return id;
@@ -44,5 +45,13 @@ public class Microservice {
 	}
 	public void setActuatorPrefix(String actuatorPrefix) {
 		this.actuatorPrefix = actuatorPrefix;
+	}
+
+	public BuildTools getBuildTool() {
+		return buildTool;
+	}
+
+	public void setBuildTool(BuildTools buildTool) {
+		this.buildTool = buildTool;
 	}
 }

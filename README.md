@@ -15,9 +15,10 @@ Also you will be able to:
 
 ### Requirements
 
-* Java 8 & Apache Maven
+* Java && (Apache Maven || Gradle wrapper)
 * Start actuator sub-project of Spring Boot on your microservices
-* Set up logging.path property your microservices in order to be able to visulize them
+* Set up logging.path and/or logging.file properties defined on your microservices in order to be able to visulize logs
+* Include your Gradle Wrapper next to your build files if your choice is Gradle as a Build Tool
 
 ### How do I make it work?
 
@@ -27,9 +28,20 @@ Also you will be able to:
 4. Finally you just have to declare your microservices and to start and/or to stop them as you wish.
 
 ### FAQ
+
 * How does the UI look like?
 
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI.png)
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_2.png)
+
+* Which build tool are Trampoline compatible to use on my microservices?
+	
+You can use Apache Maven or a Gradle Wrapper
+
+* Can I run it on any OS?.
+
+Theoretically yes, but only has been fully tested on Windows and Mac OS.
+
+* Will I have to enter data all the time?.
 
 * I am working with Spring Boot 1.3 or less and instances do not start.
 
@@ -42,12 +54,6 @@ You should add security starter on your microservices pom.xml:
 </dependency>
 
 ```
-
-* Can I run it on any OS?.
-
-Theoretically yes, but only has been fully tested on Windows and Mac OS.
-
-* Will I have to enter data all the time?.
 
 No, information introduced will be stored in a settings file, next to the script to launch each microservices :grin:
 

@@ -4,10 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.ernest.applications.trampoline.entities.Ecosystem;
-import org.ernest.applications.trampoline.entities.Instance;
-import org.ernest.applications.trampoline.entities.Microservice;
-import org.ernest.applications.trampoline.entities.StatusInstance;
+import org.ernest.applications.trampoline.entities.*;
 import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
@@ -40,7 +37,7 @@ public class EcosystemManager {
 		fileManager.saveEcosystem(ecosystem);
 	}
 	
-	public void setNewMicroservice(String name, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+	public void setNewMicroservice(String name, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments, String buildTool) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
 		Microservice microservice = new Microservice();
@@ -50,7 +47,8 @@ public class EcosystemManager {
 		microservice.setDefaultPort(defaultPort);
 		microservice.setActuatorPrefix(actuatorPrefix);
 		microservice.setVmArguments(vmArguments);
-		fileManager.createScript(microservice.getId(), pomLocation);
+		microservice.setBuildTool(BuildTools.getByCode(buildTool));
+		fileManager.createScript(microservice);
 		
 		ecosystem.getMicroservices().add(microservice);
 		fileManager.saveEcosystem(ecosystem);
@@ -66,7 +64,7 @@ public class EcosystemManager {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
 		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).collect(Collectors.toList()).get(0);
-		fileManager.runScript(microservice.getId(), ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
+		fileManager.runScript(microservice, ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
 		
 		Instance instance = new Instance();
 		instance.setId(UUID.randomUUID().toString());

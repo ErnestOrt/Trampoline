@@ -1,18 +1,19 @@
 package org.ernest.applications.trampoline.services;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
+import org.ernest.applications.trampoline.entities.BuildTools;
 import org.ernest.applications.trampoline.entities.Ecosystem;
+import org.ernest.applications.trampoline.entities.Microservice;
 import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
 import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
+import org.ernest.applications.trampoline.utils.ScriptContentsProvider;
+import org.ernest.applications.trampoline.utils.VMParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -52,13 +53,18 @@ public class FileManager {
 
 	private void updateMicroservicesInformationStored(Ecosystem ecosystem) {
 		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null)){
-
 			ecosystem.getMicroservices().stream().filter(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null).forEach(m ->{
 				m.setVmArguments("");
 				m.setActuatorPrefix("");
-				createScript(m.getId(), m.getPomLocation());
+				m.setBuildTool(BuildTools.MAVEN);
+				createScript(m);
 			});
 
+			saveEcosystem(ecosystem);
+		}
+
+		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getBuildTool() == null)){
+			ecosystem.getMicroservices().stream().filter(m -> m.getBuildTool() == null).forEach(m -> m.setBuildTool(BuildTools.MAVEN));
 			saveEcosystem(ecosystem);
 		}
 	}
@@ -72,19 +78,28 @@ public class FileManager {
 		}
 	}
 
-	public void runScript(String id, String mavenBinaryLocation, String mavenHomeLocation, String port, String vmArguments) throws RunningMicroserviceScriptException {
+	public void runScript(Microservice microservice, String mavenBinaryLocation, String mavenHomeLocation, String port, String vmArguments) throws RunningMicroserviceScriptException {
 		try {
 			mavenBinaryLocation = (mavenBinaryLocation != null && mavenBinaryLocation.trim().length() > 0) ? mavenBinaryLocation : mavenHomeLocation + "/bin";
 			if(System.getProperties().getProperty("os.name").contains("Windows")){
-				String commands = FileUtils.readFileToString(new File(getSettingsFolder() +"/"+ id +".txt"));
+				String commands = FileUtils.readFileToString(new File(getSettingsFolder() +"/"+ microservice.getId() +".txt"));
 				commands = commands.replace("#mavenBinaryLocation", mavenBinaryLocation);
 				commands = commands.replace("#mavenHomeLocation", mavenHomeLocation);
 				commands = commands.replace("#port", port);
-				commands = commands.replace("#vmArguments", vmArguments);
 
+				if(microservice.getBuildTool().equals(BuildTools.MAVEN)){
+					commands = commands.replace("#vmArguments", vmArguments);
+				}else{
+					commands = commands.replace("#vmArguments", VMParser.toWindowsEnviromentVariables(vmArguments));
+				}
 				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \""+commands+"\"");
 			}else{
-				new ProcessBuilder("sh", getSettingsFolder() + "/" + id + ".sh", mavenHomeLocation, mavenBinaryLocation, port, vmArguments).start();
+				if(microservice.getBuildTool().equals(BuildTools.MAVEN)){
+					new ProcessBuilder("sh", getSettingsFolder() + "/" + microservice.getId() + ".sh", mavenHomeLocation, mavenBinaryLocation, port, vmArguments).start();
+				}else{
+					Runtime.getRuntime().exec("chmod 777 "+microservice.getPomLocation()+"//gradlew");
+					new ProcessBuilder("sh", getSettingsFolder() + "/" + microservice.getId() + ".sh", port, VMParser.toUnixEnviromentVariables(vmArguments)).start();
+				}
 			}
 			
 		} catch (IOException e) {
@@ -93,16 +108,20 @@ public class FileManager {
 		}
 	}
 
-	public void createScript(String id, String pomLocation) throws CreatingMicroserviceScriptException {
+	public void createScript(Microservice microservice) throws CreatingMicroserviceScriptException {
 		try {
 			if(System.getProperties().getProperty("os.name").contains("Windows")){
-				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".txt"), 
-					"SET M2_HOME=#mavenHomeLocation&& SET PATH=%PATH%;#mavenBinaryLocation&& cd " + pomLocation + " && mvn spring-boot:run -Dserver.port=#port "
-					+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false #vmArguments");
+				if(microservice.getBuildTool().equals(BuildTools.MAVEN)) {
+					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"), ScriptContentsProvider.getMavenWindows(microservice.getPomLocation()));
+				}else{
+					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"), ScriptContentsProvider.getGradleWindows(microservice.getPomLocation()));
+				}
 			}else{
-				FileUtils.writeStringToFile(new File(getSettingsFolder() +"/"+ id +".sh"),
-					"export M2_HOME=$1; export PATH=$PATH:$2; cd " + pomLocation + "; mvn spring-boot:run -Dserver.port=$3 "
-					+ "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false $4");
+				if(microservice.getBuildTool().equals(BuildTools.MAVEN)) {
+					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"),ScriptContentsProvider.getMavenUnix(microservice.getPomLocation()));
+				}else{
+					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"), ScriptContentsProvider.getGradleUnix(microservice.getPomLocation()));
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -133,4 +152,6 @@ public class FileManager {
 			throw new CreatingSettingsFolderException();
 		}
 	}
+
+
 }

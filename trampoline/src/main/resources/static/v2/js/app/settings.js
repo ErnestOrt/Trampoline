@@ -18,7 +18,7 @@ function setMavenInformation(){
 }
 
 function setNewMicroservice(){
-	if($("#input-hidden-mavenhomelocation").val() == ''){
+	if($("#input-hidden-mavenhomelocation").val() == '' && $("#input-newmicroservice-build-tool").val() == 'maven'){
 		$("#form-mavenhomelocation").addClass("has-error");
 	}else{
 		cleaningNewMicroserviceFrom();
@@ -30,8 +30,8 @@ function setNewMicroservice(){
 			    url : "/settings/setnewmicroservice",
 			    type: "POST",
 			    data : {name: $("#input-newmicroservice-name").val(), pomLocation: $("#input-newmicroservice-pomlocation").val(), defaultPort: $("#input-newmicroservice-defaultport").val(),
-			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val(),
-			    	    vmArguments: $("#input-newmicroservice-vmarguments").val()},
+			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val(), vmArguments: $("#input-newmicroservice-vmarguments").val(),
+			    	    buildTool: $("#input-newmicroservice-build-tool").val()},
 			    success: function(data, textStatus, jqXHR) { location.reload(); },
                  error: function (request, status, error) {
                       $('.front-loading').hide();
@@ -79,6 +79,26 @@ function removeMicroservice(microserviceId){
 	    success: function(data, textStatus, jqXHR) { location.reload(); },
         error: function (request, status, error) {
               $('.front-loading').hide();
+               alert(request.responseText);
+           }
+	});
+}
+
+function showMicroserviceInformation(microserviceId){
+    $("#modal-microservice-information").modal("show");
+	$.ajax({
+	    url : "/settings/microserviceinfo",
+	    type: "POST",
+	    data : {id: microserviceId},
+	    success: function(data, textStatus, jqXHR) {
+	        $("#modal-microservice-name").text(data.name);
+	        $("#modal-microservice-buildTool").text(data.buildTool);
+	        $("#modal-microservice-pomLocation").text(data.pomLocation);
+	        $("#modal-microservice-defaultPort").text(data.defaultPort);
+	        $("#modal-microservice-actuatorPrefix").text(data.actuatorPrefix);
+	        $("#modal-microservice-vmArguments").text(data.vmArguments);
+	    },
+        error: function (request, status, error) {
                alert(request.responseText);
            }
 	});
