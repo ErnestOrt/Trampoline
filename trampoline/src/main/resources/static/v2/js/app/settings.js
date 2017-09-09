@@ -1,3 +1,19 @@
+function changeSelectedClass(element) {
+    if($(element).hasClass("btn-default")){
+        $(element).removeClass("btn-default");
+        $(element).addClass("btn-success");
+    }else{
+        $(element).addClass("btn-default");
+        $(element).removeClass("btn-success");
+    }
+}
+
+function createGroup(){
+    $( ".microservice-group-form.btn-success" ).each(function( index ) {
+      console.log( index + ": " + $( this ).text() );
+    });
+}
+
 function setMavenInformation(){
 	if($("#input-mavenhomelocation").val() == ''){
 		$("#form-mavenhomelocation").addClass("has-error");
