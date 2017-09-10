@@ -59,7 +59,17 @@
                             </div>
                             <div class="content">
                                 <ul class="list-unstyled team-members">
-
+                                    <li th:each="group : ${microservicesgroups}">
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <span th:text="${group.name}"></span>
+                                            </div>
+                                            <div class="col-xs-4 text-right">
+                                                <btn class="btn btn-sm btn-primary btn-icon" th:onclick="'showGroupInformation(\'' + ${group.id} + '\')'"><i class="fa fa-info"></i></btn>
+                                                <btn class="btn btn-sm btn-danger btn-icon" th:onclick="'removeGroup(\'' + ${group.id} + '\')'"><i class="fa fa-trash"></i></btn>
+                                            </div>
+                                        </div>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -180,7 +190,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <a onclick="changeSelectedClass(this)" th:each="microservice : ${microservices}" href="#" class="btn btn-default microservice-group-form" role="button" th:text="${microservice.name}"></a>
+                                        <a onclick="changeSelectedClass(this)" th:each="microservice : ${microservices}" href="#" class="btn btn-default microservice-group-form" role="button" th:text="${microservice.name}" th:attr="data-id=${microservice.id}"></a>
                                     </div>
                                 </div>
                                 <div class="text-center">
@@ -218,14 +228,15 @@
             </div>
         </div>
 
-        <div id="modal-create-group" class="modal fade" role="dialog">
+        <div id="modal-group-information" class="modal fade" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Create Microservices Group</h4>
+                        <h4 class="modal-title">Microservices Group Information</h4>
                     </div>
                     <div class="modal-body">
-                        <a onclick="changeSelectedClass(this)" th:each="microservice : ${microservices}" href="#" class="btn btn-default" role="button" th:text="${microservice.name}"></a>
+                        <p>Name:<br/><span class="text-success" id="modal-group-name"></span></p>
+                        <p>Microservices included:<br/><span class="text-success" id="modal-group-list"></span></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -234,6 +245,8 @@
 
             </div>
         </div>
+
+
 
         <footer class="footer">
             <div th:include="fragments/footer :: footer-bar" ></div>
@@ -251,5 +264,6 @@
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/app/settings.js}"></script>
+
 
 </html>

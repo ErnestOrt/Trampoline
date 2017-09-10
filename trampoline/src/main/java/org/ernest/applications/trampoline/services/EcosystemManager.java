@@ -60,6 +60,23 @@ public class EcosystemManager {
 		fileManager.saveEcosystem(ecosystem);
 	}
 
+	public void setMicroserviceGroup(String name, List<String> idsMicroservicesGroup) {
+		MicroservicesGroup microservicesGroup = new MicroservicesGroup();
+		microservicesGroup.setId(UUID.randomUUID().toString());
+		microservicesGroup.setName(name);
+		microservicesGroup.setMicroservicesIds(idsMicroservicesGroup);
+
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		ecosystem.getMicroservicesGroups().add(microservicesGroup);
+		fileManager.saveEcosystem(ecosystem);
+	}
+
+	public void removeGroup(String id) {
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		ecosystem.setMicroservicesGroups(ecosystem.getMicroservicesGroups().stream().filter(g -> !g.getId().equals(id)).collect(Collectors.toList()));
+		fileManager.saveEcosystem(ecosystem);
+	}
+
 	public void startInstance(String id, String port, String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException{
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		

@@ -2,6 +2,8 @@ package org.ernest.applications.trampoline.controller;
 
 import org.ernest.applications.trampoline.entities.Ecosystem;
 import org.ernest.applications.trampoline.entities.Microservice;
+import org.ernest.applications.trampoline.entities.MicroserviceGroupInfo;
+import org.ernest.applications.trampoline.entities.MicroservicesGroup;
 import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/settings")
@@ -29,6 +34,7 @@ public class SettingsController {
 		Ecosystem ecosystem = ecosystemManager.getEcosystem();
 
 		model.addAttribute("microservices", ecosystem.getMicroservices());
+		model.addAttribute("microservicesgroups", ecosystem.getMicroservicesGroups());
 		model.addAttribute("mavenHomeLocation", ecosystem.getMavenHomeLocation());
 		model.addAttribute("mavenBinaryLocationMessage", ecosystem.getMavenBinaryLocation() == null ? "Set Maven Binary Location if necessary. Otherwise it will automatically be searched in a bin folder inside your Maven Home Location" : ecosystem.getMavenBinaryLocation());
 		model.addAttribute("mavenHomeLocationMessage", ecosystem.getMavenHomeLocation() == null ? "Please set maven Home Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenHomeLocation());
@@ -63,4 +69,32 @@ public class SettingsController {
 		return ecosystemManager.getEcosystem().getMicroservices().stream().filter(m-> m.getId().equals(id)).findFirst().get();
 	}
 
+	@RequestMapping(value= "/setmicroservicesgroup", method = RequestMethod.POST)
+	@ResponseBody
+	public void getMicroserviceInfo(@RequestParam(value="name") String name, @RequestParam(value="idsMicroservicesGroup[]") List<String> idsMicroservicesGroup) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+		ecosystemManager.setMicroserviceGroup(name, idsMicroservicesGroup);
+	}
+
+	@RequestMapping(value= "/groupinfo", method = RequestMethod.POST)
+	@ResponseBody
+	public MicroserviceGroupInfo getGroupInfo(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+		MicroservicesGroup microservicesGroup = ecosystemManager.getEcosystem().getMicroservicesGroups().stream().filter(m-> m.getId().equals(id)).findFirst().get();
+		List<Microservice> microservices = ecosystemManager.getEcosystem().getMicroservices();
+
+		MicroserviceGroupInfo info = new MicroserviceGroupInfo();
+		info.setName(microservicesGroup.getName());
+		info.setMicroservicesNames(microservices.stream()
+				                                .filter(m->microservicesGroup.getMicroservicesIds().contains(m.getId()))
+				                                .map(Microservice::getName)
+				                                .collect(Collectors.toList()));
+		return info;
+	}
+
+	@RequestMapping(value= "/removegroup", method = RequestMethod.POST)
+	@ResponseBody
+	public void removeGroup(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException{
+		ecosystemManager.removeGroup(id);
+	}
 }
+
+

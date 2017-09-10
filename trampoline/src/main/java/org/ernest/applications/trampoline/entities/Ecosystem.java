@@ -9,10 +9,12 @@ public class Ecosystem {
 	private String mavenHomeLocation;
 	private List<Microservice> microservices;
 	private List<Instance> instances;
+	private List<MicroservicesGroup> microservicesGroups;
 	
 	public Ecosystem() {
-		microservices = new ArrayList<Microservice>();
-		instances = new ArrayList<Instance>();
+		microservices = new ArrayList<>();
+		instances = new ArrayList<>();
+		microservicesGroups = new ArrayList<>();
 	}
 
 	public String getMavenBinaryLocation() {
@@ -45,5 +47,13 @@ public class Ecosystem {
 
 	public void setInstances(List<Instance> instances) {
 		this.instances = instances;
+	}
+
+	public List<MicroservicesGroup> getMicroservicesGroups() {
+		return microservicesGroups;
+	}
+
+	public void setMicroservicesGroups(List<MicroservicesGroup> microservicesGroups) {
+		this.microservicesGroups = microservicesGroups;
 	}
 }
