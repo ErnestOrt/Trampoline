@@ -19,7 +19,7 @@ function createGroup(){
         $("#form-groupname").removeClass("has-error");
         $.notify({
             icon: "ti-more-alt",
-            message: "You must select <b>at least two microservices</b> to register a group."
+            message: "You must select <b>at least two microservices</b> to register a group. <b>Remember to register microservices first</b>."
 
          },{
              type: 'danger',
