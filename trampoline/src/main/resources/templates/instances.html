@@ -53,10 +53,36 @@
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-12 col-md-12">
+                    <div class="col-lg-4 col-md-4">
                         <div class="card">
                             <div class="header">
-                               <h4 class="title">Start Instance</h4>
+                                <h4 class="title">Launch Group</h4>
+                                <p class="category">Select a group</p>
+                            </div>
+
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group" id="form-start-group">
+                                            <label>Group*</label>
+                                            <select id="input-start-group" class="form-control border-input">
+                                                <option value="-1">Select one service...</option>
+                                                <option th:each="group : ${microservicesgroups}" th:text="${group.name}" th:value="${group.id}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button onclick="startGroup()" class="btn btn-success btn-fill btn-wd">Launch</button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-md-8">
+                        <div class="card">
+                            <div class="header">
+                               <h4 class="title">Launch Instance</h4>
                                 <p class="category">Set needed information</p>
                             </div>
 
@@ -64,7 +90,7 @@
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="form-group" id="form-start-microservice">
-                                                <label>Microservice</label>
+                                                <label>Microservice*</label>
                                                 <select id="input-start-microservice" onchange="updateStartInstanceForm()" class="form-control border-input">
                                                     <option value="-1">Select one service...</option>
                                                     <option th:each="microservice : ${microservices}" th:text="${microservice.name}" th:value="${microservice.id}"></option>
@@ -73,7 +99,7 @@
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group" id="form-start-port">
-                                                <label>Port</label>
+                                                <label>Port*</label>
                                                 <input id="input-start-port" type="text" class="form-control border-input" placeholder="" value=""/>
                                             </div>
                                         </div>
@@ -94,7 +120,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group" id="form-start-arguments">
                                                 <label>VM Arguments</label>
-                                                <input id="input-start-arguments" type="text" class="form-control border-input" placeholder="Leave it empty or set your VM Arguments, -Dmy.arg.one=false -Dmy.arg.two=true"/>
+                                                <input id="input-start-arguments" type="text" class="form-control border-input" placeholder="Ex: -Dmy.arg.one=false -Dmy.arg.two=true"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -105,7 +131,7 @@
                                         </div>
                                     </div>
                                     <div class="text-center">
-                                        <button onclick="validateNewInstance()" class="btn btn-success btn-fill btn-wd">Start</button>
+                                        <button onclick="validateNewInstance()" class="btn btn-success btn-fill btn-wd">Launch</button>
                                     </div>
                                     <div class="clearfix"></div>
                             </div>
@@ -208,7 +234,7 @@
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/Chart.min.js}"></script>
-<script type="text/javascript" th:src="@{/v2/js/app/instances.js}"></script>
+<script type="text/javascript" th:src="@{/v2/js/app/instances.js?v3.5}"></script>
 
 
 </html>

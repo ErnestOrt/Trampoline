@@ -40,6 +40,7 @@ public class InstancesController {
 		Ecosystem ecosystem = ecosystemManager.getEcosystem();
 		model.addAttribute("microservices", ecosystem.getMicroservices());
 		model.addAttribute("instances", ecosystem.getInstances());
+		model.addAttribute("microservicesgroups", ecosystem.getMicroservicesGroups());
 
 		return INSTANCES_VIEW;
     }
@@ -87,4 +88,11 @@ public class InstancesController {
 
 		return declaredInstanceOnPort == false ? PortsChecker.available(port) : false;
 	}
+
+	@RequestMapping(value= "/startgroup", method = RequestMethod.POST)
+	@ResponseBody
+	public void startGroup(@RequestParam(value="id") String id)  {
+		ecosystemManager.startGroup(id);
+	}
 }
+

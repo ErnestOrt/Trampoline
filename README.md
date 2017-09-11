@@ -12,6 +12,7 @@ Also you will be able to:
 * Configurable Actuator endpoint & VM arguments
 * Monitor memory usage for each instance, capturing their metrics every 30 seconds.
 * Monitor intances trace information any point in time
+* Define microservices groups and launch them all with one click
 
 ### Requirements
 
@@ -31,7 +32,7 @@ Also you will be able to:
 
 * How does the UI look like?
 
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_2.png)
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3.png)
 
 * Which build tool are Trampoline compatible to use on my microservices?
 	

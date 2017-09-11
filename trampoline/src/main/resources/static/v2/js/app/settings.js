@@ -1,3 +1,50 @@
+function changeSelectedClass(element) {
+    if($(element).hasClass("btn-default")){
+        $(element).removeClass("btn-default");
+        $(element).addClass("btn-success");
+    }else{
+        $(element).addClass("btn-default");
+        $(element).removeClass("btn-success");
+    }
+}
+
+function createGroup(){
+    idsMicroservicesGroup = [];
+    $( ".microservice-group-form.btn-success" ).each(function( index ) {
+        idsMicroservicesGroup.push($( this ).data("id"));
+    });
+    if($("#input-groupname").val() == ''){
+        $("#form-groupname").addClass("has-error");
+    }else if(idsMicroservicesGroup.length<2){
+        $("#form-groupname").removeClass("has-error");
+        $.notify({
+            icon: "ti-more-alt",
+            message: "You must select <b>at least two microservices</b> to register a group. <b>Remember to register microservices first</b>."
+
+         },{
+             type: 'danger',
+             timer: 3000,
+             placement: {
+                 from: 'top',
+                 align: 'right'
+             }
+         });
+    }else{
+        $("#modal-microservice-information").modal("show");
+         $.ajax({
+                url : "/settings/setmicroservicesgroup",
+                type: "POST",
+                data : {name:  $("#input-groupname").val(),
+                        idsMicroservicesGroup: idsMicroservicesGroup},
+                success: function(data, textStatus, jqXHR) {location.reload();},
+                error: function (request, status, error) {
+                     $('.front-loading').hide();
+                       alert(request.responseText);
+                   }
+            });
+    }
+}
+
 function setMavenInformation(){
 	if($("#input-mavenhomelocation").val() == ''){
 		$("#form-mavenhomelocation").addClass("has-error");
@@ -85,7 +132,7 @@ function removeMicroservice(microserviceId){
 }
 
 function showMicroserviceInformation(microserviceId){
-    $("#modal-microservice-information").modal("show");
+   $('.front-loading').show();
 	$.ajax({
 	    url : "/settings/microserviceinfo",
 	    type: "POST",
@@ -97,12 +144,51 @@ function showMicroserviceInformation(microserviceId){
 	        $("#modal-microservice-defaultPort").text(data.defaultPort);
 	        $("#modal-microservice-actuatorPrefix").text(data.actuatorPrefix);
 	        $("#modal-microservice-vmArguments").text(data.vmArguments);
+	        $('.front-loading').hide();
+	        $("#modal-microservice-information").modal("show");
 	    },
         error: function (request, status, error) {
+                 $('.front-loading').hide();
                alert(request.responseText);
            }
 	});
 }
+
+
+function showGroupInformation(groupId){
+   $('.front-loading').show();
+	$.ajax({
+	    url : "/settings/groupinfo",
+	    type: "POST",
+	    data : {id: groupId},
+	    success: function(data, textStatus, jqXHR) {
+	        $("#modal-group-name").text(data.name);
+	        $("#modal-group-list").text(data.microservicesNames);
+	        $('.front-loading').hide();
+	         $("#modal-group-information").modal("show");
+	    },
+        error: function (request, status, error) {
+                 $('.front-loading').hide();
+               alert(request.responseText);
+           }
+	});
+}
+
+
+function removeGroup(groupId){
+    $('.front-loading').show();
+	$.ajax({
+	    url : "/settings/removegroup",
+	    type: "POST",
+	    data : {id: groupId},
+	    success: function(data, textStatus, jqXHR) { location.reload(); },
+        error: function (request, status, error) {
+              $('.front-loading').hide();
+               alert(request.responseText);
+           }
+	});
+}
+
 
 $( document ).ready(function() {
     $(".front-loading").hide();

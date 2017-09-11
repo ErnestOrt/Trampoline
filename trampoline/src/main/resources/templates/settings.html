@@ -55,6 +55,26 @@
                     <div class="col-lg-4 col-md-5">
                         <div class="card">
                             <div class="header">
+                                <h4 class="title">Groups Created</h4>
+                            </div>
+                            <div class="content">
+                                <ul class="list-unstyled team-members">
+                                    <li th:each="group : ${microservicesgroups}">
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <span th:text="${group.name}"></span>
+                                            </div>
+                                            <div class="col-xs-4 text-right">
+                                                <btn class="btn btn-sm btn-primary btn-icon" th:onclick="'showGroupInformation(\'' + ${group.id} + '\')'"><i class="fa fa-info"></i></btn>
+                                                <btn class="btn btn-sm btn-danger btn-icon" th:onclick="'removeGroup(\'' + ${group.id} + '\')'"><i class="fa fa-trash"></i></btn>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="header">
                                 <h4 class="title">Microservices Registered</h4>
                             </div>
                             <div class="content">
@@ -81,15 +101,13 @@
                             </div>
                             <div class="content">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="form-group" id="form-mavenhomelocation">
                                                 <label>Maven Home Location *</label>
                                                 <input id="input-mavenhomelocation" type="text" class="form-control border-input" th:placeholder="${mavenHomeLocationMessage}"/>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Maven Binary Location</label>
                                                 <input id="input-mavenbinarylocation" type="text" class="form-control border-input" th:placeholder="${mavenBinaryLocationMessage}"/>
@@ -133,23 +151,21 @@
                                         <div class="col-md-3">
                                             <div class="form-group" id="form-newmicroservice-actuatorprefix">
                                                 <label>Actuator Prefix</label>
-                                                <input  id="input-newmicroservice-actuatorprefix" type="email" class="form-control border-input" placeholder="Leave it empty or Ex: /service-one"/>
+                                                <input  id="input-newmicroservice-actuatorprefix" type="email" class="form-control border-input" placeholder="Ex: /service-one"/>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="form-group" id="form-newmicroservice-pomlocation">
                                                 <label>Pom or Build File Location *</label>
                                                 <input  id="input-newmicroservice-pomlocation" type="text" class="form-control border-input"  placeholder="/Users/ernest/Documents/workarea/microservice-1" />
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="form-group" id="form-newmicroservice-vmarguments">
                                                 <label>VM Arguments</label>
-                                                <input  id="input-newmicroservice-vmarguments" type="text" class="form-control border-input" placeholder="Leave it empty or set your VM Arguments, -Dmy.arg.one=false -Dmy.arg.two=true"/>
+                                                <input  id="input-newmicroservice-vmarguments" type="text" class="form-control border-input" placeholder="Ex: -Dmy.arg.one=false -Dmy.arg.two=true"/>
                                             </div>
                                         </div>
                                     </div>
@@ -157,7 +173,30 @@
                                         <button onclick="setNewMicroservice()" class="btn btn-success btn-fill btn-wd">Register Microservice</button>
                                     </div>
                                     <div class="clearfix"></div>
-
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Register Microservices Group</h4>
+                            </div>
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="form-groupname">
+                                            <label>Name*</label>
+                                            <input id="input-groupname" type="text" class="form-control border-input" placeholder="microservice-group-name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <a onclick="changeSelectedClass(this)" th:each="microservice : ${microservices}" href="#" class="btn btn-default microservice-group-form" role="button" th:text="${microservice.name}" th:attr="data-id=${microservice.id}"></a>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button onclick="createGroup()" class="btn btn-success btn-fill btn-wd">Create Group</button>
+                                </div>
+                                <div class="clearfix"></div>
                             </div>
                         </div>
                     </div>
@@ -189,6 +228,26 @@
             </div>
         </div>
 
+        <div id="modal-group-information" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Microservices Group Information</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Name:<br/><span class="text-success" id="modal-group-name"></span></p>
+                        <p>Microservices included:<br/><span class="text-success" id="modal-group-list"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
         <footer class="footer">
             <div th:include="fragments/footer :: footer-bar" ></div>
         </footer>
@@ -204,6 +263,7 @@
 <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
-<script type="text/javascript" th:src="@{/v2/js/app/settings.js}"></script>
+<script type="text/javascript" th:src="@{/v2/js/app/settings.js?v3.5}"></script>
+
 
 </html>

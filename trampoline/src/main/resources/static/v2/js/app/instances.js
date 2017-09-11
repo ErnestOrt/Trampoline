@@ -1,5 +1,25 @@
 var metricsCharts;
 
+function startGroup(){
+    if($("#input-start-group").val() == "-1"){
+        $("#form-start-group").addClass("has-error");
+    }else{
+        $('.front-loading').show();
+        $.ajax({
+            url : "/instances/startgroup",
+            type: "POST",
+            data : {id: $("#input-start-group").val()},
+            success: function(data, textStatus, jqXHR) {
+              location.reload();
+            },
+            error: function (request, status, error) {
+                $('.front-loading').hide();
+                 alert(request.responseText);
+             }
+        });
+    }
+}
+
 function killInstance(instanceId){
     $('.front-loading').show();
 	$.ajax({
