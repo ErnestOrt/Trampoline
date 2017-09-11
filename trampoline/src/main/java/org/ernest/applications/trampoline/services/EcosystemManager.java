@@ -11,6 +11,7 @@ import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
 import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
 import org.ernest.applications.trampoline.exceptions.ShuttingDownInstanceException;
+import org.ernest.applications.trampoline.utils.PortsChecker;
 import org.jboss.resteasy.client.ClientRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -124,5 +125,29 @@ public class EcosystemManager {
 			return false;
 		}
 		return true;
+	}
+
+	public void startGroup(String id) {
+		MicroservicesGroup group = fileManager.getEcosystem().getMicroservicesGroups().stream().filter(g -> g.getId().equals(id)).findFirst().get();
+
+		fileManager.getEcosystem().getMicroservices().stream()
+													 .filter(m->group.getMicroservicesIds().contains(m.getId()))
+													 .forEach(m->prepareMicroservice(m));
+	}
+
+	private void prepareMicroservice(Microservice microservice) {
+		int port = Integer.parseInt(microservice.getDefaultPort());
+		boolean instanceStarted = false;
+		List<Instance> instances = fileManager.getEcosystem().getInstances();
+
+		while(!instanceStarted) {
+			final int portToBeLaunched = port;
+			if (PortsChecker.available(portToBeLaunched) && !instances.stream().anyMatch(i -> i.getPort().equals(String.valueOf(portToBeLaunched)))) {
+				startInstance(microservice.getId(), String.valueOf(port), "");
+				instanceStarted = true;
+			}else{
+				port++;
+			}
+		}
 	}
 }
