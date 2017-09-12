@@ -1,9 +1,7 @@
 package org.ernest.applications.trampoline.controller;
 
-import org.ernest.applications.trampoline.entities.Ecosystem;
-import org.ernest.applications.trampoline.entities.Microservice;
-import org.ernest.applications.trampoline.entities.MicroserviceGroupInfo;
-import org.ernest.applications.trampoline.entities.MicroservicesGroup;
+import com.sun.org.apache.regexp.internal.RE;
+import org.ernest.applications.trampoline.entities.*;
 import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -25,11 +24,14 @@ import java.util.stream.Collectors;
 public class SettingsController {
 
 	private static final String SETTINGS_VIEW = "settings";
+	private final EcosystemManager ecosystemManager;
 
-	@Autowired
-	EcosystemManager ecosystemManager;
+    @Autowired
+    public SettingsController(EcosystemManager ecosystemManager) {
+        this.ecosystemManager = ecosystemManager;
+    }
 
-	@RequestMapping("")
+    @RequestMapping
     public String getSettingsView(Model model) {
 		Ecosystem ecosystem = ecosystemManager.getEcosystem();
 
@@ -95,6 +97,11 @@ public class SettingsController {
 	public void removeGroup(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException{
 		ecosystemManager.removeGroup(id);
 	}
+
+    @RequestMapping(value = "/load", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity loadSettings(@RequestParam(value = "location") String location) {
+        Optional<MicroserviceConfiguration> configuration = ecosystemManager.loadConfigurations(location);
+        return configuration.map(ResponseEntity::success).orElseGet(ResponseEntity::failed);
+    }
 }
-
-

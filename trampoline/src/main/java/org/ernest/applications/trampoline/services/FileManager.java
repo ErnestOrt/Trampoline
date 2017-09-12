@@ -1,41 +1,50 @@
 package org.ernest.applications.trampoline.services;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.ernest.applications.trampoline.entities.BuildTools;
 import org.ernest.applications.trampoline.entities.Ecosystem;
 import org.ernest.applications.trampoline.entities.Microservice;
-import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
-import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
-import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
-import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptException;
-import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
+import org.ernest.applications.trampoline.entities.MicroserviceConfiguration;
+import org.ernest.applications.trampoline.exceptions.*;
 import org.ernest.applications.trampoline.utils.ScriptContentsProvider;
 import org.ernest.applications.trampoline.utils.VMParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class FileManager {
 
-	@Value("${settings.folder.path.mac}")
+    private static final Logger logger = Logger.getLogger(FileManager.class);
+    private static final String POM_XML = "pom.xml";
+
+    private final ConfigurationLoader configurationLoader;
+
+    @Value("${settings.folder.path.mac}")
 	private String settingsFolderPathMac;
-	
+
 	@Value("${settings.folder.path.linux}")
 	private String settingsFolderPathLinux;
-	
+
 	@Value("${settings.folder.path.windows}")
 	private String settingsFolderPathWindows;
 	
 	@Value("${settings.file.name}")
 	private String settingsFileName;
 
-	public Ecosystem getEcosystem() throws CreatingSettingsFolderException, ReadingEcosystemException {
+    @Autowired
+    public FileManager(ConfigurationLoader configurationLoader) {
+        this.configurationLoader = configurationLoader;
+    }
+
+    public Ecosystem getEcosystem() throws CreatingSettingsFolderException, ReadingEcosystemException {
 		checkIfFileExistsAndCreatedIfNeeded();
 		Ecosystem ecosystem = null;
 		
@@ -101,7 +110,7 @@ public class FileManager {
 					new ProcessBuilder("sh", getSettingsFolder() + "/" + microservice.getId() + ".sh", port, VMParser.toUnixEnviromentVariables(vmArguments)).start();
 				}
 			}
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RunningMicroserviceScriptException();
@@ -128,9 +137,27 @@ public class FileManager {
 			throw new CreatingMicroserviceScriptException();
 		}
 	}
-	
-	private String getSettingsFolder() {
-		
+
+	public Optional<MicroserviceConfiguration> loadConfigurations(String pomLocation) {
+        Optional<String> rootProjectLocation = getRootProjectLocation(pomLocation);
+        return rootProjectLocation.flatMap(configurationLoader::load);
+    }
+
+    private Optional<String> getRootProjectLocation(String pomLocation) {
+        File pom = new File(pomLocation);
+        if (!pom.exists()) {
+            return Optional.empty();
+        }
+        if (pom.isFile() && pomLocation.endsWith(POM_XML)) {
+            return Optional.of(pomLocation.substring(0, pomLocation.length() - POM_XML.length()));
+        }
+        if (pom.isDirectory()) {
+            return Optional.of(pomLocation);
+        }
+        return Optional.empty();
+    }
+
+    private String getSettingsFolder() {
 		if(System.getProperties().getProperty("os.name").contains("Mac")){
 			return settingsFolderPathMac.replaceAll("#userName", System.getProperties().getProperty("user.name"));
 		}else if(System.getProperties().getProperty("os.name").contains("Windows")){
@@ -152,6 +179,4 @@ public class FileManager {
 			throw new CreatingSettingsFolderException();
 		}
 	}
-
-
 }

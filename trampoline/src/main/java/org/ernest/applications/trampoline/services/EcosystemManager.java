@@ -1,6 +1,7 @@
 package org.ernest.applications.trampoline.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -132,8 +133,12 @@ public class EcosystemManager {
 
 		fileManager.getEcosystem().getMicroservices().stream()
 													 .filter(m->group.getMicroservicesIds().contains(m.getId()))
-													 .forEach(m->prepareMicroservice(m));
+													 .forEach(this::prepareMicroservice);
 	}
+
+	public Optional<MicroserviceConfiguration> loadConfigurations(String pomLocation) {
+        return fileManager.loadConfigurations(pomLocation);
+    }
 
 	private void prepareMicroservice(Microservice microservice) {
 		int port = Integer.parseInt(microservice.getDefaultPort());
