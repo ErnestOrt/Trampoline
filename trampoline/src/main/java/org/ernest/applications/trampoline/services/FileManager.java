@@ -138,7 +138,7 @@ public class FileManager {
 		}
 	}
 
-	public Optional<MicroserviceConfiguration> loadConfigurations(String pomLocation) {
+    public Optional<MicroserviceConfiguration> loadConfigurations(String pomLocation) {
         Optional<String> rootProjectLocation = getRootProjectLocation(pomLocation);
         return rootProjectLocation.flatMap(configurationLoader::load);
     }

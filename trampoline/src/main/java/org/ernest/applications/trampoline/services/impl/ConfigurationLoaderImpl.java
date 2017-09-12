@@ -30,9 +30,7 @@ public class ConfigurationLoaderImpl implements ConfigurationLoader {
                 .filter(file -> CONFIGURATION_FILES.contains(file))
                 .findFirst();
 
-
-        MicroserviceConfiguration configuration = new MicroserviceConfiguration();
-        configuration.setPort(1111);
-        return Optional.of(configuration);
+        // TODO: need to implement a parser for files with different extensions
+        return Optional.of(new MicroserviceConfiguration());
     }
 }

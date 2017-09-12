@@ -229,11 +229,8 @@ function notify(message, type) {
     $.notify({
         icon: "ti-more-alt",
         message: message
-        // message: "You must select <b>at least two microservices</b> to register a group. <b>Remember to register microservices first</b>."
-
     },{
         type: type,
-        // type: 'danger',
         timer: 3000,
         placement: {
             from: 'top',
