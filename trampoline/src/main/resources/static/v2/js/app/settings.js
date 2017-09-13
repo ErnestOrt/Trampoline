@@ -105,7 +105,7 @@ function loadConfigurations() {
                 success: function (data) {
                     $('.front-loading').hide();
                     if (data.status === 'success') {
-                        $("#input-newmicroservice-defaultport").val(data.body.port);
+                        $("#input-newmicroservice-defaultport").val(data.body.server.port);
                         notify('Configuration file founded', 'success');
                     } else {
                         notify('Configuration file not founded', 'danger');
