@@ -13,12 +13,10 @@ import org.thymeleaf.util.ArrayUtils;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.ernest.applications.trampoline.utils.Constants.FILE_EXTENSION_YML;
-import static org.ernest.applications.trampoline.utils.Constants.SLASH;
+import static org.ernest.applications.trampoline.entities.FileExtension.YML;
 
 @Service
 public class ConfigurationLoaderImpl implements ConfigurationLoader {
@@ -51,8 +49,8 @@ public class ConfigurationLoaderImpl implements ConfigurationLoader {
 
     private Optional<MicroserviceConfiguration> parseMicroserviceConfiguration(String resourcesPath, String resources) {
         String extension = FilenameUtils.getExtension(resources);
-        if (FILE_EXTENSION_YML.equals(extension)) {
-            String path = resourcesPath + SLASH + resources;
+        if (YML.getValue().equals(extension)) {
+            String path = resourcesPath + "/" + resources;
             return parseYml(path);
         }
         return Optional.empty();

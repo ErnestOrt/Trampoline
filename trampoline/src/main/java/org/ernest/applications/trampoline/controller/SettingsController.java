@@ -1,11 +1,7 @@
 package org.ernest.applications.trampoline.controller;
 
-import com.sun.org.apache.regexp.internal.RE;
 import org.ernest.applications.trampoline.entities.*;
-import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
-import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
-import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
-import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
+import org.ernest.applications.trampoline.exceptions.*;
 import org.ernest.applications.trampoline.services.EcosystemManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -100,8 +96,8 @@ public class SettingsController {
 
     @RequestMapping(value = "/load", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity loadSettings(@RequestParam(value = "location") String location) {
+    public MicroserviceConfiguration loadSettings(@RequestParam(value = "location") String location) {
         Optional<MicroserviceConfiguration> configuration = ecosystemManager.loadConfigurations(location);
-        return configuration.map(ResponseEntity::success).orElseGet(ResponseEntity::failed);
+        return configuration.orElseThrow(ConfigurationFileNotFoundExcpetion::new);
     }
 }
