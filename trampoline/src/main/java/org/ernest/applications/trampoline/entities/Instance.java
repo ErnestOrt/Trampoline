@@ -1,49 +1,16 @@
 package org.ernest.applications.trampoline.entities;
 
-public class Instance {
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+
+@Data
+@NoArgsConstructor
+public class Instance {
 	private String id;
 	private String name;
 	private String pomLocation;
 	private String port;
 	private String actuatorPrefix;
 	private String vmArguments;
-	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getPomLocation() {
-		return pomLocation;
-	}
-	public void setPomLocation(String pomLocation) {
-		this.pomLocation = pomLocation;
-	}
-	public String getPort() {
-		return port;
-	}
-	public void setPort(String port) {
-		this.port = port;
-	}
-	public String getActuatorPrefix() {
-		return actuatorPrefix;
-	}
-	public void setActuatorPrefix(String actuatorPrefix) {
-		this.actuatorPrefix = actuatorPrefix;
-	}
-	public String getVmArguments() {
-		return vmArguments;
-	}
-	public void setVmArguments(String vmArguments) {
-		this.vmArguments = vmArguments;
-	}
-	
 }

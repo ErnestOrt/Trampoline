@@ -34,5 +34,5 @@ dependencies {
 	compile('org.jboss.resteasy:resteasy-jaxrs:2.2.1.GA')
 	compile('org.apache.commons:commons-collections4:4.1')
 	compile('org.json:json:20160810')
-
+	provided group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
 }

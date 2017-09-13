@@ -17,7 +17,7 @@ import java.util.Queue;
 @Component
 public class DashboardCollector {
 
-    private Queue<MemoryUsageDto> memoryUsageQueue = new CircularFifoQueue(25);
+    private final Queue<MemoryUsageDto> memoryUsageQueue = new CircularFifoQueue<>(25);
 
     @Scheduled(fixedDelay=10000)
     public void collectMetrics() throws JSONException, InterruptedException, CreatingSettingsFolderException, ReadingEcosystemException {
