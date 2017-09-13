@@ -89,6 +89,33 @@ function setNewMicroservice(){
 	}
 }
 
+function loadConfigurations() {
+    if($("#input-hidden-mavenhomelocation").val() === '' && $("#input-newmicroservice-build-tool").val() === 'maven'){
+        $("#form-mavenhomelocation").addClass("has-error");
+    } else {
+        cleaningNewMicroserviceFrom();
+        var location = $("#input-newmicroservice-pomlocation").val();
+        if (location === '') {
+            $("#form-newmicroservice-pomlocation").addClass("has-error");
+        } else {
+            $('.front-loading').show();
+            $.ajax({
+                url: "/settings/load?location=" + location,
+                type: "POST",
+                success: function (data) {
+                    $('.front-loading').hide();
+                    $("#input-newmicroservice-defaultport").val(data.server.port);
+                    notify('Configuration file founded', 'success');
+                },
+                error: function () {
+                    $('.front-loading').hide();
+                    notify('Configuration file not founded', 'danger');
+                }
+            });
+        }
+    }
+}
+
 function cleaningNewMicroserviceFrom(){
 	$("#form-newmicroservice-name").removeClass("has-error");
 	$("#form-newmicroservice-pomlocation").removeClass("has-error");
@@ -189,8 +216,21 @@ function removeGroup(groupId){
 	});
 }
 
-
 $( document ).ready(function() {
     $(".front-loading").hide();
     $(".front-loading").height($("body").height());
 });
+
+function notify(message, type) {
+    $.notify({
+        icon: "ti-more-alt",
+        message: message
+    },{
+        type: type,
+        timer: 3000,
+        placement: {
+            from: 'top',
+            align: 'right'
+        }
+    });
+}
