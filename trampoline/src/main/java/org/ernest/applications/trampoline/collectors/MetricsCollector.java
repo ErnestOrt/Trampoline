@@ -18,15 +18,22 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import lombok.val;
+
+
 @Component
 public class MetricsCollector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollector.class);
 
-    @Autowired
-    EcosystemManager ecosystemManager;
+    private final EcosystemManager ecosystemManager;
+    private final Map<String, Queue<Metrics>> metricsMap;
 
-    private Map<String, Queue<Metrics>> metricsMap = new HashMap<>();
+    public MetricsCollector(final EcosystemManager ecosystemManager)
+    {
+        this.ecosystemManager = ecosystemManager;
+        metricsMap = new HashMap<>();
+    }
 
     @Scheduled(fixedDelay=30000)
     public void collectMetrics() throws JSONException, InterruptedException, CreatingSettingsFolderException, ReadingEcosystemException {
@@ -56,7 +63,8 @@ public class MetricsCollector {
     }
 
     private void removeNotActiveInstances() {
-        List<String> idsToBeDeleted = metricsMap.keySet().stream().filter(id -> {
+        val idsToBeDeleted = metricsMap.keySet().stream().filter(id ->
+        {
             try {
                 return ecosystemManager.getEcosystem().getInstances().stream().noneMatch(i -> i.getId().equals(id));
             } catch (CreatingSettingsFolderException e) {
@@ -67,7 +75,7 @@ public class MetricsCollector {
             return true;
         }).collect(Collectors.toList());
 
-        idsToBeDeleted.forEach(id-> metricsMap.remove(id));
+        idsToBeDeleted.forEach(metricsMap::remove);
     }
 
     //TODO should be marshaled via jackson or Gson

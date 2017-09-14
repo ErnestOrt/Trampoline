@@ -14,7 +14,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Queue;
 
+import lombok.Getter;
+
+
 @Component
+@Getter
 public class DashboardCollector {
 
     private final Queue<MemoryUsageDto> memoryUsageQueue = new CircularFifoQueue<>(25);
@@ -29,9 +33,5 @@ public class DashboardCollector {
         memoryUsageDto.setTotalMemoryMB(new DecimalFormat("0.00").format(Runtime.getRuntime().totalMemory()/1000000));
 
         memoryUsageQueue.add(memoryUsageDto);
-    }
-
-    public Queue<MemoryUsageDto> getMemoryUsageQueue() {
-        return memoryUsageQueue;
     }
 }
