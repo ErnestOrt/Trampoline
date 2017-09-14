@@ -1,5 +1,9 @@
 package org.ernest.applications.trampoline.controller;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.ernest.applications.trampoline.entities.Ecosystem;
 import org.ernest.applications.trampoline.entities.Microservice;
 import org.ernest.applications.trampoline.entities.MicroserviceGroupInfo;
@@ -16,17 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
 
 
-@RestController
+@Controller
 @AllArgsConstructor
 @RequestMapping("/settings")
 public class SettingsController {
@@ -49,12 +48,14 @@ public class SettingsController {
     }
 
 	@RequestMapping(value= "/setmaven", method = RequestMethod.POST)
+	@ResponseBody
 	public void setMavenBinaryLocation(@RequestParam(value="mavenHomeLocationPath") String mavenHomeLocationPath,@RequestParam(value="mavenBinaryLocationPath") String mavenBinaryLocationPath) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
 		ecosystemManager.setMavenBinaryLocation(mavenBinaryLocationPath);
 		ecosystemManager.setMavenHomeLocation(mavenHomeLocationPath);
 	}
 
 	@RequestMapping(value= "/setnewmicroservice", method = RequestMethod.POST)
+	@ResponseBody
 	public void setNewMicroservice(@RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation,
 								   @RequestParam(value="defaultPort") String defaultPort, @RequestParam(value="actuatorPrefix") String actuatorPrefix,
 								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="buildTool") String buildTool) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
@@ -62,21 +63,25 @@ public class SettingsController {
 	}
 
 	@RequestMapping(value= "/removemicroservice", method = RequestMethod.POST)
+	@ResponseBody
 	public void removeMicroservice(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException{
 		ecosystemManager.removeMicroservice(id);
 	}
 
 	@RequestMapping(value= "/microserviceinfo", method = RequestMethod.POST)
+	@ResponseBody
 	public Microservice getMicroserviceInfo(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
 		return ecosystemManager.getEcosystem().getMicroservices().stream().filter(m-> m.getId().equals(id)).findFirst().get();
 	}
 
 	@RequestMapping(value= "/setmicroservicesgroup", method = RequestMethod.POST)
+	@ResponseBody
 	public void getMicroserviceInfo(@RequestParam(value="name") String name, @RequestParam(value="idsMicroservicesGroup[]") List<String> idsMicroservicesGroup) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
 		ecosystemManager.setMicroserviceGroup(name, idsMicroservicesGroup);
 	}
 
 	@RequestMapping(value= "/groupinfo", method = RequestMethod.POST)
+	@ResponseBody
 	public MicroserviceGroupInfo getGroupInfo(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
 		val info = new MicroserviceGroupInfo();
 
@@ -94,6 +99,7 @@ public class SettingsController {
 	}
 
 	@RequestMapping(value= "/removegroup", method = RequestMethod.POST)
+	@ResponseBody
 	public void removeGroup(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException{
 		ecosystemManager.removeGroup(id);
 	}

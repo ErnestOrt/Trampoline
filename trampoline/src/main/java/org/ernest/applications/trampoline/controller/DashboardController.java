@@ -1,20 +1,25 @@
 package org.ernest.applications.trampoline.controller;
 
-import java.util.Queue;
-
 import org.ernest.applications.trampoline.collectors.DashboardCollector;
 import org.ernest.applications.trampoline.entities.Ecosystem;
 import org.ernest.applications.trampoline.entities.MemoryUsageDto;
+import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
+import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
 import org.ernest.applications.trampoline.services.EcosystemManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Queue;
 
 import lombok.AllArgsConstructor;
 
 
-@RestController
+@Controller
 @AllArgsConstructor
 public class DashboardController {
 
@@ -38,6 +43,7 @@ public class DashboardController {
     }
 
 	@RequestMapping(value= "/dashboard/memory", method = RequestMethod.GET)
+	@ResponseBody
 	public Queue<MemoryUsageDto> checkStatusInstance()  {
 		return dashboardCollector.getMemoryUsageQueue();
 	}
