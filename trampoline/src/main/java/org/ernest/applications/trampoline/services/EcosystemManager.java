@@ -60,10 +60,11 @@ public class EcosystemManager {
 		ecosystem.getMicroservices().add(microservice);
 		fileManager.saveEcosystem(ecosystem);
 	}
-
-	public void removeMicroservice(String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
+  
+	public void removeMicroservice(String idToBeDeleted) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
-		ecosystem.setMicroservices(ecosystem.getMicroservices().stream().filter(m -> !m.getId().equals(id)).collect(Collectors.toList()));
+		ecosystem.setMicroservices(ecosystem.getMicroservices().stream().filter(m -> !m.getId().equals(idToBeDeleted)).collect(Collectors.toList()));
+		ecosystem.getMicroservicesGroups().forEach(g-> g.setMicroservicesIds(g.getMicroservicesIds().stream().filter(id -> !id.equals(idToBeDeleted)).collect(Collectors.toList())));
 		fileManager.saveEcosystem(ecosystem);
 	}
 
