@@ -19,14 +19,14 @@ Also you will be able to:
 * Java && (Apache Maven || Gradle wrapper)
 * Start actuator sub-project of Spring Boot on your microservices
 * Set up logging.path and/or logging.file properties defined on your microservices in order to be able to visulize logs
-* Include your Gradle Wrapper next to your build files if your choice is Gradle as a Build Tool
+* Include your Gradle Wrapper next to your build files if build tool of choice is Gradle
 
 ### How do I make it work?
 
 1. You just have to start the project trampoline and start it, for instance with the well known commands _mvn spring-boot:run_ or _./gradlew (or gradlew.bat) bootRun_. 
 2. Once started, go to [localhost:8080](http://localhost:8080). 
-3. Once there, the only thing you should do is enter the path to your apache maven or directly enter your microservices information if you will use a gradle wrapper on _Seetings Section_. 
-4. Finally you just have to strat your instances on _Instances Section_.
+3. Once there, the only thing you should do is enter the path to your apache maven or directly enter your microservices information if you will use a gradle wrapper on _Settings Section_. 
+4. Finally you just have to start your instances on _Instances Section_.
 
 ### FAQ
 
@@ -60,6 +60,7 @@ No, information introduced will be stored in a settings file, next to the script
 
 ### Contributing
 Start with clicking the star button to make the author and his neighbors happy :blush:. Then fork the repository and submit a pull request for whatever change you want to be added to this project.
+This project is using lombok annotations so don't forget to have the plugin installed!
 
 If you have any questions, just open an issue.
 

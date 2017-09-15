@@ -1,5 +1,9 @@
 package org.ernest.applications.trampoline.controller;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.ernest.applications.trampoline.entities.Ecosystem;
 import org.ernest.applications.trampoline.entities.Microservice;
 import org.ernest.applications.trampoline.entities.MicroserviceGroupInfo;
@@ -17,17 +21,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.val;
+
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/settings")
 public class SettingsController {
 
 	private static final String SETTINGS_VIEW = "settings";
 
-	@Autowired
-	EcosystemManager ecosystemManager;
+	private final EcosystemManager ecosystemManager;
 
 	@RequestMapping("")
     public String getSettingsView(Model model) {
@@ -78,15 +83,18 @@ public class SettingsController {
 	@RequestMapping(value= "/groupinfo", method = RequestMethod.POST)
 	@ResponseBody
 	public MicroserviceGroupInfo getGroupInfo(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
-		MicroservicesGroup microservicesGroup = ecosystemManager.getEcosystem().getMicroservicesGroups().stream().filter(m-> m.getId().equals(id)).findFirst().get();
-		List<Microservice> microservices = ecosystemManager.getEcosystem().getMicroservices();
+		val info = new MicroserviceGroupInfo();
 
-		MicroserviceGroupInfo info = new MicroserviceGroupInfo();
-		info.setName(microservicesGroup.getName());
-		info.setMicroservicesNames(microservices.stream()
-				                                .filter(m->microservicesGroup.getMicroservicesIds().contains(m.getId()))
-				                                .map(Microservice::getName)
-				                                .collect(Collectors.toList()));
+		ecosystemManager.getEcosystem().getMicroservicesGroups().stream()
+			.filter(m-> m.getId().equals(id))
+			.findFirst()
+			.ifPresent(microservicesGroup -> {
+				info.setName(microservicesGroup.getName());
+				info.setMicroservicesNames(ecosystemManager.getEcosystem().getMicroservices().stream()
+					.filter(m -> microservicesGroup.getMicroservicesIds().contains(m.getId()))
+					.map(Microservice::getName)
+					.collect(Collectors.toList()));
+		});
 		return info;
 	}
 

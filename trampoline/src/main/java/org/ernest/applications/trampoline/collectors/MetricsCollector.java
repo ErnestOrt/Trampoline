@@ -18,15 +18,22 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import lombok.val;
+
+
 @Component
 public class MetricsCollector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollector.class);
 
-    @Autowired
-    EcosystemManager ecosystemManager;
+    private final EcosystemManager ecosystemManager;
+    private final Map<String, Queue<Metrics>> metricsMap;
 
-    private Map<String, Queue<Metrics>> metricsMap = new HashMap<>();
+    public MetricsCollector(final EcosystemManager ecosystemManager)
+    {
+        this.ecosystemManager = ecosystemManager;
+        metricsMap = new HashMap<>();
+    }
 
     @Scheduled(fixedDelay=30000)
     public void collectMetrics() throws JSONException, InterruptedException, CreatingSettingsFolderException, ReadingEcosystemException {
@@ -39,7 +46,7 @@ public class MetricsCollector {
                 if (metricsMap.containsKey(instance.getId())) {
                     metricsMap.get(instance.getId()).add(metrics);
                 } else {
-                    Queue<Metrics> queue = new CircularFifoQueue(20);
+                    Queue<Metrics> queue = new CircularFifoQueue<>(20);
                     queue.add(metrics);
                     metricsMap.put(instance.getId(), queue);
                 }
@@ -56,9 +63,10 @@ public class MetricsCollector {
     }
 
     private void removeNotActiveInstances() {
-        List<String> idsToBeDeleted = metricsMap.keySet().stream().filter(id -> {
+        val idsToBeDeleted = metricsMap.keySet().stream().filter(id ->
+        {
             try {
-                return !ecosystemManager.getEcosystem().getInstances().stream().anyMatch(i -> i.getId().equals(id));
+                return ecosystemManager.getEcosystem().getInstances().stream().noneMatch(i -> i.getId().equals(id));
             } catch (CreatingSettingsFolderException e) {
                 e.printStackTrace();
             } catch (ReadingEcosystemException e) {
@@ -67,18 +75,25 @@ public class MetricsCollector {
             return true;
         }).collect(Collectors.toList());
 
-        idsToBeDeleted.stream().forEach(id-> metricsMap.remove(id));
+        idsToBeDeleted.forEach(metricsMap::remove);
     }
 
+    //TODO should be marshaled via jackson or Gson
     private Metrics buildMetricsFromJsonResponse(JSONObject metricsJson) {
         Metrics metrics = new Metrics();
-        metrics.setTotalMemoryKB(Long.valueOf(metricsJson.get("mem").toString()));
-        metrics.setFreeMemoryKB(Long.valueOf(metricsJson.get("mem.free").toString()));
-        metrics.setHeapKB(Long.valueOf(metricsJson.get("heap").toString()));
-        metrics.setInitHeapKB(Long.valueOf(metricsJson.get("heap.init").toString()));
-        metrics.setUsedHeapKB(Long.valueOf(metricsJson.get("heap.used").toString()));
-        metrics.setDate(new SimpleDateFormat("HH:mm:ss").format(new Date()));
-
+        try
+        {
+            metrics.setTotalMemoryKB(Long.valueOf(metricsJson.get("mem").toString()));
+            metrics.setFreeMemoryKB(Long.valueOf(metricsJson.get("mem.free").toString()));
+            metrics.setHeapKB(Long.valueOf(metricsJson.get("heap").toString()));
+            metrics.setInitHeapKB(Long.valueOf(metricsJson.get("heap.init").toString()));
+            metrics.setUsedHeapKB(Long.valueOf(metricsJson.get("heap.used").toString()));
+            metrics.setDate(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error while reconstruction Metrics", e);
+        }
         return metrics;
     }
 }

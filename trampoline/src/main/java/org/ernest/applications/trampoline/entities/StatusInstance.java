@@ -5,9 +5,9 @@ public enum StatusInstance {
 	DEPLOYED("deployed"),
 	NOT_DEPLOYED("not deployed");
 	
-	private String code;
+	private final String code;
 	
-	private StatusInstance(String code){
+	StatusInstance(String code){
 		this.code = code;
 	}
 	

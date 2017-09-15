@@ -1,5 +1,6 @@
 package org.ernest.applications.trampoline.services;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -15,32 +16,37 @@ import org.ernest.applications.trampoline.utils.PortsChecker;
 import org.jboss.resteasy.client.ClientRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+import lombok.AllArgsConstructor;
+import lombok.val;
+
+
+@Service
+@AllArgsConstructor
 public class EcosystemManager {
-	
-	@Autowired
-	FileManager fileManager;
-	
+
+	private final FileManager fileManager;
+
 	public Ecosystem getEcosystem() throws CreatingSettingsFolderException, ReadingEcosystemException {
 		return fileManager.getEcosystem();
 	}
-	
+
 	public void setMavenBinaryLocation(String path) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		ecosystem.setMavenBinaryLocation(path);
 		fileManager.saveEcosystem(ecosystem);
 	}
-	
+
 	public void setMavenHomeLocation(String path) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		ecosystem.setMavenHomeLocation(path);
 		fileManager.saveEcosystem(ecosystem);
 	}
-	
+
 	public void setNewMicroservice(String name, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments, String buildTool) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
-		
+
 		Microservice microservice = new Microservice();
 		microservice.setId(UUID.randomUUID().toString());
 		microservice.setName(name);
@@ -50,11 +56,11 @@ public class EcosystemManager {
 		microservice.setVmArguments(vmArguments);
 		microservice.setBuildTool(BuildTools.getByCode(buildTool));
 		fileManager.createScript(microservice);
-		
+
 		ecosystem.getMicroservices().add(microservice);
 		fileManager.saveEcosystem(ecosystem);
 	}
-	
+  
 	public void removeMicroservice(String idToBeDeleted) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		ecosystem.setMicroservices(ecosystem.getMicroservices().stream().filter(m -> !m.getId().equals(idToBeDeleted)).collect(Collectors.toList()));
@@ -81,10 +87,10 @@ public class EcosystemManager {
 
 	public void startInstance(String id, String port, String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException{
 		Ecosystem ecosystem = fileManager.getEcosystem();
-		
+
 		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).collect(Collectors.toList()).get(0);
 		fileManager.runScript(microservice, ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
-		
+
 		Instance instance = new Instance();
 		instance.setId(UUID.randomUUID().toString());
 		instance.setPort(port);
@@ -99,13 +105,13 @@ public class EcosystemManager {
 	public void killInstance(String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, ShuttingDownInstanceException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		Instance instance = ecosystem.getInstances().stream().filter(i -> i.getId().equals(id)).collect(Collectors.toList()).get(0);
-		
+
 		try {
 			new ClientRequest("http://localhost:" + instance.getPort() + instance.getActuatorPrefix() + "/shutdown").post(String.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		ecosystem.setInstances(ecosystem.getInstances().stream().filter(i -> !i.getId().equals(id)).collect(Collectors.toList()));
 		fileManager.saveEcosystem(ecosystem);
 	}
@@ -129,21 +135,21 @@ public class EcosystemManager {
 	}
 
 	public void startGroup(String id) {
-		MicroservicesGroup group = fileManager.getEcosystem().getMicroservicesGroups().stream().filter(g -> g.getId().equals(id)).findFirst().get();
+		val optionalGroup = fileManager.getEcosystem().getMicroservicesGroups().stream().filter(g -> g.getId().equals(id)).findFirst();
 
-		fileManager.getEcosystem().getMicroservices().stream()
-													 .filter(m->group.getMicroservicesIds().contains(m.getId()))
-													 .forEach(m->prepareMicroservice(m));
+		optionalGroup.ifPresent(group -> fileManager.getEcosystem().getMicroservices().stream()
+            .filter(m -> group.getMicroservicesIds().contains(m.getId()))
+            .forEach(this::prepareMicroservice));
 	}
 
 	private void prepareMicroservice(Microservice microservice) {
 		int port = Integer.parseInt(microservice.getDefaultPort());
 		boolean instanceStarted = false;
-		List<Instance> instances = fileManager.getEcosystem().getInstances();
+		Collection<Instance> instances = fileManager.getEcosystem().getInstances();
 
 		while(!instanceStarted) {
 			final int portToBeLaunched = port;
-			if (PortsChecker.available(portToBeLaunched) && !instances.stream().anyMatch(i -> i.getPort().equals(String.valueOf(portToBeLaunched)))) {
+			if (PortsChecker.available(portToBeLaunched) && instances.stream().noneMatch(i -> i.getPort().equals(String.valueOf(portToBeLaunched)))) {
 				startInstance(microservice.getId(), String.valueOf(port), "");
 				instanceStarted = true;
 			}else{

@@ -16,16 +16,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Queue;
 
+import lombok.AllArgsConstructor;
+
+
 @Controller
+@AllArgsConstructor
 public class DashboardController {
 
 	private static final String DASHBOARD_VIEW = "dashboard";
 
-	@Autowired
-	EcosystemManager ecosystemManager;
-
-	@Autowired
-	DashboardCollector dashboardCollector;
+	private final EcosystemManager ecosystemManager;
+	private final DashboardCollector dashboardCollector;
 
 	@RequestMapping("/")
     public String greeting(Model model) {

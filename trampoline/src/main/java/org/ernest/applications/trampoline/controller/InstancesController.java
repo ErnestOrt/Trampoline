@@ -20,20 +20,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 import java.util.Queue;
 
+import lombok.AllArgsConstructor;
+
+
 @Controller
+@AllArgsConstructor
 @RequestMapping("/instances")
 public class InstancesController {
 
 	private static final String INSTANCES_VIEW = "instances";
 
-	@Autowired
-	EcosystemManager ecosystemManager;
-
-	@Autowired
-	MetricsCollector metricsCollector;
-
-	@Autowired
-	TraceCollector traceCollector;
+	private final EcosystemManager ecosystemManager;
+	private final MetricsCollector metricsCollector;
+	private final TraceCollector traceCollector;
 
 	@RequestMapping("")
     public String getInstanceView(Model model) {
@@ -86,7 +85,7 @@ public class InstancesController {
 	public boolean checkPort(@RequestParam(value="port") int port) throws CreatingSettingsFolderException, ReadingEcosystemException {
 		boolean declaredInstanceOnPort = ecosystemManager.getEcosystem().getInstances().stream().anyMatch(i -> i.getPort().equals(String.valueOf(port)));
 
-		return declaredInstanceOnPort == false ? PortsChecker.available(port) : false;
+		return !declaredInstanceOnPort && PortsChecker.available(port);
 	}
 
 	@RequestMapping(value= "/startgroup", method = RequestMethod.POST)

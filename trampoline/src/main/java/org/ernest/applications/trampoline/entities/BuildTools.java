@@ -17,6 +17,6 @@ public enum BuildTools {
     }
 
     public static BuildTools getByCode(String code) {
-        return Arrays.asList(BuildTools.values()).stream().filter(p -> code.equals(p.getCode())).findFirst().get();
+        return Arrays.stream(BuildTools.values()).filter(p -> code.equals(p.getCode())).findFirst().get();
     }
 }

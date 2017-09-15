@@ -16,11 +16,12 @@ import org.ernest.applications.trampoline.utils.ScriptContentsProvider;
 import org.ernest.applications.trampoline.utils.VMParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-@Component
+@Service
 public class FileManager {
 
 	@Value("${settings.folder.path.mac}")
