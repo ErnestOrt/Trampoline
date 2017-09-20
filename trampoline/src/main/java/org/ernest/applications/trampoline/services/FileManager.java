@@ -35,6 +35,9 @@ public class FileManager {
 	@Value("${settings.file.name}")
 	private String settingsFileName;
 
+    @Value("${trampoline.version}")
+    private float currentVersion;
+
 	public Ecosystem getEcosystem() throws CreatingSettingsFolderException, ReadingEcosystemException {
 		checkIfFileExistsAndCreatedIfNeeded();
 		Ecosystem ecosystem = null;
@@ -51,23 +54,35 @@ public class FileManager {
 		return ecosystem;
 	}
 
-	private void updateMicroservicesInformationStored(Ecosystem ecosystem) {
-		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null)){
-			ecosystem.getMicroservices().stream().filter(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null).forEach(m ->{
-				m.setVmArguments("");
-				m.setActuatorPrefix("");
-				m.setBuildTool(BuildTools.MAVEN);
-				createScript(m);
-			});
+    private void updateMicroservicesInformationStored(Ecosystem ecosystem) {
+		boolean ecosystemChanged = false;
+        if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null)){
+            ecosystem.getMicroservices().stream().filter(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null).forEach(m ->{
+                m.setVmArguments("");
+                m.setActuatorPrefix("");
+                m.setBuildTool(BuildTools.MAVEN);
+                createScript(m);
+            });
+			ecosystemChanged = true;
+        }
 
+        if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getBuildTool() == null)){
+            ecosystem.getMicroservices().stream().filter(m -> m.getBuildTool() == null).forEach(m -> m.setBuildTool(BuildTools.MAVEN));
+			ecosystemChanged = true;
+        }
+
+        if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getVersion() == null)){
+            ecosystem.getMicroservices().stream().filter(m -> m.getVersion() == null).forEach(m -> {
+                m.setVersion(currentVersion);
+                createScript(m);
+            });
+			ecosystemChanged = true;
+        }
+
+        if(ecosystemChanged){
 			saveEcosystem(ecosystem);
 		}
-
-		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getBuildTool() == null)){
-			ecosystem.getMicroservices().stream().filter(m -> m.getBuildTool() == null).forEach(m -> m.setBuildTool(BuildTools.MAVEN));
-			saveEcosystem(ecosystem);
-		}
-	}
+    }
 
 	public void saveEcosystem(Ecosystem ecosystem) throws SavingEcosystemException {
 		try {

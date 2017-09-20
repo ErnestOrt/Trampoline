@@ -267,6 +267,26 @@ function showTraces(instanceId, name, port){
     	});
 }
 
+function showInfo(instanceId, name, port){
+    $('.front-loading').show();
+    $("#info-title").html(name+" : "+port);
+    $.ajax({
+    	    url : "/instances/info",
+    	    type: "POST",
+    	    data : {id: instanceId},
+    	    success: function(data, textStatus, jqXHR) {
+                $("#modal-info-pomLocation").text(data.pomLocation);
+                $("#modal-info-git-branch").text(data.branch);
+                $("#modal-info-git-commit-message").text(data.commitMessage);
+                $("#modal-info-git-commit-owner").text(data.commitOwner);
+                $("#modal-info-git-commit-date").text(data.commitDate);
+
+                $('.front-loading').hide();
+                $("#modal-instance-info").modal("show");
+    	    }
+    	});
+}
+
 $( document ).ready(function() {
     $(".front-loading").hide();
     $(".front-loading").height($("body").height());

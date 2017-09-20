@@ -20,8 +20,6 @@ import java.util.List;
 @Component
 public class TraceCollector {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollector.class);
-
     @Autowired
     EcosystemManager ecosystemManager;
 

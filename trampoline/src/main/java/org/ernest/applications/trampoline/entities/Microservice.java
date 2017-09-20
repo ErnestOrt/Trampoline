@@ -9,6 +9,7 @@ public class Microservice {
 	private String actuatorPrefix;
 	private String vmArguments;
 	private BuildTools buildTool;
+	private Float version;
 	
 	public String getId() {
 		return id;
@@ -53,5 +54,13 @@ public class Microservice {
 
 	public void setBuildTool(BuildTools buildTool) {
 		this.buildTool = buildTool;
+	}
+
+	public Float getVersion() {
+		return version;
+	}
+
+	public void setVersion(Float version) {
+		this.version = version;
 	}
 }

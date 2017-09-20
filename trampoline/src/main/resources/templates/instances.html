@@ -152,7 +152,7 @@
                                         <th>Name</th>
                                         <th>Port</th>
                                         <th>Status</th>
-                                        <th>Info</th>
+                                        <th>Git Info</th>
                                         <th>Logs</th>
                                         <th>Trace</th>
                                         <th>Metrics</th>
@@ -164,7 +164,7 @@
                                             <td th:id="'td-name-' + ${instance.id}" th:text="${instance.name}"></td>
                                             <td th:id="'td-port-' + ${instance.id}"  class="center" th:text="${instance.port}"></td>
                                             <td class="center"><span class="label label-warning" th:id="'label-status-' + ${instance.id}">Waiting</span></td>
-                                            <td class="center"><button type="button" data-toggle="modal" data-target="#modal-instance-info" class="btn btn-default btn-sm"><i class="fa fa-lg fa-info-circle" aria-hidden="true"></i></button></td>
+                                            <td class="center"><button type="button" th:onclick="'showInfo(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-success btn-sm"><i class="fa fa-lg fa-info-circle" aria-hidden="true"></i></button></td>
                                             <td class="center"><button type="button" th:onclick="'window.open(\'http://localhost:'+${instance.port}+'/'+${instance.actuatorPrefix}+'/logfile\', \'_blank\');'" class="btn btn-primary btn-sm"><i class="fa fa-lg fa-clipboard" aria-hidden="true"></i></button></td>
                                             <td class="center"><button type="button" th:onclick="'showTraces(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-warning btn-sm"><i class="fa fa-lg fa-book" aria-hidden="true"></i></button></td>
                                             <td class="center"><button type="button" th:onclick="'showMetrics(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-info btn-sm"><i class="fa fa-lg fa-line-chart" aria-hidden="true"></i></button></td>
@@ -184,17 +184,15 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Instance Information</h4>
+                        <h4 class="modal-title"><span id="info-title"></span></h4>
                     </div>
                     <div class="modal-body">
-                        <p>Name:<br/><span class="text-success" id="modal-microservice-name">example</span></p>
-                        <p>Pom or Build File Location:<br/><span class="text-success" id="modal-microservice-pomLocation">C:\Users\Ernest\Documents\GitHub\Trampoline\microservice-example-gradle</span></p>
-                        <p>Build Tool:<br/><span class="text-success" id="modal-microservice-buildTool">GRADLE</span></p>
-                        <p>Git Branch:<br/><span class="text-success" id="modal-microservice-defaultPort">git-info</span></p>
+                        <p>Pom or Build File Location:<br/><span class="text-success" id="modal-info-pomLocation"></span></p>
+                        <p>Git Branch:<br/><span class="text-success" id="modal-info-git-branch"></span></p>
                         <p>Last Commit:
-                            <br/><span class="text-success" id="modal-microservice-actuatorPrefix">Enable Codenarc checks for integration test code</span>
-                            <br/><span class="text-success" id="modal-microservice-actuatorPrefix">Hubert Klein Ikkink [mrhaki@server]</span>
-                        <br/><span class="text-success" id="modal-microservice-actuatorPrefix">2016-12-15</span>
+                            <br/><span class="text-success" id="modal-info-git-commit-message"></span>
+                            <br/><span class="text-success" id="modal-info-git-commit-owner"></span>
+                        <br/><span class="text-success" id="modal-info-git-commit-date"></span>
                         </p>
                     </div>
                     <div class="modal-footer">

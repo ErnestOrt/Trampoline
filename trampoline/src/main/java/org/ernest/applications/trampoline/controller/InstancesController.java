@@ -1,9 +1,7 @@
 package org.ernest.applications.trampoline.controller;
 
-import org.ernest.applications.trampoline.entities.Ecosystem;
-import org.ernest.applications.trampoline.entities.Metrics;
-import org.ernest.applications.trampoline.entities.Microservice;
-import org.ernest.applications.trampoline.entities.TraceActuator;
+import org.ernest.applications.trampoline.collectors.InstanceInfoCollector;
+import org.ernest.applications.trampoline.entities.*;
 import org.ernest.applications.trampoline.exceptions.*;
 import org.ernest.applications.trampoline.services.EcosystemManager;
 import org.ernest.applications.trampoline.collectors.MetricsCollector;
@@ -34,6 +32,9 @@ public class InstancesController {
 
 	@Autowired
 	TraceCollector traceCollector;
+
+	@Autowired
+	InstanceInfoCollector instanceInfoCollector;
 
 	@RequestMapping("")
     public String getInstanceView(Model model) {
@@ -79,6 +80,12 @@ public class InstancesController {
 	@ResponseBody
 	public List<TraceActuator> getTraces(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException {
 		return traceCollector.getTraces(id);
+	}
+
+	@RequestMapping(value= "/info", method = RequestMethod.POST)
+	@ResponseBody
+	public InstanceInfo getInstanceInfoWhenDeployed(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException {
+		return instanceInfoCollector.getInfo(id);
 	}
 
 	@RequestMapping(value= "/checkport", method = RequestMethod.POST)
