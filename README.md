@@ -12,14 +12,16 @@ Also you will be able to:
 * Configurable Actuator endpoint & VM arguments
 * Monitor memory usage for each instance, capturing their metrics every 30 seconds.
 * Monitor intances trace information any point in time
+* Visualize GIT branch and last commit on instances
 * Define microservices groups and launch them all with one click
 
 ### Requirements
 
 * Java && (Apache Maven || Gradle wrapper)
+* Include your Gradle Wrapper next to your build files if your choice is Gradle as a Build Tool
 * Start actuator sub-project of Spring Boot on your microservices
 * Set up logging.path and/or logging.file properties defined on your microservices in order to be able to visulize logs
-* Include your Gradle Wrapper next to your build files if your choice is Gradle as a Build Tool
+* Set up git info pluggin on your ms to visulaize git information on deployed instances (see examples provided)
 
 ### How do I make it work?
 
@@ -42,7 +44,7 @@ You can use Apache Maven or a Gradle Wrapper
 
 Theoretically yes, but only has been fully tested on Windows and Mac OS.
 
-* Will I have to enter data all the time?.
+* Can I run it on any OS?.
 
 * I am working with Spring Boot 1.3 or less and instances do not start.
 
@@ -55,6 +57,22 @@ You should add security starter on your microservices pom.xml:
 </dependency>
 
 ```
+
+* Which are the pluggins I should use to retrieve git information?.
+
+```
+"gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17"
+```
+
+```
+<plugin>
+	<groupId>pl.project13.maven</groupId>
+	<artifactId>git-commit-id-plugin</artifactId>
+	<version>2.2.3</version>
+</plugin>
+```
+
+* Will I have to enter data all the time?.
 
 No, information introduced will be stored in a settings file, next to the script to launch each microservices :grin:
 
