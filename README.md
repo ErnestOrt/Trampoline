@@ -44,8 +44,6 @@ You can use Apache Maven or a Gradle Wrapper
 
 Theoretically yes, but only has been fully tested on Windows and Mac OS.
 
-* Can I run it on any OS?.
-
 * I am working with Spring Boot 1.3 or less and instances do not start.
 
 You should add security starter on your microservices pom.xml:
