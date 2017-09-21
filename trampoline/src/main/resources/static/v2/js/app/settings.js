@@ -1,3 +1,5 @@
+var selectedMicroserviceId;
+
 function changeSelectedClass(element) {
     if($(element).hasClass("btn-default")){
         $(element).removeClass("btn-default");
@@ -78,7 +80,7 @@ function setNewMicroservice(){
 			    type: "POST",
 			    data : {name: $("#input-newmicroservice-name").val(), pomLocation: $("#input-newmicroservice-pomlocation").val(), defaultPort: $("#input-newmicroservice-defaultport").val(),
 			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val(), vmArguments: $("#input-newmicroservice-vmarguments").val(),
-			    	    buildTool: $("#input-newmicroservice-build-tool").val()},
+			    	    buildTool: $("#input-newmicroservice-build-tool").val(), gitLocation: $("#input-newmicroservice-gitLocation").val()},
 			    success: function(data, textStatus, jqXHR) { location.reload(); },
                  error: function (request, status, error) {
                       $('.front-loading').hide();
@@ -132,6 +134,7 @@ function removeMicroservice(microserviceId){
 }
 
 function showMicroserviceInformation(microserviceId){
+    selectedMicroserviceId=microserviceId;
    $('.front-loading').show();
 	$.ajax({
 	    url : "/settings/microserviceinfo",
@@ -140,10 +143,11 @@ function showMicroserviceInformation(microserviceId){
 	    success: function(data, textStatus, jqXHR) {
 	        $("#modal-microservice-name").text(data.name);
 	        $("#modal-microservice-buildTool").text(data.buildTool);
-	        $("#modal-microservice-pomLocation").text(data.pomLocation);
-	        $("#modal-microservice-defaultPort").text(data.defaultPort);
-	        $("#modal-microservice-actuatorPrefix").text(data.actuatorPrefix);
-	        $("#modal-microservice-vmArguments").text(data.vmArguments);
+	        $("#input-update-pomLocation").val(data.pomLocation);
+	        $("#input-update-default-port").val(data.defaultPort);
+	        $("#input-update-actuator-prefix").val(data.actuatorPrefix);
+	        $("#input-update-vm-arguments").val(data.vmArguments);
+	        $("#input-update-gitLocation").val(data.gitLocation);
 	        $('.front-loading').hide();
 	        $("#modal-microservice-information").modal("show");
 	    },
@@ -154,6 +158,43 @@ function showMicroserviceInformation(microserviceId){
 	});
 }
 
+function showGitStatus(microserviceId){
+    $.ajax({
+    	    url : "/settings/gitmicroservice",
+    	    type: "POST",
+    	    data : {id: microserviceId},
+    	    success: function(data, textStatus, jqXHR) {
+
+    	    },
+            error: function (request, status, error) {
+                     $('.front-loading').hide();
+                   alert(request.responseText);
+               }
+    	});
+}
+
+function updateMicroservice(){
+    if($("#input-update-pomLocation").val() == '' || $("#input-update-default-port").val() == ''){
+
+    }else{
+        $('.front-loading').show();
+        $.ajax({
+            url : "/settings/updatemicroservice",
+            type: "POST",
+            data : {id: selectedMicroserviceId,
+                    defaultPort: $("#input-update-default-port").val(),
+                    actuatorPrefix: $("#input-update-actuator-prefix").val(),
+                    vmArguments: $("#input-update-vm-arguments").val(),
+                    pomLocation: $("#input-update-pomLocation").val(),
+                    gitLocation: $("#input-update-gitLocation").val()},
+            success: function(data, textStatus, jqXHR) { location.reload(); },
+             error: function (request, status, error) {
+                  $('.front-loading').hide();
+                   alert(request.responseText);
+               }
+        });
+    }
+}
 
 function showGroupInformation(groupId){
    $('.front-loading').show();

@@ -34,5 +34,7 @@ dependencies {
 	compile('org.jboss.resteasy:resteasy-jaxrs:2.2.1.GA')
 	compile('org.apache.commons:commons-collections4:4.1')
 	compile('org.json:json:20160810')
+	compile('org.eclipse.jgit:org.eclipse.jgit:4.8.0.201706111038-r')
+
 
 }

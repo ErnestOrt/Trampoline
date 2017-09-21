@@ -85,7 +85,8 @@
                                                         <span th:text="${microservice.name}"></span>
                                                     </div>
                                                     <div class="col-xs-4 text-right">
-                                                        <btn class="btn btn-sm btn-primary btn-icon" th:onclick="'showMicroserviceInformation(\'' + ${microservice.id} + '\')'"><i class="fa fa-info"></i></btn>
+                                                        <btn class="btn btn-sm btn-warning btn-icon" th:onclick="'showGitStatus(\'' + ${microservice.id} + '\')'"><i class="fa fa-github"></i></btn>
+                                                        <btn class="btn btn-sm btn-primary btn-icon" th:onclick="'showMicroserviceInformation(\'' + ${microservice.id} + '\')'"><i class="fa fa-pencil"></i></btn>
                                                         <btn class="btn btn-sm btn-danger btn-icon" th:onclick="'removeMicroservice(\'' + ${microservice.id} + '\')'"><i class="fa fa-trash"></i></btn>
                                                     </div>
                                                 </div>
@@ -130,7 +131,7 @@
                                         <div class="col-md-5">
                                             <div class="form-group" id="form-newmicroservice-name">
                                                 <label>Name *</label>
-                                                <input id="input-newmicroservice-name" type="text" class="form-control border-input" placeholder="microservice-1"/>
+                                                <input id="input-newmicroservice-name" type="text" class="form-control border-input" placeholder="Ex: microservice-1"/>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -145,7 +146,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group" id="form-newmicroservice-defaultport">
                                                 <label>Default Port *</label>
-                                                <input  id="input-newmicroservice-defaultport" type="text" class="form-control border-input" placeholder="9988"/>
+                                                <input  id="input-newmicroservice-defaultport" type="text" class="form-control border-input" placeholder="Ex: 9988"/>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -159,10 +160,19 @@
                                         <div class="col-md-6">
                                             <div class="form-group" id="form-newmicroservice-pomlocation">
                                                 <label>Pom or Build File Location *</label>
-                                                <input  id="input-newmicroservice-pomlocation" type="text" class="form-control border-input"  placeholder="/Users/ernest/Documents/workarea/microservice-1" />
+                                                <input  id="input-newmicroservice-pomlocation" type="text" class="form-control border-input"  placeholder="Ex: /Users/ernest/Documents/workarea/microservice-1" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
+                                            <div class="form-group" id="form-newmicroservice-gitLocation">
+                                                <label>Git Repo Root Location</label>
+                                                <input  id="input-newmicroservice-gitLocation" type="text" class="form-control border-input" placeholder="Ex: /Users/ernest/Documents/workarea/microservice-1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-12">
                                             <div class="form-group" id="form-newmicroservice-vmarguments">
                                                 <label>VM Arguments</label>
                                                 <input  id="input-newmicroservice-vmarguments" type="text" class="form-control border-input" placeholder="Ex: -Dmy.arg.one=false -Dmy.arg.two=true"/>
@@ -214,13 +224,15 @@
                     </div>
                     <div class="modal-body">
                         <p>Name:<br/><span class="text-success" id="modal-microservice-name"></span></p>
-                        <p>Pom or Build File Location:<br/><span class="text-success" id="modal-microservice-pomLocation"></span></p>
                         <p>Build Tool:<br/><span class="text-success" id="modal-microservice-buildTool"></span></p>
-                        <p>Default Port:<br/><span class="text-success" id="modal-microservice-defaultPort"></span></p>
-                        <p>Actuator Prefix:<br/><span class="text-success" id="modal-microservice-actuatorPrefix"></span></p>
-                        <p>VM Arguments:<br/><span class="text-success" id="modal-microservice-vmArguments"></span></p>
+                        <p>Default Port*:<br/><input  id="input-update-default-port" type="email" class="form-control border-input" placeholder="Ex: 9988"/></p>
+                        <p>Pom or Build File Location*:<br/><input  id="input-update-pomLocation" type="email" class="form-control border-input" placeholder="Ex: /Users/ernest/Documents/workarea/microservice-1"/></p>
+                        <p>Git Repo Root Location:<br/><input  id="input-update-gitLocation" type="email" class="form-control border-input" placeholder="Ex: /Users/ernest/Documents/workarea/microservice-1"/></p>
+                        <p>Actuator Prefix:<br/><input  id="input-update-actuator-prefix" type="email" class="form-control border-input" placeholder="Ex: /service-one"/></p>
+                        <p>VM Arguments:<br/><input  id="input-update-vm-arguments" type="email" class="form-control border-input" placeholder="Ex: -Dmy.arg.one=false -Dmy.arg.two=true"/></p>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" onclick="updateMicroservice()" class="btn btn-success">Save</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
