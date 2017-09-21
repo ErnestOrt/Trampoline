@@ -83,7 +83,7 @@ public class EcosystemManager {
 	public void startInstance(String id, String port, String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException{
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
-		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).collect(Collectors.toList()).get(0);
+		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).findAny().get();
 		fileManager.runScript(microservice, ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
 		
 		Instance instance = new Instance();
@@ -156,7 +156,7 @@ public class EcosystemManager {
 	public void updateMicroservice(String id, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments, String gitLocation) {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 
-		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).collect(Collectors.toList()).get(0);
+		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).findAny().get();
 		microservice.setPomLocation(pomLocation);
 		microservice.setDefaultPort(defaultPort);
 		microservice.setActuatorPrefix(actuatorPrefix);

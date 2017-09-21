@@ -160,11 +160,11 @@ function showMicroserviceInformation(microserviceId){
 
 function showGitStatus(microserviceId){
     $.ajax({
-    	    url : "/settings/gitmicroservice",
+    	    url : "/settings/microservicegitbranches",
     	    type: "POST",
     	    data : {id: microserviceId},
     	    success: function(data, textStatus, jqXHR) {
-
+                
     	    },
             error: function (request, status, error) {
                      $('.front-loading').hide();

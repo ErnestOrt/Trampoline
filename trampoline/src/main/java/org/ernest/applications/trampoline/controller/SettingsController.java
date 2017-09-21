@@ -110,9 +110,9 @@ public class SettingsController {
 		ecosystemManager.removeGroup(id);
 	}
 
-	@RequestMapping(value= "/gitmicroservice", method = RequestMethod.POST)
+	@RequestMapping(value= "/microservicegitbranches", method = RequestMethod.POST)
 	@ResponseBody
-	public void getGitMicroservice(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, IOException, GitAPIException {
-		gitManager.getMicroseriviceInfo(id);
+	public List<String> getGitMicroservice(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, IOException, GitAPIException {
+		return gitManager.getMicroseriviceBranches(id);
 	}
 }
