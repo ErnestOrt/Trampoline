@@ -1,10 +1,7 @@
 package org.ernest.applications.trampoline.controller;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.ernest.applications.trampoline.entities.Ecosystem;
-import org.ernest.applications.trampoline.entities.Microservice;
-import org.ernest.applications.trampoline.entities.MicroserviceGroupInfo;
-import org.ernest.applications.trampoline.entities.MicroservicesGroup;
+import org.ernest.applications.trampoline.entities.*;
 import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
@@ -112,7 +109,7 @@ public class SettingsController {
 
 	@RequestMapping(value= "/microservicegitbranches", method = RequestMethod.POST)
 	@ResponseBody
-	public List<String> getGitMicroservice(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, IOException, GitAPIException {
+	public MicroserviceGitInfo getGitMicroservice(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, IOException, GitAPIException {
 		return gitManager.getMicroseriviceBranches(id);
 	}
 }

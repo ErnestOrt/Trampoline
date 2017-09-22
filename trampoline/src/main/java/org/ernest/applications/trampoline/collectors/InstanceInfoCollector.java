@@ -1,7 +1,7 @@
 package org.ernest.applications.trampoline.collectors;
 
 import org.ernest.applications.trampoline.entities.Instance;
-import org.ernest.applications.trampoline.entities.InstanceInfo;
+import org.ernest.applications.trampoline.entities.InstanceGitInfo;
 import org.ernest.applications.trampoline.services.EcosystemManager;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -22,8 +22,8 @@ public class InstanceInfoCollector {
     @Autowired
     EcosystemManager ecosystemManager;
 
-    public InstanceInfo getInfo(String idInstance) {
-        InstanceInfo info = new InstanceInfo();
+    public InstanceGitInfo getInfo(String idInstance) {
+        InstanceGitInfo info = new InstanceGitInfo();
 
         Instance instance = ecosystemManager.getEcosystem().getInstances().stream().filter(i -> i.getId().equals(idInstance)).findAny().get();
         info.setPomLocation(instance.getPomLocation());

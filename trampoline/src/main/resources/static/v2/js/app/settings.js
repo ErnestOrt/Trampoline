@@ -159,16 +159,44 @@ function showMicroserviceInformation(microserviceId){
 }
 
 function showGitStatus(microserviceId){
+    $('.front-loading').show();
     $.ajax({
     	    url : "/settings/microservicegitbranches",
     	    type: "POST",
     	    data : {id: microserviceId},
     	    success: function(data, textStatus, jqXHR) {
-                
+    	     $('.front-loading').hide();
+    	    $("#modal-microservice-git").modal("show");
+                $("#ul-branches-git").html("");
+                $("#span-current-git-branch").html(data.currentBranch);
+                data.branches.forEach(function(item) {
+                       $("#ul-branches-git").append(' <li >'
+                       +'             <br/><div class="row">'
+                       +'                 <div class="col-xs-12">'
+                       +'                     <span >'+item+'</span>'
+                       +'                 </div>'
+                       +'                 <div class="col-xs-12 text-right">'
+                       +'                     <btn class="btn btn-sm btn-success btn-icon" >Checkout and Pull</btn>'
+                       +'                     <btn class="btn btn-sm btn-danger btn-icon" >Checkout and Pull and Restart Instances</btn>'
+                       +'                 </div>'
+                       +'             </div>'
+                       +'        </li>');
+                    });
     	    },
             error: function (request, status, error) {
                      $('.front-loading').hide();
-                   alert(request.responseText);
+                    $.notify({
+                       icon: "ti-more-alt",
+                       message: "Not possible to retrieve git information... Did you set <i>Git Repo Root Location?</i>"
+
+                    },{
+                        type: 'danger',
+                        timer: 3000,
+                        placement: {
+                            from: 'top',
+                            align: 'right'
+                        }
+                    });
                }
     	});
 }
