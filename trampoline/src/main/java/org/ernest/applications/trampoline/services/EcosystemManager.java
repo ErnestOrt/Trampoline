@@ -93,6 +93,7 @@ public class EcosystemManager {
 		instance.setPomLocation(microservice.getPomLocation());
 		instance.setActuatorPrefix(microservice.getActuatorPrefix());
 		instance.setVmArguments(vmArguments);
+		instance.setMicroserviceId(id);
 		ecosystem.getInstances().add(instance);
 		fileManager.saveEcosystem(ecosystem);
 	}
@@ -164,5 +165,12 @@ public class EcosystemManager {
 		microservice.setGitLocation(gitLocation);
 
 		fileManager.saveEcosystem(ecosystem);
+	}
+
+	public void restartInstance(String instanceId) {
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		Instance instance = ecosystem.getInstances().stream().filter(i -> i.getId().equals(instanceId)).findFirst().get();
+		killInstance(instance.getId());
+		startInstance(instance.getMicroserviceId(), instance.getPort(), instance.getVmArguments());
 	}
 }

@@ -112,4 +112,18 @@ public class SettingsController {
 	public MicroserviceGitInfo getGitMicroservice(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, IOException, GitAPIException {
 		return gitManager.getMicroseriviceBranches(id);
 	}
+
+	@RequestMapping(value= "/checkoutpullbranch", method = RequestMethod.POST)
+	@ResponseBody
+	public void checkoutAndPull(@RequestParam(value="id") String id, @RequestParam(value="branchName") String branchName) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, IOException, GitAPIException {
+		gitManager.checkoutAndPull(id, branchName);
+	}
+
+	@RequestMapping(value= "/checkoutpullbranchrestartinstances", method = RequestMethod.POST)
+	@ResponseBody
+	public void checkoutAndPullAndRestart(@RequestParam(value="id") String id, @RequestParam(value="branchName") String branchName) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, IOException, GitAPIException {
+		gitManager.checkoutAndPull(id, branchName);
+		List<String> intancesIds = ecosystemManager.getEcosystem().getInstances().stream().filter(i-> i.getMicroserviceId().equals(id)).map(Instance::getId).collect(Collectors.toList());
+		intancesIds.forEach(intancesId-> ecosystemManager.restartInstance(intancesId));
+	}
 }

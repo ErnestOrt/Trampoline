@@ -176,8 +176,8 @@ function showGitStatus(microserviceId){
                        +'                     <span >'+item+'</span>'
                        +'                 </div>'
                        +'                 <div class="col-xs-12 text-right">'
-                       +'                     <btn class="btn btn-sm btn-success btn-icon" >Checkout and Pull</btn>'
-                       +'                     <btn class="btn btn-sm btn-danger btn-icon" >Checkout and Pull and Restart Instances</btn>'
+                       +'                     <btn class="btn btn-sm btn-success btn-icon" onclick="checkoutAndPull(\''+microserviceId+'\', \''+item+'\')">Checkout and Pull</btn>'
+                       +'                     <btn class="btn btn-sm btn-danger btn-icon" onclick="checkoutAndPullAndRestart(\''+microserviceId+'\', \''+item+'\')">Checkout and Pull and Restart Instances</btn>'
                        +'                 </div>'
                        +'             </div>'
                        +'        </li>');
@@ -199,6 +199,40 @@ function showGitStatus(microserviceId){
                     });
                }
     	});
+}
+
+function checkoutAndPullAndRestart(microserviceId, branch){
+    $("#modal-microservice-git").modal("hide");
+   $('.front-loading').show();
+	$.ajax({
+	    url : "/settings/checkoutpullbranchrestartinstances",
+	    type: "POST",
+	    data : {id: microserviceId, branchName: branch},
+	    success: function(data, textStatus, jqXHR) {
+            $('.front-loading').hide();
+	    },
+        error: function (request, status, error) {
+                 $('.front-loading').hide();
+               alert(request.responseText);
+           }
+	});
+}
+
+function checkoutAndPull(microserviceId, branch){
+    $("#modal-microservice-git").modal("hide");
+   $('.front-loading').show();
+	$.ajax({
+	    url : "/settings/checkoutpullbranch",
+	    type: "POST",
+	    data : {id: microserviceId, branchName: branch},
+	    success: function(data, textStatus, jqXHR) {
+            $('.front-loading').hide();
+	    },
+        error: function (request, status, error) {
+                 $('.front-loading').hide();
+               alert(request.responseText);
+           }
+	});
 }
 
 function updateMicroservice(){

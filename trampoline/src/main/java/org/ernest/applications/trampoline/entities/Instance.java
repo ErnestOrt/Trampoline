@@ -8,6 +8,7 @@ public class Instance {
 	private String port;
 	private String actuatorPrefix;
 	private String vmArguments;
+	private String microserviceId;
 	
 	public String getId() {
 		return id;
@@ -45,5 +46,12 @@ public class Instance {
 	public void setVmArguments(String vmArguments) {
 		this.vmArguments = vmArguments;
 	}
-	
+
+	public String getMicroserviceId() {
+		return microserviceId;
+	}
+
+	public void setMicroserviceId(String microserviceId) {
+		this.microserviceId = microserviceId;
+	}
 }
