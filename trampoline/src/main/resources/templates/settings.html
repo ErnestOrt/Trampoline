@@ -138,6 +138,7 @@
                                             <div class="form-group" id="form-newmicroservice-build-tool">
                                                 <label>Build Tool *</label>
                                                 <select id="input-newmicroservice-build-tool" class="form-control border-input">
+                                                    <option value="-1">Select...</option>
                                                     <option value="maven">Maven</option>
                                                     <option value="gradle">Gradle</option>
                                                 </select>
@@ -203,8 +204,11 @@
                                         <a onclick="changeSelectedClass(this)" th:each="microservice : ${microservices}" href="#" class="btn btn-default microservice-group-form" role="button" th:text="${microservice.name}" th:attr="data-id=${microservice.id}"></a>
                                     </div>
                                 </div>
-                                <div class="text-center">
-                                    <button onclick="createGroup()" class="btn btn-success btn-fill btn-wd">Create Group</button>
+                                <div class="row">
+                                    <br/>
+                                    <div class="text-center">
+                                        <button onclick="createGroup()" class="btn btn-success btn-fill btn-wd">Create Group</button>
+                                    </div>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -225,8 +229,8 @@
                     <div class="modal-body">
                         <p>Name:<br/><span class="text-success" id="modal-microservice-name"></span></p>
                         <p>Build Tool:<br/><span class="text-success" id="modal-microservice-buildTool"></span></p>
-                        <p>Default Port*:<br/><input  id="input-update-default-port" type="email" class="form-control border-input" placeholder="Ex: 9988"/></p>
-                        <p>Pom or Build File Location*:<br/><input  id="input-update-pomLocation" type="email" class="form-control border-input" placeholder="Ex: /Users/ernest/Documents/workarea/microservice-1"/></p>
+                        <p>Default Port*:<br/><div class="form-group" id="form-update-default-port"><input  id="input-update-default-port" type="email" class="form-control border-input" placeholder="Ex: 9988"/></div></p>
+                        <p>Pom or Build File Location*:<br/><div class="form-group" id="form-update-pomLocation"><input  id="input-update-pomLocation" type="email" class="form-control border-input" placeholder="Ex: /Users/ernest/Documents/workarea/microservice-1"/></div></p>
                         <p>Git Repo Root Location:<br/><input  id="input-update-gitLocation" type="email" class="form-control border-input" placeholder="Ex: /Users/ernest/Documents/workarea/microservice-1"/></p>
                         <p>Actuator Prefix:<br/><input  id="input-update-actuator-prefix" type="email" class="form-control border-input" placeholder="Ex: /service-one"/></p>
                         <p>VM Arguments:<br/><input  id="input-update-vm-arguments" type="email" class="form-control border-input" placeholder="Ex: -Dmy.arg.one=false -Dmy.arg.two=true"/></p>
@@ -306,7 +310,7 @@
 <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
-<script type="text/javascript" th:src="@{/v2/js/app/settings.js?v3.5}"></script>
+<script type="text/javascript" th:src="@{/v2/js/app/settings.js?v3.6.1}"></script>
 
 
 </html>

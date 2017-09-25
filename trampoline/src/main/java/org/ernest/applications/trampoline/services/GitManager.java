@@ -25,6 +25,7 @@ public class GitManager {
         Microservice microservice = ecosystemManager.getEcosystem().getMicroservices().stream().filter(m -> m.getId().equals(microserviceId)).findAny().get();
 
         Git git = Git.open(new java.io.File(microservice.getGitLocation()));
+        git.fetch().setRemoveDeletedRefs(true).call();
         microserviceGitInfo.setBranches(git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call().stream().map(Ref::getName).collect(Collectors.toList()));
         microserviceGitInfo.setCurrentBranch(git.getRepository().getBranch());
 
@@ -32,8 +33,6 @@ public class GitManager {
     }
 
     public void checkoutAndPull(String microserviceId, String branchName) throws IOException, GitAPIException {
-
-        MicroserviceGitInfo microserviceGitInfo = new MicroserviceGitInfo();
         Microservice microservice = ecosystemManager.getEcosystem().getMicroservices().stream().filter(m -> m.getId().equals(microserviceId)).findAny().get();
 
         branchName = branchName.replaceAll("refs/remotes/origin/", "");

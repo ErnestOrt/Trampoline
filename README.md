@@ -13,6 +13,7 @@ Also you will be able to:
 * Monitor memory usage for each instance, capturing their metrics every 30 seconds.
 * Monitor intances trace information any point in time
 * Visualize GIT branch and last commit on instances
+* Checkout branch, pull code and restart instances with a single mouse click
 * Define microservices groups and launch them all with one click
 
 ### Requirements
@@ -34,7 +35,7 @@ Also you will be able to:
 
 * How does the UI look like?
 
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3.png)
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_6.png)
 
 * Which build tool are Trampoline compatible to use on my microservices?
 	
