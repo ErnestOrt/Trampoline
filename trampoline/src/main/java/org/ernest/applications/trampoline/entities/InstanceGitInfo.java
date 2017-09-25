@@ -1,7 +1,7 @@
 package org.ernest.applications.trampoline.entities;
 
 
-public class InstanceInfo {
+public class InstanceGitInfo {
 
     private String pomLocation;
     private String branch;

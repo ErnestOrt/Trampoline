@@ -1,3 +1,5 @@
+var selectedMicroserviceId;
+
 function changeSelectedClass(element) {
     if($(element).hasClass("btn-default")){
         $(element).removeClass("btn-default");
@@ -17,18 +19,7 @@ function createGroup(){
         $("#form-groupname").addClass("has-error");
     }else if(idsMicroservicesGroup.length<2){
         $("#form-groupname").removeClass("has-error");
-        $.notify({
-            icon: "ti-more-alt",
-            message: "You must select <b>at least two microservices</b> to register a group. <b>Remember to register microservices first</b>."
-
-         },{
-             type: 'danger',
-             timer: 3000,
-             placement: {
-                 from: 'top',
-                 align: 'right'
-             }
-         });
+        showNotification('danger', "You must select <b>at least two microservices</b> to register a group. <b>Remember to register microservices first</b>.");
     }else{
         $("#modal-microservice-information").modal("show");
          $.ajax({
@@ -39,7 +30,7 @@ function createGroup(){
                 success: function(data, textStatus, jqXHR) {location.reload();},
                 error: function (request, status, error) {
                      $('.front-loading').hide();
-                       alert(request.responseText);
+                      showNotification('danger', "Error occurred when trying to create a group. Check Logs for more info");
                    }
             });
     }
@@ -58,7 +49,7 @@ function setMavenInformation(){
 		    success: function(data, textStatus, jqXHR) { location.reload(); },
              error: function (request, status, error) {
                   $('.front-loading').hide();
-                   alert(request.responseText);
+                  showNotification('danger', "Error occurred when trying to setting up maven location. Check Logs for more info");
                }
 		});
 	}
@@ -69,7 +60,7 @@ function setNewMicroservice(){
 		$("#form-mavenhomelocation").addClass("has-error");
 	}else{
 		cleaningNewMicroserviceFrom();
-		if($("#input-newmicroservice-name").val() == '' || $("#input-newmicroservice-pomlocation").val() == '' || $("#input-newmicroservice-defaultport").val() == ''){
+		if($("#input-newmicroservice-name").val() == '' || $("#input-newmicroservice-pomlocation").val() == '' || $("#input-newmicroservice-defaultport").val() == '' || $("#input-newmicroservice-build-tool").val() == '-1'){
 			checkEachNewMicroserviceFromField();
 		}else{
 		    $('.front-loading').show();
@@ -78,11 +69,12 @@ function setNewMicroservice(){
 			    type: "POST",
 			    data : {name: $("#input-newmicroservice-name").val(), pomLocation: $("#input-newmicroservice-pomlocation").val(), defaultPort: $("#input-newmicroservice-defaultport").val(),
 			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val(), vmArguments: $("#input-newmicroservice-vmarguments").val(),
-			    	    buildTool: $("#input-newmicroservice-build-tool").val()},
+			    	    buildTool: $("#input-newmicroservice-build-tool").val(), gitLocation: $("#input-newmicroservice-gitLocation").val()},
 			    success: function(data, textStatus, jqXHR) { location.reload(); },
                  error: function (request, status, error) {
                       $('.front-loading').hide();
-                       alert(request.responseText);
+                       showNotification('danger', "Error occurred when trying to register a microservice. Check Logs for more info");
+
                    }
 			});
 		}
@@ -93,10 +85,12 @@ function cleaningNewMicroserviceFrom(){
 	$("#form-newmicroservice-name").removeClass("has-error");
 	$("#form-newmicroservice-pomlocation").removeClass("has-error");
 	$("#form-newmicroservice-defaultport").removeClass("has-error");
+	$("#form-newmicroservice-build-tool").removeClass("has-error");
 
 	$("#form-newmicroservice-name").removeClass("has-success");
     $("#form-newmicroservice-pomlocation").removeClass("has-success");
     $("#form-newmicroservice-defaultport").removeClass("has-success");
+    $("#form-newmicroservice-build-tool").removeClass("has-success");
 }
 
 function checkEachNewMicroserviceFromField(){
@@ -115,6 +109,11 @@ function checkEachNewMicroserviceFromField(){
 	}else{
         $("#form-newmicroservice-defaultport").addClass("has-success");
     }
+    if($("#input-newmicroservice-build-tool").val() == '-1'){
+        $("#form-newmicroservice-build-tool").addClass("has-error");
+    }else{
+        $("#form-newmicroservice-build-tool").addClass("has-success");
+    }
 }
 
 function removeMicroservice(microserviceId){
@@ -126,12 +125,13 @@ function removeMicroservice(microserviceId){
 	    success: function(data, textStatus, jqXHR) { location.reload(); },
         error: function (request, status, error) {
               $('.front-loading').hide();
-               alert(request.responseText);
+               showNotification('danger', "Error occurred when trying to remove a microservice. Check Logs for more info");
            }
 	});
 }
 
 function showMicroserviceInformation(microserviceId){
+    selectedMicroserviceId=microserviceId;
    $('.front-loading').show();
 	$.ajax({
 	    url : "/settings/microserviceinfo",
@@ -140,20 +140,113 @@ function showMicroserviceInformation(microserviceId){
 	    success: function(data, textStatus, jqXHR) {
 	        $("#modal-microservice-name").text(data.name);
 	        $("#modal-microservice-buildTool").text(data.buildTool);
-	        $("#modal-microservice-pomLocation").text(data.pomLocation);
-	        $("#modal-microservice-defaultPort").text(data.defaultPort);
-	        $("#modal-microservice-actuatorPrefix").text(data.actuatorPrefix);
-	        $("#modal-microservice-vmArguments").text(data.vmArguments);
+	        $("#input-update-pomLocation").val(data.pomLocation);
+	        $("#input-update-default-port").val(data.defaultPort);
+	        $("#input-update-actuator-prefix").val(data.actuatorPrefix);
+	        $("#input-update-vm-arguments").val(data.vmArguments);
+	        $("#input-update-gitLocation").val(data.gitLocation);
 	        $('.front-loading').hide();
 	        $("#modal-microservice-information").modal("show");
 	    },
         error: function (request, status, error) {
                  $('.front-loading').hide();
-               alert(request.responseText);
+               showNotification('danger', "Error occurred when trying to retrieve microservice information. Check Logs for more info");
            }
 	});
 }
 
+function showGitStatus(microserviceId){
+    $('.front-loading').show();
+    $.ajax({
+    	    url : "/settings/microservicegitbranches",
+    	    type: "POST",
+    	    data : {id: microserviceId},
+    	    success: function(data, textStatus, jqXHR) {
+    	     $('.front-loading').hide();
+    	    $("#modal-microservice-git").modal("show");
+                $("#ul-branches-git").html("");
+                $("#span-current-git-branch").html(data.currentBranch);
+                data.branches.forEach(function(item) {
+                       $("#ul-branches-git").append(' <li >'
+                       +'             <br/><div class="row">'
+                       +'                 <div class="col-xs-12">'
+                       +'                     <span >'+item+'</span>'
+                       +'                 </div>'
+                       +'                 <div class="col-xs-12 text-right">'
+                       +'                     <btn class="btn btn-sm btn-success btn-icon" onclick="checkoutAndPull(\''+microserviceId+'\', \''+item+'\')">Checkout and Pull</btn>'
+                       +'                     <btn class="btn btn-sm btn-danger btn-icon" onclick="checkoutAndPullAndRestart(\''+microserviceId+'\', \''+item+'\')">Checkout and Pull and Restart Instances</btn>'
+                       +'                 </div>'
+                       +'             </div>'
+                       +'        </li>');
+                    });
+    	    },
+            error: function (request, status, error) {
+                     $('.front-loading').hide();
+                     showNotification('danger', "Not possible to retrieve git information... Did you set <i>Git Repo Root Location?</i> Check Logs for more info");
+               }
+    	});
+}
+
+function checkoutAndPullAndRestart(microserviceId, branch){
+    $("#modal-microservice-git").modal("hide");
+   $('.front-loading').show();
+	$.ajax({
+	    url : "/settings/checkoutpullbranchrestartinstances",
+	    type: "POST",
+	    data : {id: microserviceId, branchName: branch},
+	    success: function(data, textStatus, jqXHR) {
+            $('.front-loading').hide();
+	    },
+        error: function (request, status, error) {
+                 $('.front-loading').hide();
+                showNotification('danger', "Error occurred when trying to checkout, pull and restart instances. Check Logs for more info");
+           }
+	});
+}
+
+function checkoutAndPull(microserviceId, branch){
+    $("#modal-microservice-git").modal("hide");
+   $('.front-loading').show();
+	$.ajax({
+	    url : "/settings/checkoutpullbranch",
+	    type: "POST",
+	    data : {id: microserviceId, branchName: branch},
+	    success: function(data, textStatus, jqXHR) {
+            $('.front-loading').hide();
+	    },
+        error: function (request, status, error) {
+                 $('.front-loading').hide();
+              showNotification('danger', "Error occurred when trying to checkout and pull code. Check Logs for more info");
+           }
+	});
+}
+
+function updateMicroservice(){
+    $("#form-update-pomLocation").removeClass("has-error");
+	$("#form-update-default-port").removeClass("has-error");
+
+    if($("#input-update-pomLocation").val() == '' || $("#input-update-default-port").val() == ''){
+        if($("#input-update-pomLocation").val() == '') $("#form-update-pomLocation").addClass("has-error");
+        if($("#input-update-default-port").val() == '') $("#form-update-default-port").addClass("has-error");
+    }else{
+        $('.front-loading').show();
+        $.ajax({
+            url : "/settings/updatemicroservice",
+            type: "POST",
+            data : {id: selectedMicroserviceId,
+                    defaultPort: $("#input-update-default-port").val(),
+                    actuatorPrefix: $("#input-update-actuator-prefix").val(),
+                    vmArguments: $("#input-update-vm-arguments").val(),
+                    pomLocation: $("#input-update-pomLocation").val(),
+                    gitLocation: $("#input-update-gitLocation").val()},
+            success: function(data, textStatus, jqXHR) { location.reload(); },
+             error: function (request, status, error) {
+                  $('.front-loading').hide();
+                  showNotification('danger', "Error occurred when updating microservice information. Check Logs for more info");
+               }
+        });
+    }
+}
 
 function showGroupInformation(groupId){
    $('.front-loading').show();
@@ -169,7 +262,7 @@ function showGroupInformation(groupId){
 	    },
         error: function (request, status, error) {
                  $('.front-loading').hide();
-               alert(request.responseText);
+                 showNotification('danger', "Error occurred when trying to show group information. Check Logs for more info");
            }
 	});
 }
@@ -184,7 +277,7 @@ function removeGroup(groupId){
 	    success: function(data, textStatus, jqXHR) { location.reload(); },
         error: function (request, status, error) {
               $('.front-loading').hide();
-               alert(request.responseText);
+               showNotification('danger', "Error occurred when trying to remove group. Check Logs for more info");
            }
 	});
 }
@@ -194,3 +287,18 @@ $( document ).ready(function() {
     $(".front-loading").hide();
     $(".front-loading").height($("body").height());
 });
+
+function showNotification(notificationType, notificationMessage){
+    $.notify({
+       icon: "ti-more-alt",
+       message: notificationMessage
+
+    },{
+        type: notificationType,
+        timer: 3000,
+        placement: {
+            from: 'top',
+            align: 'right'
+        }
+    });
+}

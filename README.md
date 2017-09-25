@@ -9,10 +9,12 @@ Are you developing an application based on the _paradigm of microservices_ using
 The aim is to **help during the course of developing an application based on the paradigm of microservices with _Spring Boot_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **start instances** and **kill them**.
 
 Also you will be able to:
+
 * Use configurable Actuator Endpoints and VM arguments
 * Monitor memory usage for each instance, capturing their metrics every 30 seconds
 * Monitor instances and trace information at any point in time
 * See Git branch and last commit on instances
+* Checkout branch, pull code and restart instances with a single mouse click
 * Define microservices groups and launch them all with one click
 
 ### Requirements
@@ -36,7 +38,7 @@ Also you will be able to:
 
 * What does the UI look like?
 
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3.png)
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_6.png)
 
 * Which build tools are Trampoline compatible with in my microservices?
 	

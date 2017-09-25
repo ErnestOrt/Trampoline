@@ -14,7 +14,7 @@ function startGroup(){
             },
             error: function (request, status, error) {
                 $('.front-loading').hide();
-                 alert(request.responseText);
+                showNotification('danger', "Error occurred when trying to start a group. Check Logs for more info");
              }
         });
     }
@@ -29,7 +29,7 @@ function killInstance(instanceId){
 	    success: function(data, textStatus, jqXHR) { location.reload(); },
 	    error: function (request, status, error) {
             $('.front-loading').hide();
-             alert(request.responseText);
+            showNotification('danger', "Error occurred when trying to kill instance. Check Logs for more info");
          }
 	});
 }
@@ -78,24 +78,12 @@ function validateNewInstance(){
                     $("#form-start-port").removeClass("has-error");
                     $("#form-start-port").removeClass("has-success");
                     $("#form-start-port").addClass("has-error");
-
-                     $.notify({
-                        icon: "ti-more-alt",
-                        message: "PORT <b>"+$("#input-start-port").val()+"</b> is already used by other instances or other process. Remove old instance before creating a new instance on this port."
-
-                     },{
-                         type: 'danger',
-                         timer: 3000,
-                         placement: {
-                             from: 'top',
-                             align: 'right'
-                         }
-                     });
+                    showNotification('danger', "PORT <b>"+$("#input-start-port").val()+"</b> is already used by other instances or other process. Remove old instance before creating a new instance on this port.");
                 }
             },
             error: function (request, status, error) {
                  $('.front-loading').hide();
-                  alert(request.responseText);
+                 showNotification('danger', "Error occurred when trying to validate instance. Check Logs for more info");
               }
         });
 	}
@@ -110,7 +98,7 @@ function startInstance(){
         success: function(data, textStatus, jqXHR) { location.reload(); },
         error: function (request, status, error) {
              $('.front-loading').hide();
-              alert(request.responseText);
+              showNotification('danger', "Error occurred when trying to start instance. Check Logs for more info");
           }
     });
 }
@@ -150,18 +138,7 @@ function updateStatusInstances(){
 
 		    	     if( $("#"+item.id).text() != "Deployed"){
 		    	        if( $("#"+item.id).text() == "Not Deployed"){
-                            $.notify({
-                                icon: "ti-check-box",
-                                message: "Microservice has been <b>successfully</b> deployed"
-
-                             },{
-                                 type: 'success',
-                                 timer: 3000,
-                                 placement: {
-                                     from: 'top',
-                                     align: 'right'
-                                 }
-                             });
+		    	            showNotification('success', "Microservice has been <b>successfully</b> deployed");
                          }
                          $("#"+item.id).removeClass("label-success");
                          $("#"+item.id).removeClass("label-danger");
@@ -175,18 +152,7 @@ function updateStatusInstances(){
 
 		    	    if( $("#"+item.id).text() != "Not Deployed"){
 		    	         if( $("#"+item.id).text() == "Deployed"){
-                            $.notify({
-                                icon: "ti-more-alt",
-                                message: "Microservice has been <b>stopped</b>"
-
-                             },{
-                                 type: 'danger',
-                                 timer: 3000,
-                                 placement: {
-                                     from: 'top',
-                                     align: 'right'
-                                 }
-                             });
+		    	             showNotification('danger', "Microservice has been <b>stopped</b>");
                          }
                          $("#"+item.id).removeClass("label-success");
                          $("#"+item.id).removeClass("label-danger");
@@ -239,7 +205,11 @@ function showMetrics(instanceId, name, port){
                                           }
 
               metricsCharts.update();
-    	    }
+    	    },
+            error: function (request, status, error) {
+               $('.front-loading').hide();
+                showNotification('danger', "Error occurred when trying to retrieve metrics. Check Logs for more info");
+            }
     	});
 }
 
@@ -263,7 +233,11 @@ function showTraces(instanceId, name, port){
                                                     '</div>'+
                                                 '</article>');
                 });
-    	    }
+    	    },
+            error: function (request, status, error) {
+               $('.front-loading').hide();
+                showNotification('danger', "Error occurred when trying to retrieve traces. Check Logs for more info");
+            }
     	});
 }
 
@@ -283,7 +257,11 @@ function showInfo(instanceId, name, port){
 
                 $('.front-loading').hide();
                 $("#modal-instance-info").modal("show");
-    	    }
+    	    },
+    	    error: function (request, status, error) {
+              $('.front-loading').hide();
+               showNotification('danger', "Error occurred when trying to retrieve git info. Check Logs for more info");
+           }
     	});
 }
 
@@ -312,3 +290,18 @@ $( document ).ready(function() {
             options: {}
         });
 });
+
+function showNotification(notificationType, notificationMessage){
+    $.notify({
+       icon: "ti-more-alt",
+       message: notificationMessage
+
+    },{
+        type: notificationType,
+        timer: 3000,
+        placement: {
+            from: 'top',
+            align: 'right'
+        }
+    });
+}

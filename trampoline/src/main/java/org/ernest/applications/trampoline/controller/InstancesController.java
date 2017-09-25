@@ -84,7 +84,7 @@ public class InstancesController {
 
 	@RequestMapping(value= "/info", method = RequestMethod.POST)
 	@ResponseBody
-	public InstanceInfo getInstanceInfoWhenDeployed(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException {
+	public InstanceGitInfo getInstanceInfoWhenDeployed(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException {
 		return instanceInfoCollector.getInfo(id);
 	}
 

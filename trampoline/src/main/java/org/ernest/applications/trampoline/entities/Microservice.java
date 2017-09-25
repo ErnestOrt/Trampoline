@@ -5,6 +5,7 @@ public class Microservice {
 	private String id;
 	private String name;
 	private String pomLocation;
+	private String gitLocation;
 	private String defaultPort;
 	private String actuatorPrefix;
 	private String vmArguments;
@@ -62,5 +63,13 @@ public class Microservice {
 
 	public void setVersion(Float version) {
 		this.version = version;
+	}
+
+	public String getGitLocation() {
+		return gitLocation;
+	}
+
+	public void setGitLocation(String gitLocation) {
+		this.gitLocation = gitLocation;
 	}
 }

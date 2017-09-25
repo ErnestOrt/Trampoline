@@ -38,7 +38,7 @@ public class EcosystemManager {
 		fileManager.saveEcosystem(ecosystem);
 	}
 	
-	public void setNewMicroservice(String name, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments, String buildTool) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+	public void setNewMicroservice(String name, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments, String buildTool, String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
 		Microservice microservice = new Microservice();
@@ -49,6 +49,7 @@ public class EcosystemManager {
 		microservice.setActuatorPrefix(actuatorPrefix);
 		microservice.setVmArguments(vmArguments);
 		microservice.setBuildTool(BuildTools.getByCode(buildTool));
+		microservice.setGitLocation(gitLocation);
 		fileManager.createScript(microservice);
 		
 		ecosystem.getMicroservices().add(microservice);
@@ -82,7 +83,7 @@ public class EcosystemManager {
 	public void startInstance(String id, String port, String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException{
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
-		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).collect(Collectors.toList()).get(0);
+		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).findAny().get();
 		fileManager.runScript(microservice, ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
 		
 		Instance instance = new Instance();
@@ -92,6 +93,7 @@ public class EcosystemManager {
 		instance.setPomLocation(microservice.getPomLocation());
 		instance.setActuatorPrefix(microservice.getActuatorPrefix());
 		instance.setVmArguments(vmArguments);
+		instance.setMicroserviceId(id);
 		ecosystem.getInstances().add(instance);
 		fileManager.saveEcosystem(ecosystem);
 	}
@@ -150,5 +152,25 @@ public class EcosystemManager {
 				port++;
 			}
 		}
+	}
+
+	public void updateMicroservice(String id, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments, String gitLocation) {
+		Ecosystem ecosystem = fileManager.getEcosystem();
+
+		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).findAny().get();
+		microservice.setPomLocation(pomLocation);
+		microservice.setDefaultPort(defaultPort);
+		microservice.setActuatorPrefix(actuatorPrefix);
+		microservice.setVmArguments(vmArguments);
+		microservice.setGitLocation(gitLocation);
+
+		fileManager.saveEcosystem(ecosystem);
+	}
+
+	public void restartInstance(String instanceId) {
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		Instance instance = ecosystem.getInstances().stream().filter(i -> i.getId().equals(instanceId)).findFirst().get();
+		killInstance(instance.getId());
+		startInstance(instance.getMicroserviceId(), instance.getPort(), instance.getVmArguments());
 	}
 }

@@ -1,14 +1,13 @@
 package org.ernest.applications.trampoline.controller;
 
-import org.ernest.applications.trampoline.entities.Ecosystem;
-import org.ernest.applications.trampoline.entities.Microservice;
-import org.ernest.applications.trampoline.entities.MicroserviceGroupInfo;
-import org.ernest.applications.trampoline.entities.MicroservicesGroup;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.ernest.applications.trampoline.entities.*;
 import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
 import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
 import org.ernest.applications.trampoline.services.EcosystemManager;
+import org.ernest.applications.trampoline.services.GitManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +28,9 @@ public class SettingsController {
 
 	@Autowired
 	EcosystemManager ecosystemManager;
+
+	@Autowired
+	GitManager gitManager;
 
 	@RequestMapping("")
     public String getSettingsView(Model model) {
@@ -53,8 +56,16 @@ public class SettingsController {
 	@ResponseBody
 	public void setNewMicroservice(@RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation,
 								   @RequestParam(value="defaultPort") String defaultPort, @RequestParam(value="actuatorPrefix") String actuatorPrefix,
-								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="buildTool") String buildTool) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
-		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort, actuatorPrefix, vmArguments, buildTool);
+								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="buildTool") String buildTool, @RequestParam(value="gitLocation") String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort, actuatorPrefix, vmArguments, buildTool, gitLocation);
+	}
+
+	@RequestMapping(value= "/updatemicroservice", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateMicroservice(@RequestParam(value="id") String id, @RequestParam(value="pomLocation") String pomLocation,
+								   @RequestParam(value="defaultPort") String defaultPort, @RequestParam(value="actuatorPrefix") String actuatorPrefix,
+								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="gitLocation") String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+		ecosystemManager.updateMicroservice(id, pomLocation, defaultPort, actuatorPrefix, vmArguments, gitLocation);
 	}
 
 	@RequestMapping(value= "/removemicroservice", method = RequestMethod.POST)
@@ -95,6 +106,24 @@ public class SettingsController {
 	public void removeGroup(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException{
 		ecosystemManager.removeGroup(id);
 	}
+
+	@RequestMapping(value= "/microservicegitbranches", method = RequestMethod.POST)
+	@ResponseBody
+	public MicroserviceGitInfo getGitMicroservice(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, IOException, GitAPIException {
+		return gitManager.getMicroseriviceBranches(id);
+	}
+
+	@RequestMapping(value= "/checkoutpullbranch", method = RequestMethod.POST)
+	@ResponseBody
+	public void checkoutAndPull(@RequestParam(value="id") String id, @RequestParam(value="branchName") String branchName) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, IOException, GitAPIException {
+		gitManager.checkoutAndPull(id, branchName);
+	}
+
+	@RequestMapping(value= "/checkoutpullbranchrestartinstances", method = RequestMethod.POST)
+	@ResponseBody
+	public void checkoutAndPullAndRestart(@RequestParam(value="id") String id, @RequestParam(value="branchName") String branchName) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, IOException, GitAPIException {
+		gitManager.checkoutAndPull(id, branchName);
+		List<String> intancesIds = ecosystemManager.getEcosystem().getInstances().stream().filter(i-> i.getMicroserviceId().equals(id)).map(Instance::getId).collect(Collectors.toList());
+		intancesIds.forEach(intancesId-> ecosystemManager.restartInstance(intancesId));
+	}
 }
-
-
