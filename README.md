@@ -4,50 +4,53 @@
 
 Welcome to **Trampoline**.
 
-Are you developing an application based on the _paradigm of microservices_ using spring boot? Are you **tired of that set of scripts**? Quiet, Trampoline has come in your life.
+Are you developing an application based on the _paradigm of microservices_ using Spring Boot? Are you **tired of that set of scripts**? Relax, Trampoline has come into your life.
 
-The aim is to **help during the course of developing an application based on the paradigm of microservices with _spring boot nature_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **starting instances** and **kill them**.
+The aim is to **help during the course of developing an application based on the paradigm of microservices with _Spring Boot_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **start instances** and **kill them**.
 
 Also you will be able to:
-* Configurable Actuator endpoint & VM arguments
-* Monitor memory usage for each instance, capturing their metrics every 30 seconds.
-* Monitor intances trace information any point in time
-* Visualize GIT branch and last commit on instances
+
+* Use configurable Actuator Endpoints and VM arguments
+* Monitor memory usage for each instance, capturing their metrics every 30 seconds
+* Monitor instances and trace information at any point in time
+* See Git branch and last commit on instances
 * Checkout branch, pull code and restart instances with a single mouse click
 * Define microservices groups and launch them all with one click
 
 ### Requirements
 
-* Java && (Apache Maven || Gradle wrapper)
+* Java and Apache Maven or Gradle Wrapper
 * Include your Gradle Wrapper next to your build files if your choice is Gradle as a Build Tool
-* Start actuator sub-project of Spring Boot on your microservices
-* Set up logging.path and/or logging.file properties defined on your microservices in order to be able to visulize logs
-* Set up git info pluggin on your ms to visulaize git information on deployed instances (see examples provided)
+* Include Spring Boot Actuator in your microservices
+* Set up logging.path and/or logging.file properties in your microservices in order to be able to visualize logs
+* Set up Git Info plugin in your microservices to see Git information on deployed instances (see examples provided)
 
 ### How do I make it work?
 
-1. You just have to start the project trampoline and start it, for instance with the well known commands _mvn spring-boot:run_ or _./gradlew (or gradlew.bat) bootRun_. 
-2. Once started, go to [localhost:8080](http://localhost:8080). 
-3. Once there, the only thing you should do is enter the path to your apache maven or directly enter your microservices information if you will use a gradle wrapper on _Seetings Section_. 
-4. Finally you just have to strat your instances on _Instances Section_.
+1. With the Trampoline project checked out go to the `trampoline` sub-folder
+2. Now start `trampoline`, for instance with the well known commands _mvn spring-boot:run_ or _./gradlew (or gradlew.bat) bootRun_
+3. Once started go to [localhost:8080](http://localhost:8080)
+4. If using Apache Maven then be sure to enter the path to your installation here
+5. Go to the _Settings Section_ and add all your microservices
+6. Finally you just have to start your instances in the _Instances Section_
 
 ### FAQ
 
-* How does the UI look like?
+* What does the UI look like?
 
 ![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_6.png)
 
-* Which build tool are Trampoline compatible to use on my microservices?
+* Which build tools are Trampoline compatible with in my microservices?
 	
-You can use Apache Maven or a Gradle Wrapper
+You can use Apache Maven or Gradle Wrapper.
 
-* Can I run it on any OS?.
+* Can I run it on any OS?
 
-Theoretically yes, but only has been fully tested on Windows and Mac OS.
+Theoretically yes, but it has only been fully tested on Windows and Mac OS.
 
-* I am working with Spring Boot 1.3 or less and instances do not start.
+* I am working with Spring Boot 1.3 or less and instances do not start
 
-You should add security starter on your microservices pom.xml:
+You should add security starter to your microservices `pom.xml`:
 
 ```
 <dependency>
@@ -57,7 +60,7 @@ You should add security starter on your microservices pom.xml:
 
 ```
 
-* Which are the pluggins I should use to retrieve git information?.
+* What are the plugins I should use to retrieve Git information?
 
 ```
 "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17"
@@ -71,9 +74,9 @@ You should add security starter on your microservices pom.xml:
 </plugin>
 ```
 
-* Will I have to enter data all the time?.
+* Will I have to enter data all the time?
 
-No, information introduced will be stored in a settings file, next to the script to launch each microservices :grin:
+No, information introduced will be stored in a settings file along with scripts to launch each microservice :grin:. These files are stored in a `trampoline` folder inside your `Documents` folder on Mac and Linux or inside the `Temp` folder on Windows.
 
 ### Contributing
 Start with clicking the star button to make the author and his neighbors happy :blush:. Then fork the repository and submit a pull request for whatever change you want to be added to this project.
