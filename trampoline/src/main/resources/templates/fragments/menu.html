@@ -17,19 +17,19 @@
             <ul class="nav">
 
                 <li th:classappend="${selected}=='Dashboard' ? 'active' : ''">
-                    <a href="/">
+                    <a href="/" th:href="@{/}">
                         <i class="ti-stats-up"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
                 <li th:classappend="${selected}=='Instances' ? 'active' : ''">
-                    <a href="/instances">
+                    <a href="/instances" th:href="@{/instances}">
                         <i class="ti-view-list-alt"></i>
                         <p>Instances</p>
                     </a>
                 </li>
                 <li th:classappend="${selected}=='Settings' ? 'active' : ''">
-                    <a href="/settings">
+                    <a href="/settings" th:href="@{/settings}">
                         <i class="ti-panel"></i>
                         <p>Settings</p>
                     </a>
