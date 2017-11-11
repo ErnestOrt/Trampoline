@@ -74,6 +74,17 @@ You should add security starter to your microservices `pom.xml`:
 </plugin>
 ```
 
+* TransportException: <my git repo>.git: Authentication is required but no CredentialsProvider has been registered]
+
+If you don't have git in your local machine you can easily solve it by adding credentials on FetchCommand and PullCommands on GitManager like this:
+
+```
+git.fetch().setCredentialsProvider(new UsernamePasswordCredentialsProvider( "user", "password" ) ).setRemoveDeletedRefs(true).call();
+
+git.pull().setCredentialsProvider(new UsernamePasswordCredentialsProvider( "user", "password" ) ).call();
+```
+Of course, you will have to place your user and password.
+
 * Will I have to enter data all the time?
 
 No, information introduced will be stored in a settings file along with scripts to launch each microservice :grin:. These files are stored in a `trampoline` folder inside your `Documents` folder on Mac and Linux or inside the `Temp` folder on Windows.
