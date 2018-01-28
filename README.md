@@ -4,12 +4,15 @@
 
 Welcome to **Trampoline**.
 
-Are you developing an application based on the _paradigm of microservices_ using Spring Boot? Are you **tired of that set of scripts**? Relax, Trampoline has come into your life.
+Are you Admin Spring Boot locally? Are you **tired of that set of scripts**? Relax, Trampoline has come into your life.
 
 The aim is to **help during the course of developing an application based on the paradigm of microservices with _Spring Boot_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **start instances** and **kill them**.
 
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_6.png)
+
 Also you will be able to:
 
+* Admin Spring Boot locally
 * Use configurable Actuator Endpoints and VM arguments
 * Monitor memory usage for each instance, capturing their metrics every 30 seconds
 * Monitor instances and trace information at any point in time
@@ -27,6 +30,8 @@ Also you will be able to:
 
 ### How do I make it work?
 
+To Admin Spring Boot locally:
+
 1. With the Trampoline project checked out go to the `trampoline` sub-folder
 2. Now start `trampoline`, for instance with the well known commands _mvn spring-boot:run_ or _./gradlew (or gradlew.bat) bootRun_
 3. Once started go to [localhost:8080](http://localhost:8080)
@@ -35,10 +40,6 @@ Also you will be able to:
 6. Finally you just have to start your instances in the _Instances Section_
 
 ### FAQ
-
-* What does the UI look like?
-
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_6.png)
 
 * Which build tools are Trampoline compatible with in my microservices?
 	
@@ -90,7 +91,7 @@ Of course, you will have to place your user and password.
 No, information introduced will be stored in a settings file along with scripts to launch each microservice :grin:. These files are stored in a `trampoline` folder inside your `Documents` folder on Mac and Linux or inside the `Temp` folder on Windows.
 
 ### Contributing
-Start with clicking the star button to make the author and his neighbors happy :blush:. Then fork the repository and submit a pull request for whatever change you want to be added to this project.
+Start Admin Spring Boot locally and then click the star button to make the author and his neighbors happy :blush:. Then fork the repository and submit a pull request for whatever change you want to be added to this project.
 
 If you have any questions, just open an issue.
 
