@@ -95,14 +95,14 @@ public class FileManager {
 
 	public void runScript(Microservice microservice, String mavenBinaryLocation, String mavenHomeLocation, String port, String vmArguments) throws RunningMicroserviceScriptException {
 		try {
-			mavenBinaryLocation = (mavenBinaryLocation != null && mavenBinaryLocation.trim().length() > 0) ? mavenBinaryLocation : mavenHomeLocation + "/bin";
 			if(System.getProperties().getProperty("os.name").contains("Windows")){
 				String commands = FileUtils.readFileToString(new File(getSettingsFolder() +"/"+ microservice.getId() +".txt"));
-				commands = commands.replace("#mavenBinaryLocation", mavenBinaryLocation);
-				commands = commands.replace("#mavenHomeLocation", mavenHomeLocation);
 				commands = commands.replace("#port", port);
 
 				if(microservice.getBuildTool().equals(BuildTools.MAVEN)){
+					mavenBinaryLocation = (mavenBinaryLocation != null && mavenBinaryLocation.trim().length() > 0) ? mavenBinaryLocation : mavenHomeLocation + "/bin";
+					commands = commands.replace("#mavenBinaryLocation", mavenBinaryLocation);
+					commands = commands.replace("#mavenHomeLocation", mavenHomeLocation);
 					commands = commands.replace("#vmArguments", vmArguments);
 				}else{
 					commands = commands.replace("#vmArguments", VMParser.toWindowsEnviromentVariables(vmArguments));
