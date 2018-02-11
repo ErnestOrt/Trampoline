@@ -110,6 +110,7 @@ public class FileManager {
 				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \""+commands+"\"");
 			}else{
 				if(microservice.getBuildTool().equals(BuildTools.MAVEN)){
+					mavenBinaryLocation = (mavenBinaryLocation != null && mavenBinaryLocation.trim().length() > 0) ? mavenBinaryLocation : mavenHomeLocation + "/bin";
 					new ProcessBuilder("sh", getSettingsFolder() + "/" + microservice.getId() + ".sh", mavenHomeLocation, mavenBinaryLocation, port, vmArguments).start();
 				}else{
 					Runtime.getRuntime().exec("chmod 777 "+microservice.getPomLocation()+"//gradlew");
