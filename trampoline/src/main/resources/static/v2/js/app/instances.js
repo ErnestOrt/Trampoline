@@ -20,6 +20,20 @@ function startGroup(){
     }
 }
 
+function restartInstance(instanceId){
+    $('.front-loading').show();
+    $.ajax({
+        url : "/instances/restartinstance",
+        type: "POST",
+        data : {id: instanceId},
+        success: function(data, textStatus, jqXHR) { location.reload(); },
+        error: function (request, status, error) {
+            $('.front-loading').hide();
+            showNotification('danger', "Error occurred when trying to restart instance. Check Logs for more info");
+        }
+    });
+}
+
 function killInstance(instanceId){
     $('.front-loading').show();
 	$.ajax({
