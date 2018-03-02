@@ -64,6 +64,12 @@ public class InstancesController {
 		ecosystemManager.startInstance(id, port, vmArguments);
 	}
 
+	@RequestMapping(value= "/restartinstance", method = RequestMethod.POST)
+	@ResponseBody
+	public void restartInstance(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, ShuttingDownInstanceException {
+		ecosystemManager.restartInstance(id);
+	}
+
 	@RequestMapping(value= "/killinstance", method = RequestMethod.POST)
 	@ResponseBody
 	public void killInstance(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, ShuttingDownInstanceException {
