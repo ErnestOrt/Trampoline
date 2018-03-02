@@ -1,5 +1,9 @@
 # Trampoline
 
+### Stay tuned
+
+https://twitter.com/TrampolineSB
+
 ### Description
 
 Welcome to **Trampoline**.
