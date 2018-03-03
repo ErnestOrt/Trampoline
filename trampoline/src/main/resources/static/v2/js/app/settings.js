@@ -282,12 +282,6 @@ function removeGroup(groupId){
 	});
 }
 
-
-$( document ).ready(function() {
-    $(".front-loading").hide();
-    $(".front-loading").height($("body").height());
-});
-
 function showNotification(notificationType, notificationMessage){
     $.notify({
        icon: "ti-more-alt",

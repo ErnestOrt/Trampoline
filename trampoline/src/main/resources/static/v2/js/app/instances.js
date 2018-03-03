@@ -280,8 +280,6 @@ function showInfo(instanceId, name, port){
 }
 
 $( document ).ready(function() {
-    $(".front-loading").hide();
-    $(".front-loading").height($("body").height());
 	updateStatusInstances();
 	var ctx = document.getElementById('metrics-chart').getContext('2d');
         metricsCharts = new Chart(ctx, {
