@@ -155,6 +155,30 @@ function showMicroserviceInformation(microserviceId){
 	});
 }
 
+function copyMsInfo(microserviceId){
+   $('.front-loading').show();
+	$.ajax({
+	    url : "/settings/microserviceinfo",
+	    type: "POST",
+	    data : {id: microserviceId},
+	    success: function(data, textStatus, jqXHR) {
+	        $("#input-newmicroservice-name").val(data.name);
+	        $("#input-newmicroservice-build-tool").val(data.buildTool.toLowerCase());
+	        $("#input-newmicroservice-pomlocation").val(data.pomLocation);
+	        $("#input-newmicroservice-defaultport").val(data.defaultPort);
+	        $("#input-newmicroservice-actuatorprefix").val(data.actuatorPrefix);
+	        $("#input-newmicroservice-vmarguments").val(data.vmArguments);
+	        $("#input-newmicroservice-gitLocation").val(data.gitLocation);
+	        $('.front-loading').hide();
+	    },
+        error: function (request, status, error) {
+                 $('.front-loading').hide();
+               showNotification('danger', "Error occurred when trying to retrieve microservice information. Check Logs for more info");
+           }
+	});
+}
+
+
 function showGitStatus(microserviceId){
     $('.front-loading').show();
     $.ajax({

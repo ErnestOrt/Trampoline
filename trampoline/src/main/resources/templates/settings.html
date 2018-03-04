@@ -81,10 +81,11 @@
                                 <ul class="list-unstyled team-members">
                                             <li th:each="microservice : ${microservices}">
                                                 <div class="row">
-                                                    <div class="col-xs-8">
+                                                    <div class="col-xs-7">
                                                         <span th:text="${microservice.name}"></span>
                                                     </div>
-                                                    <div class="col-xs-4 text-right">
+                                                    <div class="col-xs-5 text-right">
+                                                        <btn class="btn btn-sm btn-info btn-icon" th:onclick="'copyMsInfo(\'' + ${microservice.id} + '\')'"><i class="fa fa-clone"></i></btn>
                                                         <btn class="btn btn-sm btn-warning btn-icon" th:onclick="'showGitStatus(\'' + ${microservice.id} + '\')'"><i class="fa fa-github"></i></btn>
                                                         <btn class="btn btn-sm btn-primary btn-icon" th:onclick="'showMicroserviceInformation(\'' + ${microservice.id} + '\')'"><i class="fa fa-pencil"></i></btn>
                                                         <btn class="btn btn-sm btn-danger btn-icon" th:onclick="'removeMicroservice(\'' + ${microservice.id} + '\')'"><i class="fa fa-trash"></i></btn>
@@ -310,7 +311,7 @@
 <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
-<script type="text/javascript" th:src="@{/v2/js/app/settings.js?v3.7}"></script>
+<script type="text/javascript" th:src="@{/v2/js/app/settings.js?v3.9}"></script>
 <script type="text/javascript" th:src="@{/v2/js/app/loading.js?v3.7}"></script>
 
 
