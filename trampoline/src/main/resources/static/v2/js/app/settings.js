@@ -323,3 +323,7 @@ function showNotification(notificationType, notificationMessage){
         }
     });
 }
+
+$(document).ready(function(){
+    $('[data-toggle="git-popover"]').popover();
+});
