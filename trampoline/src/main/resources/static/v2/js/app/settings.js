@@ -282,6 +282,33 @@ function removeGroup(groupId){
 	});
 }
 
+function saveGitCred(){
+    $('.front-loading').show();
+	$.ajax({
+	    url : "/settings/git/save",
+	    type: "POST",
+	    data : {user: $("#input-git-user").val(), pass: $("#input-git-pass").val()},
+	    success: function(data, textStatus, jqXHR) { location.reload(); },
+        error: function (request, status, error) {
+              $('.front-loading').hide();
+               showNotification('danger', "Error occurred when trying to remove group. Check Logs for more info");
+           }
+	});
+}
+
+function cleanGitCred(){
+    $('.front-loading').show();
+	$.ajax({
+	    url : "/settings/git/clean",
+	    type: "GET",
+	    success: function(data, textStatus, jqXHR) { location.reload(); },
+        error: function (request, status, error) {
+              $('.front-loading').hide();
+               showNotification('danger', "Error occurred when trying to remove group. Check Logs for more info");
+           }
+	});
+}
+
 function showNotification(notificationType, notificationMessage){
     $.notify({
        icon: "ti-more-alt",

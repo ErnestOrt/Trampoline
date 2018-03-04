@@ -134,7 +134,7 @@
                                             <div class="col-md-12">
                                                 <div class="form-group" id="form-git-user">
                                                     <label>Username</label>
-                                                    <input id="input-git-user" type="text" class="form-control border-input"/>
+                                                    <input id="input-git-user" type="text" class="form-control border-input" th:placeholder="${gitUsername}"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -145,7 +145,8 @@
                                             </div>
                                         </div>
                                         <div class="text-center">
-                                            <button onclick="setGitInformation()" class="btn btn-success btn-fill btn-wd">Save GIT Information</button>
+                                            <button onclick="saveGitCred()" class="btn btn-success btn-fill btn-wd">Save</button>
+                                            <button onclick="cleanGitCred()" class="btn btn-danger btn-fill btn-wd">Clean</button>
                                         </div>
                                         <div class="clearfix"></div>
                                     </div>
