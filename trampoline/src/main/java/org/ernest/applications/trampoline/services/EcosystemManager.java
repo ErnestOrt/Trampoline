@@ -172,4 +172,16 @@ public class EcosystemManager {
 		killInstance(instance.getId());
 		startInstance(instance.getMicroserviceId(), instance.getPort(), instance.getVmArguments());
 	}
+
+	public void saveGitCred(String user, String pass) {
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		ecosystem.setGitCredentials(new GitCredentials(user, pass));
+		fileManager.saveEcosystem(ecosystem);
+	}
+
+	public void cleanGitCred() {
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		ecosystem.setGitCredentials(null);
+		fileManager.saveEcosystem(ecosystem);
+	}
 }
