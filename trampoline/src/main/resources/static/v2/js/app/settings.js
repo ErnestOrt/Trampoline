@@ -285,7 +285,7 @@ function removeGroup(groupId){
 function saveGitCred(){
     $('.front-loading').show();
 	$.ajax({
-	    url : "/settings/git/save",
+	    url : "/settings/git/config/save",
 	    type: "POST",
 	    data : {user: $("#input-git-user").val(), pass: $("#input-git-pass").val()},
 	    success: function(data, textStatus, jqXHR) { location.reload(); },
@@ -299,7 +299,7 @@ function saveGitCred(){
 function cleanGitCred(){
     $('.front-loading').show();
 	$.ajax({
-	    url : "/settings/git/clean",
+	    url : "/settings/git/config/clean",
 	    type: "GET",
 	    success: function(data, textStatus, jqXHR) { location.reload(); },
         error: function (request, status, error) {

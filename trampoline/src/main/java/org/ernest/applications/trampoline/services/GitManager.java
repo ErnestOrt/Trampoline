@@ -67,7 +67,7 @@ public class GitManager {
     }
 
     public String getRegisteredUsername(Ecosystem ecosystem) {
-        return ecosystem.getGitCredentials() != null ?  encryptService.decrypt(ecosystem.getGitCredentials().getUsername()) : "";
+        return ecosystem.getGitCredentials() != null ? encryptService.decrypt(ecosystem.getGitCredentials().getUsername()) : "";
     }
 
     public void saveCred(String user, String pass) {

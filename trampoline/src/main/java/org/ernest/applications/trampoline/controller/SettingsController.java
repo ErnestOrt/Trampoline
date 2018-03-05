@@ -128,13 +128,13 @@ public class SettingsController {
 		intancesIds.forEach(intancesId-> ecosystemManager.restartInstance(intancesId));
 	}
 
-	@RequestMapping(value= "/git/save", method = RequestMethod.POST)
+	@RequestMapping(value= "/git/config/save", method = RequestMethod.POST)
 	@ResponseBody
 	public void saveGitCred(@RequestParam(value="user") String user,@RequestParam(value="pass") String pass) {
 		gitManager.saveCred(user, pass);
 	}
 
-	@RequestMapping(value= "/git/clean", method = RequestMethod.GET)
+	@RequestMapping(value= "/git/config/clean", method = RequestMethod.GET)
 	@ResponseBody
 	public void cleanGitCred() {
 		gitManager.cleanCred();
