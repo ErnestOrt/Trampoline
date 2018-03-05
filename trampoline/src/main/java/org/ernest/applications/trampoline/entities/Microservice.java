@@ -11,7 +11,7 @@ public class Microservice {
 	private String vmArguments;
 	private BuildTools buildTool;
 	private Float version;
-	
+
 	public String getId() {
 		return id;
 	}

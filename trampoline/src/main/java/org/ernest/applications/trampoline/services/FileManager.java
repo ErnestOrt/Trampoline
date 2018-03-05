@@ -2,18 +2,22 @@ package org.ernest.applications.trampoline.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.ernest.applications.trampoline.buildtool.BuildToolRunner;
+import org.ernest.applications.trampoline.buildtool.GradleRunner;
+import org.ernest.applications.trampoline.buildtool.MavenRunner;
 import org.ernest.applications.trampoline.entities.BuildTools;
 import org.ernest.applications.trampoline.entities.Ecosystem;
 import org.ernest.applications.trampoline.entities.Microservice;
-import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
 import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
-import org.ernest.applications.trampoline.utils.ScriptContentsProvider;
-import org.ernest.applications.trampoline.utils.VMParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +26,8 @@ import com.google.gson.JsonSyntaxException;
 
 @Component
 public class FileManager {
+
+	private static final Logger LOG = LoggerFactory.getLogger(FileManager.class);
 
 	@Value("${settings.folder.path.mac}")
 	private String settingsFolderPathMac;
@@ -37,6 +43,14 @@ public class FileManager {
 
     @Value("${trampoline.version}")
     private float currentVersion;
+
+    private GradleRunner gradleRunner;
+    private MavenRunner mavenRunner;
+
+    public FileManager() {
+    	gradleRunner = new GradleRunner();
+    	mavenRunner = new MavenRunner();
+	}
 
 	public Ecosystem getEcosystem() throws CreatingSettingsFolderException, ReadingEcosystemException {
 		checkIfFileExistsAndCreatedIfNeeded();
@@ -61,7 +75,6 @@ public class FileManager {
                 m.setVmArguments("");
                 m.setActuatorPrefix("");
                 m.setBuildTool(BuildTools.MAVEN);
-                createScript(m);
             });
 			ecosystemChanged = true;
         }
@@ -74,7 +87,6 @@ public class FileManager {
         if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getVersion() == null)){
             ecosystem.getMicroservices().stream().filter(m -> m.getVersion() == null).forEach(m -> {
                 m.setVersion(currentVersion);
-                createScript(m);
             });
 			ecosystemChanged = true;
         }
@@ -93,58 +105,26 @@ public class FileManager {
 		}
 	}
 
-	public void runScript(Microservice microservice, String mavenBinaryLocation, String mavenHomeLocation, String port, String vmArguments) throws RunningMicroserviceScriptException {
-		try {
-			if(System.getProperties().getProperty("os.name").contains("Windows")){
-				String commands = FileUtils.readFileToString(new File(getSettingsFolder() +"/"+ microservice.getId() +".txt"));
-				commands = commands.replace("#port", port);
-
-				if(microservice.getBuildTool().equals(BuildTools.MAVEN)){
-					mavenBinaryLocation = (mavenBinaryLocation != null && mavenBinaryLocation.trim().length() > 0) ? mavenBinaryLocation : mavenHomeLocation + "/bin";
-					commands = commands.replace("#mavenBinaryLocation", mavenBinaryLocation);
-					commands = commands.replace("#mavenHomeLocation", mavenHomeLocation);
-					commands = commands.replace("#vmArguments", vmArguments);
-				}else{
-					commands = commands.replace("#vmArguments", VMParser.toWindowsEnviromentVariables(vmArguments));
-				}
-				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \""+commands+"\"");
-			}else{
-				if(microservice.getBuildTool().equals(BuildTools.MAVEN)){
-					mavenBinaryLocation = (mavenBinaryLocation != null && mavenBinaryLocation.trim().length() > 0) ? mavenBinaryLocation : mavenHomeLocation + "/bin";
-					new ProcessBuilder("sh", getSettingsFolder() + "/" + microservice.getId() + ".sh", mavenHomeLocation, mavenBinaryLocation, port, vmArguments).start();
-				}else{
-					Runtime.getRuntime().exec("chmod 777 "+microservice.getPomLocation()+"//gradlew");
-					new ProcessBuilder("sh", getSettingsFolder() + "/" + microservice.getId() + ".sh", port, VMParser.toUnixEnviromentVariables(vmArguments)).start();
-				}
-			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RunningMicroserviceScriptException();
+	public void runMicroservice(Microservice microservice, String mavenBinaryLocation, String mavenHomeLocation, String port, String vmArguments) throws RunningMicroserviceScriptException {
+		if (microservice.getBuildTool().equals(BuildTools.MAVEN)) {
+			mavenBinaryLocation = (mavenBinaryLocation != null && mavenBinaryLocation.trim().length() > 0) ? mavenBinaryLocation : mavenHomeLocation + "/bin";
+			mavenRunner.getEnvironment().put(MavenRunner.MAVEN_HOME, mavenHomeLocation);
+			mavenRunner.setMavenPath(mavenBinaryLocation);
+			runBuildTool(microservice, port, vmArguments, mavenRunner);
+		} else if (microservice.getBuildTool().equals(BuildTools.GRADLE)) {
+			runBuildTool(microservice, port, vmArguments, gradleRunner);
 		}
 	}
 
-	public void createScript(Microservice microservice) throws CreatingMicroserviceScriptException {
+	private static void runBuildTool(Microservice microservice, String port, String vmArguments, BuildToolRunner buildToolRunner) throws RunningMicroserviceScriptException {
 		try {
-			if(System.getProperties().getProperty("os.name").contains("Windows")){
-				if(microservice.getBuildTool().equals(BuildTools.MAVEN)) {
-					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"), ScriptContentsProvider.getMavenWindows(microservice.getPomLocation()));
-				}else{
-					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"), ScriptContentsProvider.getGradleWindows(microservice.getPomLocation()));
-				}
-			}else{
-				if(microservice.getBuildTool().equals(BuildTools.MAVEN)) {
-					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"),ScriptContentsProvider.getMavenUnix(microservice.getPomLocation()));
-				}else{
-					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"), ScriptContentsProvider.getGradleUnix(microservice.getPomLocation()));
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new CreatingMicroserviceScriptException();
-		}
+            buildToolRunner.executeBuildToolProcess(microservice.getPomLocation(), port, vmArguments);
+        } catch (IOException e) {
+            LOG.error("Failed to run Gradle build tool for microservice [id: {} name: {}]", microservice.getId(), microservice.getName());
+            throw new RunningMicroserviceScriptException(e.getMessage());
+        }
 	}
-	
+
 	private String getSettingsFolder() {
 		
 		if(System.getProperties().getProperty("os.name").contains("Mac")){

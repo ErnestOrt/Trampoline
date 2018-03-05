@@ -50,8 +50,7 @@ public class EcosystemManager {
 		microservice.setVmArguments(vmArguments);
 		microservice.setBuildTool(BuildTools.getByCode(buildTool));
 		microservice.setGitLocation(gitLocation);
-		fileManager.createScript(microservice);
-		
+
 		ecosystem.getMicroservices().add(microservice);
 		fileManager.saveEcosystem(ecosystem);
 	}
@@ -84,7 +83,7 @@ public class EcosystemManager {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
 		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).findAny().get();
-		fileManager.runScript(microservice, ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
+		fileManager.runMicroservice(microservice, ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
 		
 		Instance instance = new Instance();
 		instance.setId(UUID.randomUUID().toString());
