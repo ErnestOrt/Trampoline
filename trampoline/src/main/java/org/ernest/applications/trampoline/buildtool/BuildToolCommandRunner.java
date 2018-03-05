@@ -16,7 +16,6 @@ public abstract class BuildToolCommandRunner implements BuildToolRunner {
 
         ProcessBuilder processBuilder = new ProcessBuilder(getCommand(port, parsedArguments)).directory(new File(buildFile));
         processBuilder.environment().putAll(getEnvironment());
-        processBuilder.inheritIO();
 
         return processBuilder.start();
     }
