@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Ecosystem {
 
+	private GitCredentials gitCredentials;
 	private String mavenBinaryLocation;
 	private String mavenHomeLocation;
 	private List<Microservice> microservices;
@@ -55,5 +56,13 @@ public class Ecosystem {
 
 	public void setMicroservicesGroups(List<MicroservicesGroup> microservicesGroups) {
 		this.microservicesGroups = microservicesGroups;
+	}
+
+	public GitCredentials getGitCredentials() {
+		return gitCredentials;
+	}
+
+	public void setGitCredentials(GitCredentials gitCredentials) {
+		this.gitCredentials = gitCredentials;
 	}
 }

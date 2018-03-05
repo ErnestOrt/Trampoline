@@ -12,7 +12,7 @@ Are you Admin Spring Boot locally? Are you **tired of that set of scripts**? Rel
 
 The aim is to **help during the course of developing an application based on the paradigm of microservices with _Spring Boot_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **start instances**, **restart** and **kill them**.
 
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_10.png)
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_11.png)
 
 Also you will be able to:
 
@@ -81,14 +81,7 @@ You should add security starter to your microservices `pom.xml`:
 
 * TransportException: <my git repo>.git: Authentication is required but no CredentialsProvider has been registered]
 
-If you don't have git in your local machine you can easily solve it by adding credentials on FetchCommand and PullCommands on GitManager like this:
-
-```
-git.fetch().setCredentialsProvider(new UsernamePasswordCredentialsProvider( "user", "password" ) ).setRemoveDeletedRefs(true).call();
-
-git.pull().setCredentialsProvider(new UsernamePasswordCredentialsProvider( "user", "password" ) ).call();
-```
-Of course, you will have to place your user and password.
+If you don't have git in your local machine you can easily solve it by adding credentials on `Settings View`
 
 * Will I have to enter data all the time?
 

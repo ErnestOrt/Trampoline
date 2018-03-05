@@ -96,29 +96,61 @@
                         </div>
                     </div>
                     <div class="col-lg-8 col-md-7">
-                         <div class="card">
-                            <div class="header">
-                                <h4 class="title">Maven Settings</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                 <div class="card">
+                                    <div class="header">
+                                        <h4 class="title">Maven Settings</h4>
+                                    </div>
+                                    <div class="content">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group" id="form-mavenhomelocation">
+                                                        <label>Maven Home Location *</label>
+                                                        <input id="input-mavenhomelocation" type="text" class="form-control border-input" th:placeholder="${mavenHomeLocationMessage}"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label>Maven Binary Location</label>
+                                                        <input id="input-mavenbinarylocation" type="text" class="form-control border-input" th:placeholder="${mavenBinaryLocationMessage}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-center">
+                                                <button onclick="setMavenInformation()" class="btn btn-success btn-fill btn-wd">Save Maven Information</button>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="content">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group" id="form-mavenhomelocation">
-                                                <label>Maven Home Location *</label>
-                                                <input id="input-mavenhomelocation" type="text" class="form-control border-input" th:placeholder="${mavenHomeLocationMessage}"/>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="header">
+                                        <h4 class="title">GIT Settings <i class="fa fa-info-circle" data-toggle="git-popover" data-content="If GIT is installed on your system, you don't need it to enjoy GIT features, otherwise yes. Credentials will be secured and not published."></i></h4>
+                                    </div>
+                                    <div class="content">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="form-git-user">
+                                                    <label>Username</label>
+                                                    <input id="input-git-user" type="text" class="form-control border-input" th:placeholder="${gitUsername}"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Password</label>
+                                                    <input id="input-git-pass" type="password" class="form-control border-input"/>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Maven Binary Location</label>
-                                                <input id="input-mavenbinarylocation" type="text" class="form-control border-input" th:placeholder="${mavenBinaryLocationMessage}"/>
-                                            </div>
+                                        <div class="text-center">
+                                            <button onclick="saveGitCred()" class="btn btn-success btn-fill btn-wd">Save</button>
+                                            <button onclick="cleanGitCred()" class="btn btn-danger btn-fill btn-wd">Clean</button>
                                         </div>
+                                        <div class="clearfix"></div>
                                     </div>
-                                    <div class="text-center">
-                                        <button onclick="setMavenInformation()" class="btn btn-success btn-fill btn-wd">Save Maven Information</button>
-                                    </div>
-                                    <div class="clearfix"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="card">
@@ -310,7 +342,7 @@
 <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
-<script type="text/javascript" th:src="@{/v2/js/app/settings.js?v3.7}"></script>
+<script type="text/javascript" th:src="@{/v2/js/app/settings.js?v3.8}"></script>
 <script type="text/javascript" th:src="@{/v2/js/app/loading.js?v3.7}"></script>
 
 
