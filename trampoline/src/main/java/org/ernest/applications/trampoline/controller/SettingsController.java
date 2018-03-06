@@ -41,6 +41,7 @@ public class SettingsController {
 		model.addAttribute("mavenHomeLocation", ecosystem.getMavenHomeLocation());
 		model.addAttribute("mavenBinaryLocationMessage", ecosystem.getMavenBinaryLocation() == null ? "Set Maven Binary Location if necessary. Otherwise it will automatically be searched in a bin folder inside your Maven Home Location" : ecosystem.getMavenBinaryLocation());
 		model.addAttribute("mavenHomeLocationMessage", ecosystem.getMavenHomeLocation() == null ? "Please set maven Home Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenHomeLocation());
+		model.addAttribute("gitUsername", gitManager.getRegisteredUsername(ecosystem));
 
 		return SETTINGS_VIEW;
     }
@@ -125,5 +126,17 @@ public class SettingsController {
 		gitManager.checkoutAndPull(id, branchName);
 		List<String> intancesIds = ecosystemManager.getEcosystem().getInstances().stream().filter(i-> i.getMicroserviceId().equals(id)).map(Instance::getId).collect(Collectors.toList());
 		intancesIds.forEach(intancesId-> ecosystemManager.restartInstance(intancesId));
+	}
+
+	@RequestMapping(value= "/git/config/save", method = RequestMethod.POST)
+	@ResponseBody
+	public void saveGitCred(@RequestParam(value="user") String user,@RequestParam(value="pass") String pass) {
+		gitManager.saveCred(user, pass);
+	}
+
+	@RequestMapping(value= "/git/config/clean", method = RequestMethod.GET)
+	@ResponseBody
+	public void cleanGitCred() {
+		gitManager.cleanCred();
 	}
 }

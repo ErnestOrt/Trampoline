@@ -6,6 +6,9 @@ import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.ernest.applications.trampoline.entities.Ecosystem;
+import org.ernest.applications.trampoline.entities.GitCredentials;
 import org.ernest.applications.trampoline.entities.Microservice;
 import org.ernest.applications.trampoline.entities.MicroserviceGitInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +23,22 @@ public class GitManager {
     @Autowired
     EcosystemManager ecosystemManager;
 
+    @Autowired
+    EncryptService encryptService;
+
     public MicroserviceGitInfo getMicroseriviceBranches(String microserviceId) throws IOException, GitAPIException {
         MicroserviceGitInfo microserviceGitInfo = new MicroserviceGitInfo();
-        Microservice microservice = ecosystemManager.getEcosystem().getMicroservices().stream().filter(m -> m.getId().equals(microserviceId)).findAny().get();
+
+        Ecosystem ecosystem =  ecosystemManager.getEcosystem();
+        Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(microserviceId)).findAny().get();
 
         Git git = Git.open(new java.io.File(microservice.getGitLocation()));
-        git.fetch().setRemoveDeletedRefs(true).call();
+        if(ecosystem.getGitCredentials()!=null){
+            git.fetch().setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials())).setRemoveDeletedRefs(true).call();
+        }else{
+            git.fetch().setRemoveDeletedRefs(true).call();
+        }
+
         microserviceGitInfo.setBranches(git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call().stream().map(Ref::getName).collect(Collectors.toList()));
         microserviceGitInfo.setCurrentBranch(git.getRepository().getBranch());
 
@@ -33,7 +46,8 @@ public class GitManager {
     }
 
     public void checkoutAndPull(String microserviceId, String branchName) throws IOException, GitAPIException {
-        Microservice microservice = ecosystemManager.getEcosystem().getMicroservices().stream().filter(m -> m.getId().equals(microserviceId)).findAny().get();
+        Ecosystem ecosystem =  ecosystemManager.getEcosystem();
+        Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(microserviceId)).findAny().get();
 
         branchName = branchName.replaceAll("refs/remotes/origin/", "");
         branchName = branchName.replaceAll("refs/heads/", "");
@@ -45,6 +59,26 @@ public class GitManager {
             git.checkout().setCreateBranch(false).setName(branchName).call();
         }
 
-        git.pull().call();
+        if(ecosystem.getGitCredentials()!=null){
+            git.pull().setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials())).call();
+        }else{
+            git.pull().call();
+        }
+    }
+
+    public String getRegisteredUsername(Ecosystem ecosystem) {
+        return ecosystem.getGitCredentials() != null ? encryptService.decrypt(ecosystem.getGitCredentials().getUsername()) : "";
+    }
+
+    public void saveCred(String user, String pass) {
+        ecosystemManager.saveGitCred(encryptService.encrypt(user), encryptService.encrypt(pass));
+    }
+
+    public void cleanCred() {
+        ecosystemManager.cleanGitCred();
+    }
+
+    private UsernamePasswordCredentialsProvider buildCredentialsProvider(GitCredentials gitCredentials) {
+        return new UsernamePasswordCredentialsProvider(encryptService.decrypt(gitCredentials.getUsername()), encryptService.decrypt(gitCredentials.getPass()));
     }
 }
