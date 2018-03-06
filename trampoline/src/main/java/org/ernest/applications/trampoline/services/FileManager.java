@@ -120,7 +120,7 @@ public class FileManager {
 		try {
             buildToolRunner.executeBuildToolProcess(microservice.getPomLocation(), port, vmArguments);
         } catch (IOException e) {
-            LOG.error("Failed to run Gradle build tool for microservice [id: {} name: {}]", microservice.getId(), microservice.getName());
+            LOG.error("Failed to run build tool for microservice [id: {} name: {}]", microservice.getId(), microservice.getName());
             throw new RunningMicroserviceScriptException(e.getMessage());
         }
 	}
