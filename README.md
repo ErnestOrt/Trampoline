@@ -1,8 +1,6 @@
-# Trampoline
+# Trampoline [![Twitter](https://img.shields.io/twitter/follow/espadrine.svg?style=social&logo=twitter&label=Follow)](https://twitter.com/TrampolineSB)
 
-### Stay tuned
-
-https://twitter.com/TrampolineSB
+*NOTE: If you want to use examples provided (microservice-example-gradle & microservice-example-maven), please, clone the repository instead of downloading release zip. They need .git folder due to git related plugins specified on pom.xml and build.gradle*
 
 ### Description
 
