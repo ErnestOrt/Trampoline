@@ -1,10 +1,10 @@
 # Trampoline [![Twitter](https://img.shields.io/twitter/follow/espadrine.svg?style=social&logo=twitter&label=Follow)](https://twitter.com/TrampolineSB)
 
 [![Build Status](https://travis-ci.org/stunstunstun/awesome-spring-boot.svg?branch=master)](https://travis-ci.org/stunstunstun/awesome-spring-boot)
-+[![Wercker](https://img.shields.io/badge/spring--boot-1.5.3.RELEASE-brightgreen.svg)]()
-+[![Wercker](https://img.shields.io/badge/java-8-brightgreen.svg)]()
-+[![Wercker](https://img.shields.io/badge/gradle-3.5-brightgreen.svg)]()
-+[![Maven metadata URI](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/google/code/gson/gson/maven-metadata.xml.svg)]()
+[![Wercker](https://img.shields.io/badge/spring--boot-1.5.3.RELEASE-brightgreen.svg)]()
+[![Wercker](https://img.shields.io/badge/java-8-brightgreen.svg)]()
+[![Wercker](https://img.shields.io/badge/gradle-3.5-brightgreen.svg)]()
+[![Maven metadata URI](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/google/code/gson/gson/maven-metadata.xml.svg)]()
 
 *NOTE: If you want to use examples provided (microservice-example-gradle & microservice-example-maven), please, clone the repository instead of downloading release zip. They need .git folder due to git related plugins specified on pom.xml and build.gradle*
 
