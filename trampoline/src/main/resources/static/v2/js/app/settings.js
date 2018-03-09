@@ -351,6 +351,7 @@ function showNotification(notificationType, notificationMessage){
 $(document).ready(function(){
     $('[data-toggle="git-popover"]').popover();
     $("#tab-newmicroservice-git-repo").addClass("active");
+    $('#content-file-system').hide();
 });
 
 function showNewMsForm(component){
@@ -361,4 +362,17 @@ function showNewMsForm(component){
     $("#tab-newmicroservice-git-repo").removeClass("active");
     $("#tab-file-system").removeClass("active");
     $("#tab-"+component).addClass("active");
+}
+
+function fillFormGitNewMs(){
+    var girUrl =$('#input-git-newmicroservice-repo').val();
+    var repoName = girUrl.split("/")[girUrl.split("/").length-1].replace('.git','');
+
+    $('#input-git-newmicroservice-name').val(repoName);
+    $('#input-git-newmicroservice-destination').val("C:/workarea/"+repoName);
+    $('#input-git-newmicroservice-pomlocation').val("C:/workarea/"+repoName);
+    $('#input-git-newmicroservice-gitLocation').val("C:/workarea/"+repoName);
+}
+
+function setNewMicroserviceFromGit(){
 }

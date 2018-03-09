@@ -157,6 +157,7 @@
                         <div class="card">
                             <div class="header">
                                 <h4 class="title">Register Microservice</h4>
+                                <br/>
                             </div>
                             <ul class="nav nav-tabs">
                                 <li role="presentation" id="tab-newmicroservice-git-repo" onclick="showNewMsForm('newmicroservice-git-repo')"><a>GIT Repo</a></li>
@@ -164,15 +165,72 @@
                             </ul>
                             <div id="content-newmicroservice-git-repo" class="content">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group" id="form-git-newmicroservice-repo">
                                             <label>GIT Repo</label>
-                                            <input  id="input-git-newmicroservice-repo" type="text" class="form-control border-input" placeholder="Ex: -Dmy.arg.one=false -Dmy.arg.two=true"/>
+                                            <input  id="input-git-newmicroservice-repo" onchange="fillFormGitNewMs()" type="text" class="form-control border-input" placeholder="Ex: https://github.com/ErnestOrt/Trampoline.git"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="form-git-newmicroservice-destination">
+                                            <label>Destiantion Folder</label>
+                                            <input  id="input-git-newmicroservice-destination" type="text" class="form-control border-input" placeholder="Ex: C:\Users\Trampoline\Documents\workarea"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group" id="form-git-newmicroservice-name">
+                                            <label>Name *</label>
+                                            <input id="input-git-newmicroservice-name" type="text" class="form-control border-input" placeholder="Ex: microservice-1"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group" id="form-git-newmicroservice-build-tool">
+                                            <label>Build Tool *</label>
+                                            <select id="input-git-newmicroservice-build-tool" class="form-control border-input">
+                                                <option value="-1">Select...</option>
+                                                <option value="maven">Maven</option>
+                                                <option value="gradle">Gradle</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group" id="form-git-newmicroservice-defaultport">
+                                            <label>Default Port *</label>
+                                            <input  id="input-git-newmicroservice-defaultport" type="text" class="form-control border-input" placeholder="Ex: 9988"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group" id="form-git-newmicroservice-actuatorprefix">
+                                            <label>Actuator Prefix</label>
+                                            <input  id="input-git-newmicroservice-actuatorprefix" type="email" class="form-control border-input" placeholder="Ex: /service-one"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="form-git-newmicroservice-pomlocation">
+                                            <label>Pom or Build File Location *</label>
+                                            <input  id="input-git-newmicroservice-pomlocation" type="text" class="form-control border-input"  placeholder="Ex: /Users/ernest/Documents/workarea/microservice-1" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="form-git-newmicroservice-gitLocation">
+                                            <label>Git Repo Root Location</label>
+                                            <input  id="input-git-newmicroservice-gitLocation" type="text" class="form-control border-input" placeholder="Ex: /Users/ernest/Documents/workarea/microservice-1"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-12">
+                                        <div class="form-group" id="form-git-newmicroservice-vmarguments">
+                                            <label>VM Arguments</label>
+                                            <input  id="input-git-newmicroservice-vmarguments" type="text" class="form-control border-input" placeholder="Ex: -Dmy.arg.one=false -Dmy.arg.two=true"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                    <button onclick="setNewMicroserviceFromGit()" class="btn btn-success btn-fill btn-wd">Register Microservice</button>
+                                    <button onclick="setNewMicroserviceFromGit()" class="btn btn-success btn-fill btn-wd">Clone and Register Microservice</button>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>

@@ -27,16 +27,5 @@ public class EncryptServiceTest {
         Assert.assertEquals(value, encryptService.decrypt(encryptValue));
     }
 
-    @Test
-    public void sdfsdfs() throws Exception {
-
-        Git git = Git.cloneRepository()
-                .setURI( "https://github.com/eclipse/jgit.git" )
-                .setDirectory(new File("C:\\Users\\Ernest\\Desktop\\CHAPAS-VERO"))
-                .call();
-
-
-
-
-    }
+    
 }
