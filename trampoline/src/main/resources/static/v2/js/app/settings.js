@@ -326,4 +326,15 @@ function showNotification(notificationType, notificationMessage){
 
 $(document).ready(function(){
     $('[data-toggle="git-popover"]').popover();
+    $("#tab-newmicroservice-git-repo").addClass("active");
 });
+
+function showNewMsForm(component){
+     $('#content-file-system').hide();
+     $('#content-newmicroservice-git-repo').hide();
+     $('#content-'+component).show();
+
+    $("#tab-newmicroservice-git-repo").removeClass("active");
+    $("#tab-file-system").removeClass("active");
+    $("#tab-"+component).addClass("active");
+}

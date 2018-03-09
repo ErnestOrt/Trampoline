@@ -157,8 +157,25 @@
                             <div class="header">
                                 <h4 class="title">Register Microservice</h4>
                             </div>
-                            <div class="content">
-
+                            <ul class="nav nav-tabs">
+                                <li role="presentation" id="tab-newmicroservice-git-repo" onclick="showNewMsForm('newmicroservice-git-repo')"><a>GIT Repo</a></li>
+                                <li role="presentation" id="tab-file-system" onclick="showNewMsForm('file-system')"><a>File System</a></li>
+                            </ul>
+                            <div id="content-newmicroservice-git-repo" class="content">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group" id="form-git-newmicroservice-repo">
+                                            <label>GIT Repo</label>
+                                            <input  id="input-git-newmicroservice-repo" type="text" class="form-control border-input" placeholder="Ex: -Dmy.arg.one=false -Dmy.arg.two=true"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button onclick="setNewMicroserviceFromGit()" class="btn btn-success btn-fill btn-wd">Register Microservice</button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div id="content-file-system" class="content">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="form-group" id="form-newmicroservice-name">

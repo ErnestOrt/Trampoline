@@ -1,9 +1,12 @@
 package org.ernest;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.ernest.applications.trampoline.services.EncryptService;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.UUID;
 
 public class EncryptServiceTest {
@@ -22,5 +25,18 @@ public class EncryptServiceTest {
 
         encryptService.initializeEncrypt();
         Assert.assertEquals(value, encryptService.decrypt(encryptValue));
+    }
+
+    @Test
+    public void sdfsdfs() throws Exception {
+
+        Git git = Git.cloneRepository()
+                .setURI( "https://github.com/eclipse/jgit.git" )
+                .setDirectory(new File("C:\\Users\\Ernest\\Desktop\\CHAPAS-VERO"))
+                .call();
+
+
+
+
     }
 }
