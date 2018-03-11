@@ -1,5 +1,6 @@
 package org.ernest.applications.trampoline.services;
 
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
@@ -14,6 +15,7 @@ import org.ernest.applications.trampoline.entities.MicroserviceGitInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
@@ -76,6 +78,16 @@ public class GitManager {
 
     public void cleanCred() {
         ecosystemManager.cleanGitCred();
+    }
+
+    public void cloneRepository(String gitUrl, String destinationFolder) throws GitAPIException {
+        Ecosystem ecosystem =  ecosystemManager.getEcosystem();
+        CloneCommand cloneCommand = Git.cloneRepository();
+
+        if(ecosystem.getGitCredentials()!=null){
+            cloneCommand.setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials())).call();
+        }
+        cloneCommand.setURI(gitUrl).setDirectory(new File(destinationFolder)).call();
     }
 
     private UsernamePasswordCredentialsProvider buildCredentialsProvider(GitCredentials gitCredentials) {

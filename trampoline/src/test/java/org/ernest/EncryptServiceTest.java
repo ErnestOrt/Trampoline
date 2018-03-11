@@ -26,6 +26,4 @@ public class EncryptServiceTest {
         encryptService.initializeEncrypt();
         Assert.assertEquals(value, encryptService.decrypt(encryptValue));
     }
-
-    
 }

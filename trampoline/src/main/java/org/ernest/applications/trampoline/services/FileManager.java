@@ -145,7 +145,7 @@ public class FileManager {
 		}
 	}
 	
-	private String getSettingsFolder() {
+	public String getSettingsFolder() {
 		
 		if(System.getProperties().getProperty("os.name").contains("Mac")){
 			return settingsFolderPathMac.replaceAll("#userName", System.getProperties().getProperty("user.name"));

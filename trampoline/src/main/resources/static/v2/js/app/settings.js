@@ -59,10 +59,13 @@ function setNewMicroservice(){
 	if($("#input-hidden-mavenhomelocation").val() == '' && $("#input-newmicroservice-build-tool").val() == 'maven'){
 		$("#form-mavenhomelocation").addClass("has-error");
 	}else{
-		cleaningNewMicroserviceFrom();
-		if($("#input-newmicroservice-name").val() == '' || $("#input-newmicroservice-pomlocation").val() == '' || $("#input-newmicroservice-defaultport").val() == '' || $("#input-newmicroservice-build-tool").val() == '-1'){
-			checkEachNewMicroserviceFromField();
-		}else{
+	    var fieldsToCheck = [];
+        fieldsToCheck.push("newmicroservice-name");
+        fieldsToCheck.push("newmicroservice-pomlocation");
+        fieldsToCheck.push("newmicroservice-defaultport");
+        fieldsToCheck.push("newmicroservice-build-tool");
+
+        if(!cheackEmptyValuesForm(fieldsToCheck)){
 		    $('.front-loading').show();
 			$.ajax({
 			    url : "/settings/setnewmicroservice",
@@ -79,41 +82,6 @@ function setNewMicroservice(){
 			});
 		}
 	}
-}
-
-function cleaningNewMicroserviceFrom(){
-	$("#form-newmicroservice-name").removeClass("has-error");
-	$("#form-newmicroservice-pomlocation").removeClass("has-error");
-	$("#form-newmicroservice-defaultport").removeClass("has-error");
-	$("#form-newmicroservice-build-tool").removeClass("has-error");
-
-	$("#form-newmicroservice-name").removeClass("has-success");
-    $("#form-newmicroservice-pomlocation").removeClass("has-success");
-    $("#form-newmicroservice-defaultport").removeClass("has-success");
-    $("#form-newmicroservice-build-tool").removeClass("has-success");
-}
-
-function checkEachNewMicroserviceFromField(){
-	if($("#input-newmicroservice-name").val() == ''){
-		$("#form-newmicroservice-name").addClass("has-error");
-	}else{
-	    $("#form-newmicroservice-name").addClass("has-success");
-	}
-	if($("#input-newmicroservice-pomlocation").val() == ''){
-		$("#form-newmicroservice-pomlocation").addClass("has-error");
-	}else{
-        $("#form-newmicroservice-pomlocation").addClass("has-success");
-    }
-	if($("#input-newmicroservice-defaultport").val() == ''){
-		$("#form-newmicroservice-defaultport").addClass("has-error");
-	}else{
-        $("#form-newmicroservice-defaultport").addClass("has-success");
-    }
-    if($("#input-newmicroservice-build-tool").val() == '-1'){
-        $("#form-newmicroservice-build-tool").addClass("has-error");
-    }else{
-        $("#form-newmicroservice-build-tool").addClass("has-success");
-    }
 }
 
 function removeMicroservice(microserviceId){
@@ -369,10 +337,64 @@ function fillFormGitNewMs(){
     var repoName = girUrl.split("/")[girUrl.split("/").length-1].replace('.git','');
 
     $('#input-git-newmicroservice-name').val(repoName);
-    $('#input-git-newmicroservice-destination').val("C:/workarea/"+repoName);
-    $('#input-git-newmicroservice-pomlocation').val("C:/workarea/"+repoName);
-    $('#input-git-newmicroservice-gitLocation').val("C:/workarea/"+repoName);
+    $('#input-git-newmicroservice-destination').val(settingsFolder+"/"+repoName);
+    $('#input-git-newmicroservice-pomlocation').val(settingsFolder+"/"+repoName);
+    $('#input-git-newmicroservice-gitLocation').val(settingsFolder+"/"+repoName);
 }
 
 function setNewMicroserviceFromGit(){
+    var fieldsToCheck = [];
+    fieldsToCheck.push("git-newmicroservice-repo");
+    fieldsToCheck.push("git-newmicroservice-destination");
+    fieldsToCheck.push("git-newmicroservice-name");
+    fieldsToCheck.push("git-newmicroservice-pomlocation");
+    fieldsToCheck.push("git-newmicroservice-defaultport");
+    fieldsToCheck.push("git-newmicroservice-build-tool");
+    fieldsToCheck.push("git-newmicroservice-gitLocation");
+
+    if($("#input-hidden-mavenhomelocation").val() == '' && $("#input-newmicroservice-build-tool").val() == 'maven'){
+    		$("#form-mavenhomelocation").addClass("has-error");
+    }else{
+        if(!cheackEmptyValuesForm(fieldsToCheck)){
+            $('.front-loading').show();
+            $.ajax({
+                url : "/settings/setnewmicroservice/git",
+                type: "POST",
+                 data : {gitRepo: $('#input-git-newmicroservice-repo').val(),
+                        destinationFolder: $('#input-git-newmicroservice-destination').val(),
+                        name: $("#input-git-newmicroservice-name").val(),
+                        pomLocation: $("#input-git-newmicroservice-pomlocation").val(),
+                        defaultPort: $("#input-git-newmicroservice-defaultport").val(),
+                        actuatorPrefix: $("#input-git-newmicroservice-actuatorprefix").val(),
+                        vmArguments: $("#input-git-newmicroservice-vmarguments").val(),
+                        buildTool: $("#input-git-newmicroservice-build-tool").val(),
+                        gitLocation: $("#input-git-newmicroservice-gitLocation").val()},
+                success: function(data, textStatus, jqXHR) { location.reload(); },
+                 error: function (request, status, error) {
+                      $('.front-loading').hide();
+                       showNotification('danger', "Error occurred when trying to register a microservice. Check Logs for more info");
+
+                   }
+            });
+        }
+    }
 }
+
+function cheackEmptyValuesForm(fieldsToCheck){
+    var errors = false;
+    fieldsToCheck.forEach(function(field) {
+        $("#form-" + field).removeClass("has-error");
+        $("#form-" + field).removeClass("has-success");
+
+        if($("#input-" + field).val() == '' || $("#input-" + field).val() == '-1'){
+            errors = true
+            $("#form-" + field).addClass("has-error");
+        }else{
+            $("#form-" + field).addClass("has-success");
+        }
+    });
+
+    return errors;
+}
+
+
