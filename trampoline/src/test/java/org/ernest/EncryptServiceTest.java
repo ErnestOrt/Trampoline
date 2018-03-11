@@ -1,12 +1,9 @@
 package org.ernest;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.ernest.applications.trampoline.services.EncryptService;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.UUID;
 
 public class EncryptServiceTest {

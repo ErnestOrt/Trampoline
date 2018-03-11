@@ -127,12 +127,16 @@ public class FileManager {
 	public void createScript(Microservice microservice) throws CreatingMicroserviceScriptException {
 		try {
 			if(System.getProperties().getProperty("os.name").contains("Windows")){
+				try{FileUtils.forceDelete(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"));}catch (Exception e){}
+
 				if(microservice.getBuildTool().equals(BuildTools.MAVEN)) {
 					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"), ScriptContentsProvider.getMavenWindows(microservice.getPomLocation()));
 				}else{
 					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"), ScriptContentsProvider.getGradleWindows(microservice.getPomLocation()));
 				}
 			}else{
+				try{FileUtils.forceDelete(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"));}catch (Exception e){}
+
 				if(microservice.getBuildTool().equals(BuildTools.MAVEN)) {
 					FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"),ScriptContentsProvider.getMavenUnix(microservice.getPomLocation()));
 				}else{
