@@ -7,6 +7,7 @@ import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderExcep
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
 import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
 import org.ernest.applications.trampoline.services.EcosystemManager;
+import org.ernest.applications.trampoline.services.FileManager;
 import org.ernest.applications.trampoline.services.GitManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,9 @@ public class SettingsController {
 	EcosystemManager ecosystemManager;
 
 	@Autowired
+	FileManager fileManager;
+
+	@Autowired
 	GitManager gitManager;
 
 	@RequestMapping("")
@@ -42,6 +46,7 @@ public class SettingsController {
 		model.addAttribute("mavenBinaryLocationMessage", ecosystem.getMavenBinaryLocation() == null ? "Set Maven Binary Location if necessary. Otherwise it will automatically be searched in a bin folder inside your Maven Home Location" : ecosystem.getMavenBinaryLocation());
 		model.addAttribute("mavenHomeLocationMessage", ecosystem.getMavenHomeLocation() == null ? "Please set maven Home Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenHomeLocation());
 		model.addAttribute("gitUsername", gitManager.getRegisteredUsername(ecosystem));
+		model.addAttribute("settingsFolder", fileManager.getSettingsFolder());
 
 		return SETTINGS_VIEW;
     }
@@ -58,6 +63,16 @@ public class SettingsController {
 	public void setNewMicroservice(@RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation,
 								   @RequestParam(value="defaultPort") String defaultPort, @RequestParam(value="actuatorPrefix") String actuatorPrefix,
 								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="buildTool") String buildTool, @RequestParam(value="gitLocation") String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort, actuatorPrefix, vmArguments, buildTool, gitLocation);
+	}
+
+	@RequestMapping(value= "/setnewmicroservice/git", method = RequestMethod.POST)
+	@ResponseBody
+	public void setNewMicroserviceFromGit(@RequestParam(value="gitRepo") String gitRepo, @RequestParam(value="destinationFolder") String destinationFolder,
+										  @RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation,
+								   @RequestParam(value="defaultPort") String defaultPort, @RequestParam(value="actuatorPrefix") String actuatorPrefix,
+								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="buildTool") String buildTool, @RequestParam(value="gitLocation") String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException, GitAPIException {
+		gitManager.cloneRepository(gitRepo, destinationFolder);
 		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort, actuatorPrefix, vmArguments, buildTool, gitLocation);
 	}
 

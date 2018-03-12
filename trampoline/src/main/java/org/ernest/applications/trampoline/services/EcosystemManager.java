@@ -164,6 +164,8 @@ public class EcosystemManager {
 		microservice.setVmArguments(vmArguments);
 		microservice.setGitLocation(gitLocation);
 
+		fileManager.createScript(microservice);
+
 		fileManager.saveEcosystem(ecosystem);
 	}
 
