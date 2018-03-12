@@ -16,12 +16,13 @@ Are you Admin Spring Boot locally? Are you **tired of that set of scripts**? Rel
 
 The aim is to **help during the course of developing an application based on the paradigm of microservices with _Spring Boot_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **start instances**, **restart** and **kill them**.
 
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_11.png)
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_12.png)
 
 Also you will be able to:
 
 * Admin Spring Boot locally
 * Use configurable Actuator Endpoints and VM arguments
+* Register nicroservices directly from a GIT url
 * Monitor memory usage for each instance, capturing their metrics every 30 seconds
 * Monitor instances and trace information at any point in time
 * See Git branch and last commit on instances
@@ -30,6 +31,7 @@ Also you will be able to:
 
 ### Requirements
 
+* Unix or Windows OS
 * Java and Apache Maven or Gradle Wrapper
 * Include your Gradle Wrapper next to your build files if your choice is Gradle as a Build Tool
 * Include Spring Boot Actuator in your microservices
