@@ -27,6 +27,10 @@ public class InstanceInfoCollector {
 
         Instance instance = ecosystemManager.getEcosystem().getInstances().stream().filter(i -> i.getId().equals(idInstance)).findAny().get();
         info.setPomLocation(instance.getPomLocation());
+        info.setBranch("-");
+        info.setCommitMessage("-");
+        info.setCommitOwner("-");
+        info.setCommitDate("-");
         try {
             JSONObject infoJson = new JSONObject(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/info", String.class));
 
@@ -34,15 +38,14 @@ public class InstanceInfoCollector {
             info.setCommitMessage(infoJson.getJSONObject("git").getJSONObject("commit").getJSONObject("message").get("full").toString());
             info.setCommitOwner(infoJson.getJSONObject("git").getJSONObject("commit").getJSONObject("user").get("name").toString() + "["+infoJson.getJSONObject("git").getJSONObject("commit").getJSONObject("user").get("email").toString()+"]");
 
-            Long timestamp = Long.valueOf(infoJson.getJSONObject("git").getJSONObject("commit").get("time").toString());
-            info.setCommitDate(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format( new Date(new Timestamp(timestamp).getTime())));
+            try {
+                Long timestamp = Long.valueOf(infoJson.getJSONObject("git").getJSONObject("commit").get("time").toString());
+                info.setCommitDate(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date(new Timestamp(timestamp).getTime())));
+            }catch (NumberFormatException e){
+                info.setCommitDate(infoJson.getJSONObject("git").getJSONObject("commit").get("time").toString());
+            }
         }catch (Exception e){
-            info.setBranch("-");
-            info.setCommitMessage("-");
-            info.setCommitOwner("-");
-            info.setCommitDate("-");
-
-            LOGGER.error("Not possible to retrieve git info for instance: ["+instance.getId()+"] hosted on port: ["+instance.getPort()+"]");
+            LOGGER.error("Not possible to retrieve git info for instance: ["+instance.getId()+"] hosted on port: ["+instance.getPort()+"]", e);
         }
         return info;
     }
