@@ -14,6 +14,8 @@ import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptEx
 import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
 import org.ernest.applications.trampoline.utils.ScriptContentsProvider;
 import org.ernest.applications.trampoline.utils.VMParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,8 @@ import com.google.gson.JsonSyntaxException;
 
 @Component
 public class FileManager {
+
+	private final Logger log = LoggerFactory.getLogger(FileManager.class);
 
 	@Value("${settings.folder.path.mac}")
 	private String settingsFolderPathMac;
@@ -107,6 +111,7 @@ public class FileManager {
 				}else{
 					commands = commands.replace("#vmArguments", VMParser.toWindowsEnviromentVariables(vmArguments));
 				}
+				log.info("Starting ["+microservice.getId()+"] with following command ["+commands+"]");
 				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \""+commands+"\"");
 			}else{
 				if(microservice.getBuildTool().equals(BuildTools.MAVEN)){

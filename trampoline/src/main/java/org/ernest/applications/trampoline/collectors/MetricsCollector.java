@@ -70,7 +70,7 @@ public class MetricsCollector {
         idsToBeDeleted.stream().forEach(id-> metricsMap.remove(id));
     }
 
-    private Metrics buildMetricsFromJsonResponse(JSONObject metricsJson) {
+    private Metrics buildMetricsFromJsonResponse(JSONObject metricsJson) throws JSONException {
         Metrics metrics = new Metrics();
         metrics.setTotalMemoryKB(Long.valueOf(metricsJson.get("mem").toString()));
         metrics.setFreeMemoryKB(Long.valueOf(metricsJson.get("mem.free").toString()));

@@ -7,6 +7,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17")
 	}
 }
 
@@ -15,6 +16,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
+group = 'org.trampoline'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
@@ -26,18 +28,9 @@ repositories {
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-	compile('com.google.code.gson:gson')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('junit:junit')
+}
 
-	compile('org.apache.commons:commons-io:1.3.2')
-	compile('org.jboss.resteasy:resteasy-jaxrs:2.2.1.GA')
-	compile('org.apache.commons:commons-collections4:4.1')
-	compile('org.json:json:20160810')
-	compile('org.eclipse.jgit:org.eclipse.jgit:4.8.0.201706111038-r')
-	compile('org.json:json:20160810')
-	compile('org.jasypt:jasypt:1.9.2')
-	compile('com.github.dblock:oshi-core:3.3')
-
+gitProperties {
+	gitRepositoryRoot = new File("${project.rootDir}/..")
 }

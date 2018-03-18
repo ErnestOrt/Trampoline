@@ -7,6 +7,7 @@ import org.ernest.applications.trampoline.services.EcosystemManager;
 import org.ernest.applications.trampoline.collectors.MetricsCollector;
 import org.ernest.applications.trampoline.collectors.TraceCollector;
 import org.ernest.applications.trampoline.utils.PortsChecker;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -84,7 +85,7 @@ public class InstancesController {
 
 	@RequestMapping(value= "/traces", method = RequestMethod.POST)
 	@ResponseBody
-	public List<TraceActuator> getTraces(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException {
+	public List<TraceActuator> getTraces(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, JSONException {
 		return traceCollector.getTraces(id);
 	}
 
