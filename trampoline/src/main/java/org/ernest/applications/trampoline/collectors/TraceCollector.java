@@ -28,8 +28,34 @@ public class TraceCollector {
         List<TraceActuator> traces = new ArrayList<>();
 
         Instance instance = ecosystemManager.getEcosystem().getInstances().stream().filter(i -> i.getId().equals(idInstance)).findAny().get();
-        JSONArray traceArrayJson = new JSONArray(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/trace", String.class));
+        JSONArray traceArrayJson;
 
+        try {
+            traceArrayJson = new JSONArray(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/trace", String.class));
+            buildTracesV1x(traces, traceArrayJson);
+        }catch (Exception e){
+            traceArrayJson = new JSONObject(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/httptrace", String.class)).getJSONArray("traces");
+            buildTracesV2x(traces, traceArrayJson);
+        }
+
+        return traces;
+    }
+
+    private void buildTracesV2x(List<TraceActuator> traces, JSONArray traceArrayJson) throws JSONException {
+        for (int i = 0; i < traceArrayJson.length(); i++) {
+            JSONObject traceJson = traceArrayJson.getJSONObject(i);
+
+            org.ernest.applications.trampoline.entities.TraceActuator traceActuator = new org.ernest.applications.trampoline.entities.TraceActuator();
+            traceActuator.setDate(traceJson.getString("timestamp"));
+            traceActuator.setMethod(traceJson.getJSONObject("request").getString("method"));
+            traceActuator.setPath(traceJson.getJSONObject("request").getString("uri"));
+            traceActuator.setStatus(traceJson.getJSONObject("response").getString("status"));
+            traces.add(traceActuator);
+        }
+
+    }
+
+    private void buildTracesV1x(List<TraceActuator> traces, JSONArray traceArrayJson) throws JSONException {
         for (int i = 0; i < traceArrayJson.length(); i++) {
             JSONObject traceJson = traceArrayJson.getJSONObject(i);
 
@@ -40,7 +66,5 @@ public class TraceCollector {
             traceActuator.setStatus(traceJson.getJSONObject("info").getJSONObject("headers").getJSONObject("response").getString("status"));
             traces.add(traceActuator);
         }
-
-        return traces;
     }
 }

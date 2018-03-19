@@ -39,4 +39,14 @@ public class TraceActuator {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "TraceActuator{" +
+                "date='" + date + '\'' +
+                ", method='" + method + '\'' +
+                ", path='" + path + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }
