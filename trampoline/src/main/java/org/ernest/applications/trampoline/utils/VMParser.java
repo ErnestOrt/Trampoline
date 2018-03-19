@@ -25,6 +25,18 @@ public class VMParser {
     }
 
     public static String toWindowsEnviromentVariables(String vmArguments){
-        return vmArguments.replaceAll("-D", "&& SET ");
+        Pattern pattern = Pattern.compile(REGEX_VM_ARGUMENTS);
+        Matcher matcher = pattern.matcher(vmArguments);
+
+        StringBuffer upperCaseStringBuffer = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(upperCaseStringBuffer, matcher.group().toUpperCase());
+        }
+        matcher.appendTail(upperCaseStringBuffer);
+
+        String strResult = upperCaseStringBuffer.toString();
+        strResult = strResult.replaceAll("-D", "&& SET ");
+        strResult = strResult.replaceAll("\\.", "_");
+        return strResult;
     }
 }

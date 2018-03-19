@@ -6,6 +6,7 @@ import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderExcep
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
 import org.ernest.applications.trampoline.services.EcosystemManager;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class TraceCollector {
     @Autowired
     EcosystemManager ecosystemManager;
 
-    public List<TraceActuator> getTraces(String idInstance) throws CreatingSettingsFolderException, ReadingEcosystemException {
+    public List<TraceActuator> getTraces(String idInstance) throws CreatingSettingsFolderException, ReadingEcosystemException, JSONException {
         List<TraceActuator> traces = new ArrayList<>();
 
         Instance instance = ecosystemManager.getEcosystem().getInstances().stream().filter(i -> i.getId().equals(idInstance)).findAny().get();
