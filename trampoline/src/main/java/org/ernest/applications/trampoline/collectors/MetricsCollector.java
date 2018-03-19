@@ -1,6 +1,7 @@
 package org.ernest.applications.trampoline.collectors;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
+import org.ernest.applications.trampoline.entities.Instance;
 import org.ernest.applications.trampoline.entities.Metrics;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
@@ -33,8 +34,12 @@ public class MetricsCollector {
 
         ecosystemManager.getEcosystem().getInstances().forEach(instance ->{
             try {
-                JSONObject metricsJson = new JSONObject(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/metrics", String.class));
-                Metrics metrics = buildMetricsFromJsonResponse(metricsJson);
+                Metrics metrics;
+                try {
+                    metrics = buildMetricsFromJsonResponseV1x(instance);
+                }catch (Exception e){
+                    metrics = buildMetricsFromJsonResponseV2x(instance);
+                }
 
                 if (metricsMap.containsKey(instance.getId())) {
                     metricsMap.get(instance.getId()).add(metrics);
@@ -70,7 +75,9 @@ public class MetricsCollector {
         idsToBeDeleted.stream().forEach(id-> metricsMap.remove(id));
     }
 
-    private Metrics buildMetricsFromJsonResponse(JSONObject metricsJson) throws JSONException {
+    private Metrics buildMetricsFromJsonResponseV1x(Instance instance) throws JSONException {
+        JSONObject metricsJson = new JSONObject(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/metrics", String.class));
+
         Metrics metrics = new Metrics();
         metrics.setTotalMemoryKB(Long.valueOf(metricsJson.get("mem").toString()));
         metrics.setFreeMemoryKB(Long.valueOf(metricsJson.get("mem.free").toString()));
@@ -81,4 +88,23 @@ public class MetricsCollector {
 
         return metrics;
     }
+
+    private Metrics buildMetricsFromJsonResponseV2x(Instance instance) throws JSONException {
+        Metrics metrics = new Metrics();
+        metrics.setTotalMemoryKB(getValueMetric(instance, "jvm.memory.max"));
+        metrics.setHeapKB(0L);
+        metrics.setInitHeapKB(0L);
+        metrics.setUsedHeapKB(getValueMetric(instance, "jvm.memory.used"));
+        metrics.setFreeMemoryKB(metrics.getTotalMemoryKB() - metrics.getUsedHeapKB());
+        metrics.setDate(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+
+        return metrics;
+    }
+
+    private Long getValueMetric(Instance instance, String key) throws JSONException {
+        JSONObject metricsJson = new JSONObject(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/metrics/"+key, String.class));
+        return Long.valueOf(metricsJson.getJSONArray("measurements").getJSONObject(0).getInt("value"));
+    }
 }
+
+
