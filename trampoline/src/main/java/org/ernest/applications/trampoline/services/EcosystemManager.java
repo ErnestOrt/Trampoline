@@ -120,7 +120,7 @@ public class EcosystemManager {
 		try {
 			new ClientRequest("http://localhost:" + instance.getPort() + instance.getActuatorPrefix() + "/shutdown").post(String.class);
 		} catch (Exception e) {
-			log.error("Stopping instances id: [{}]", id, e);
+			log.error("Stopping instances id: [{}]", id);
 		}
 		
 		ecosystem.setInstances(ecosystem.getInstances().stream().filter(i -> !i.getId().equals(id)).collect(Collectors.toList()));
