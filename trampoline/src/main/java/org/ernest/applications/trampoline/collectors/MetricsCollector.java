@@ -15,6 +15,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.ConnectException;
+import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
 @Component
 public class MetricsCollector {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollector.class);
+    private static final Logger log = LoggerFactory.getLogger(MetricsCollector.class);
 
     @Autowired
     EcosystemManager ecosystemManager;
@@ -48,8 +50,8 @@ public class MetricsCollector {
                     queue.add(metrics);
                     metricsMap.put(instance.getId(), queue);
                 }
-            }catch (Exception e){
-                LOGGER.error("Not possible to retrieve metrics for instance: ["+instance.getId()+"] hosted on port: ["+instance.getPort()+"]");
+            }catch (Exception  e){
+                log.error("Not possible to retrieve metrics for instance: ["+instance.getId()+"] hosted on port: ["+instance.getPort()+"]");
             }
         });
 
@@ -76,9 +78,12 @@ public class MetricsCollector {
     }
 
     private Metrics buildMetricsFromJsonResponseV1x(Instance instance) throws JSONException {
-        JSONObject metricsJson = new JSONObject(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/metrics", String.class));
-
         Metrics metrics = new Metrics();
+
+        String url = "http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/metrics";
+        log.info("Reading metrics Spring Boot 1.x for instance id: [{}] using url: [{}]", instance.getId(), url);
+
+        JSONObject metricsJson = new JSONObject(new RestTemplate().getForObject(url, String.class));
         metrics.setTotalMemoryKB(Long.valueOf(metricsJson.get("mem").toString()));
         metrics.setFreeMemoryKB(Long.valueOf(metricsJson.get("mem.free").toString()));
         metrics.setHeapKB(Long.valueOf(metricsJson.get("heap").toString()));
@@ -90,6 +95,8 @@ public class MetricsCollector {
     }
 
     private Metrics buildMetricsFromJsonResponseV2x(Instance instance) throws JSONException {
+        log.info("Reading metrics Spring Boot 2.x for instance id: [{}]", instance.getId());
+
         Metrics metrics = new Metrics();
         metrics.setTotalMemoryKB(getValueMetric(instance, "jvm.memory.max"));
         metrics.setHeapKB(0L);

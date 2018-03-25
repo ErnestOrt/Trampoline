@@ -12,6 +12,8 @@ import org.ernest.applications.trampoline.entities.Ecosystem;
 import org.ernest.applications.trampoline.entities.GitCredentials;
 import org.ernest.applications.trampoline.entities.Microservice;
 import org.ernest.applications.trampoline.entities.MicroserviceGitInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 @Component
 public class GitManager {
 
+    private final Logger log = LoggerFactory.getLogger(GitManager.class);
+
     @Autowired
     EcosystemManager ecosystemManager;
 
@@ -29,6 +33,7 @@ public class GitManager {
     EncryptService encryptService;
 
     public MicroserviceGitInfo getMicroseriviceBranches(String microserviceId) throws IOException, GitAPIException {
+        log.info("Reading GIT Branches for microservice id: [{}]", microserviceId);
         MicroserviceGitInfo microserviceGitInfo = new MicroserviceGitInfo();
 
         Ecosystem ecosystem =  ecosystemManager.getEcosystem();
@@ -48,6 +53,7 @@ public class GitManager {
     }
 
     public void checkoutAndPull(String microserviceId, String branchName) throws IOException, GitAPIException {
+        log.info("Checkout and Pulling code for microservice id: [{}] branchName: [{}]", microserviceId, branchName);
         Ecosystem ecosystem =  ecosystemManager.getEcosystem();
         Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(microserviceId)).findAny().get();
 
@@ -81,6 +87,8 @@ public class GitManager {
     }
 
     public void cloneRepository(String gitUrl, String destinationFolder) throws GitAPIException {
+        log.info("Cloning repository gitUrl: [{}] destinationFolder: [{}]", gitUrl, destinationFolder);
+
         Ecosystem ecosystem =  ecosystemManager.getEcosystem();
         CloneCommand cloneCommand = Git.cloneRepository();
 
