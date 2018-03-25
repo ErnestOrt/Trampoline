@@ -21,6 +21,8 @@ import java.util.List;
 @Component
 public class TraceCollector {
 
+    private static final Logger log = LoggerFactory.getLogger(TraceCollector.class);
+
     @Autowired
     EcosystemManager ecosystemManager;
 
@@ -30,11 +32,16 @@ public class TraceCollector {
         Instance instance = ecosystemManager.getEcosystem().getInstances().stream().filter(i -> i.getId().equals(idInstance)).findAny().get();
         JSONArray traceArrayJson;
 
+        String url;
         try {
-            traceArrayJson = new JSONArray(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/trace", String.class));
+            url = "http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/trace";
+            log.info("Reading traces Spring Boot 1.x for instance id: [{}] using url: [{}]", idInstance, url);
+            traceArrayJson = new JSONArray(new RestTemplate().getForObject(url, String.class));
             buildTracesV1x(traces, traceArrayJson);
         }catch (Exception e){
-            traceArrayJson = new JSONObject(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/httptrace", String.class)).getJSONArray("traces");
+            url = "http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/httptrace";
+            log.info("Reading traces Spring Boot 2.x for instance id: [{}] using url: [{}]", idInstance, url);
+            traceArrayJson = new JSONObject(new RestTemplate().getForObject(url, String.class)).getJSONArray("traces");
             buildTracesV2x(traces, traceArrayJson);
         }
 

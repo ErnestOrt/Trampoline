@@ -89,6 +89,7 @@ public class FileManager {
     }
 
 	public void saveEcosystem(Ecosystem ecosystem) throws SavingEcosystemException {
+		log.info("Saving Ecosystem");
 		try {
 			FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + settingsFileName), new Gson().toJson(ecosystem));
 		} catch (IOException e) {
@@ -130,6 +131,7 @@ public class FileManager {
 	}
 
 	public void createScript(Microservice microservice) throws CreatingMicroserviceScriptException {
+		log.info("Creating deployment script for microservice [{}]", microservice.getId());
 		try {
 			if(System.getProperties().getProperty("os.name").contains("Windows")){
 				try{FileUtils.forceDelete(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"));}catch (Exception e){}
@@ -155,7 +157,6 @@ public class FileManager {
 	}
 	
 	public String getSettingsFolder() {
-		
 		if(System.getProperties().getProperty("os.name").contains("Mac")){
 			return settingsFolderPathMac.replaceAll("#userName", System.getProperties().getProperty("user.name"));
 		}else if(System.getProperties().getProperty("os.name").contains("Windows")){

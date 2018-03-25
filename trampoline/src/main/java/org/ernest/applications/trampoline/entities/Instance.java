@@ -54,4 +54,17 @@ public class Instance {
 	public void setMicroserviceId(String microserviceId) {
 		this.microserviceId = microserviceId;
 	}
+
+	@Override
+	public String toString() {
+		return "Instance{" +
+				"id='" + id + '\'' +
+				", name='" + name + '\'' +
+				", pomLocation='" + pomLocation + '\'' +
+				", port='" + port + '\'' +
+				", actuatorPrefix='" + actuatorPrefix + '\'' +
+				", vmArguments='" + vmArguments + '\'' +
+				", microserviceId='" + microserviceId + '\'' +
+				'}';
+	}
 }

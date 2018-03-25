@@ -16,18 +16,8 @@ public class EncryptService {
 
     @PostConstruct
     public void initializeEncrypt(){
-       /* SystemInfo systemInfo = new SystemInfo();
-        OperatingSystem operatingSystem = systemInfo.getOperatingSystem();
-        HardwareAbstractionLayer hardwareAbstractionLayer = systemInfo.getHardware();
-        CentralProcessor centralProcessor = hardwareAbstractionLayer.getProcessor();*/
-
         standardPBEStringEncryptor = new StandardPBEStringEncryptor();
-        standardPBEStringEncryptor.setPassword("s32rwnj2341mWDaqw12"/*new StringBuilder()
-                                                    .append(operatingSystem.getManufacturer())
-                                                    .append(centralProcessor.getSystemSerialNumber())
-                                                    .append(centralProcessor.getIdentifier())
-                                                    .append(centralProcessor.getLogicalProcessorCount())
-                                                    .toString()*/);
+        standardPBEStringEncryptor.setPassword("s32rwnj2341mWDaqw12");
     }
 
 

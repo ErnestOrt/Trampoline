@@ -72,4 +72,19 @@ public class Microservice {
 	public void setGitLocation(String gitLocation) {
 		this.gitLocation = gitLocation;
 	}
+
+	@Override
+	public String toString() {
+		return "Microservice{" +
+				"id='" + id + '\'' +
+				", name='" + name + '\'' +
+				", pomLocation='" + pomLocation + '\'' +
+				", gitLocation='" + gitLocation + '\'' +
+				", defaultPort='" + defaultPort + '\'' +
+				", actuatorPrefix='" + actuatorPrefix + '\'' +
+				", vmArguments='" + vmArguments + '\'' +
+				", buildTool=" + buildTool +
+				", version=" + version +
+				'}';
+	}
 }

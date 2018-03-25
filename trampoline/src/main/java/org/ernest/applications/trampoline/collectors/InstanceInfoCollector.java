@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
 @Component
 public class InstanceInfoCollector {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TraceCollector.class);
+    private static final Logger log = LoggerFactory.getLogger(InstanceInfoCollector.class);
 
     @Autowired
     EcosystemManager ecosystemManager;
@@ -32,20 +32,23 @@ public class InstanceInfoCollector {
         info.setCommitOwner("-");
         info.setCommitDate("-");
         try {
-            JSONObject infoJson = new JSONObject(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/info", String.class));
+            String url = "http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/info";
 
+            log.info("Reading GIT info Spring Boot 1.x for instance id: [{}] using url: [{}]", idInstance, url);
+            JSONObject infoJson = new JSONObject(new RestTemplate().getForObject(url, String.class));
             info.setBranch(infoJson.getJSONObject("git").get("branch").toString());
             info.setCommitMessage(infoJson.getJSONObject("git").getJSONObject("commit").getJSONObject("message").get("full").toString());
             info.setCommitOwner(infoJson.getJSONObject("git").getJSONObject("commit").getJSONObject("user").get("name").toString() + "["+infoJson.getJSONObject("git").getJSONObject("commit").getJSONObject("user").get("email").toString()+"]");
 
             try {
+                log.info("Reading GIT info Spring Boot 2.x for instance id: [{}] using url: [{}]", idInstance, url);
                 Long timestamp = Long.valueOf(infoJson.getJSONObject("git").getJSONObject("commit").get("time").toString());
                 info.setCommitDate(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date(new Timestamp(timestamp).getTime())));
             }catch (NumberFormatException e){
                 info.setCommitDate(infoJson.getJSONObject("git").getJSONObject("commit").get("time").toString());
             }
         }catch (Exception e){
-            LOGGER.error("Not possible to retrieve git info for instance: ["+instance.getId()+"] hosted on port: ["+instance.getPort()+"]", e);
+            log.error("Not possible to retrieve git info for instance: ["+instance.getId()+"] hosted on port: ["+instance.getPort()+"]", e);
         }
         return info;
     }
