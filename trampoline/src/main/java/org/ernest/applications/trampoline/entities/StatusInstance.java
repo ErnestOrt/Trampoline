@@ -7,7 +7,7 @@ public enum StatusInstance {
 	
 	private String code;
 	
-	private StatusInstance(String code){
+	StatusInstance(String code){
 		this.code = code;
 	}
 	
