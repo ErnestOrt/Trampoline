@@ -19,7 +19,7 @@ Also you will be able to:
 
 * Admin Spring Boot locally (fully support for v1.x and v2.x)
 * Use configurable Actuator Endpoints and VM arguments
-* Register nicroservices directly from a GIT url
+* Register microservices directly from a GIT URL
 * Monitor memory usage for each instance, capturing their metrics every 30 seconds
 * Monitor instances and trace information at any point in time
 * See Git branch and last commit on instances
