@@ -95,10 +95,30 @@
                                         </ul>
                             </div>
                         </div>
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Running Instances Registered</h4>
+                            </div>
+                            <div class="content">
+                                <ul class="list-unstyled team-members">
+                                    <li th:each="microservice : ${microservices}">
+                                        <div class="row">
+                                            <div class="col-xs-7">
+                                                <span th:text="${microservice.name}"></span>
+                                            </div>
+                                            <div class="col-xs-5 text-right">
+                                                <btn class="btn btn-sm btn-primary btn-icon" th:onclick="'showMicroserviceInformation(\'' + ${microservice.id} + '\')'"><i class="fa fa-pencil"></i></btn>
+                                                <btn class="btn btn-sm btn-danger btn-icon" th:onclick="'removeMicroservice(\'' + ${microservice.id} + '\')'"><i class="fa fa-trash"></i></btn>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-8 col-md-7">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                  <div class="card">
                                     <div class="header">
                                         <h4 class="title">Maven Settings</h4>
@@ -125,7 +145,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="card">
                                     <div class="header">
                                         <h4 class="title">GIT Settings <i class="fa fa-info-circle" data-toggle="git-popover" data-content="If GIT is installed on your system, you don't need it to enjoy GIT features, otherwise yes. Credentials will be secured and not published."></i></h4>
@@ -148,6 +168,39 @@
                                         <div class="text-center">
                                             <button onclick="saveGitCred()" class="btn btn-success btn-fill btn-wd">Save</button>
                                             <button onclick="cleanGitCred()" class="btn btn-danger btn-fill btn-wd">Clean</button>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="header">
+                                        <h4 class="title">Register Running Instance <i class="fa fa-info-circle" data-placement="left" data-toggle="git-popover" data-content="It can happen that instances are deployed using other methods, but Trampoline looks amazing to have them all under one dashboard, isn't it?"></i></h4>
+                                    </div>
+                                    <div class="content">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="form-running-instance">
+                                                    <label>Running Instance Name</label>
+                                                    <input id="input-running-instance-name" type="text" class="form-control border-input" placeholder="Ex: ms-upload"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>IP</label>
+                                                    <input id="input-running-instance-ip" type="text" class="form-control border-input" placeholder="Ex: 10.3.1.203"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Port</label>
+                                                    <input id="input-running-instance-port" type="text" class="form-control border-input" placeholder="Ex: 8877"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button onclick="" class="btn btn-success btn-fill btn-wd">Register Instance</button>
                                         </div>
                                         <div class="clearfix"></div>
                                     </div>

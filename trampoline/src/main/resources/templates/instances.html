@@ -53,7 +53,7 @@
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-2 col-md-2">
                         <div class="card">
                             <div class="header">
                                 <h4 class="title">Launch Group</h4>
@@ -74,6 +74,32 @@
                                 </div>
                                 <div class="text-center">
                                     <button onclick="startGroup()" class="btn btn-success btn-fill btn-wd">Launch</button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Running Instance</h4>
+                                <p class="category">Select an instance</p>
+                            </div>
+
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group" id="form-running-instance">
+                                            <label>Group*</label>
+                                            <select id="input-running-instance" class="form-control border-input">
+                                                <option value="-1">Select one instance...</option>
+                                                <option th:each="group : ${microservicesgroups}" th:text="${group.name}" th:value="${group.id}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button onclick="startGroup()" class="btn btn-success btn-fill btn-wd">Add</button>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
