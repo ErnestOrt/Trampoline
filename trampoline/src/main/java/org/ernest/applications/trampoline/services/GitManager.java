@@ -41,7 +41,7 @@ public class GitManager {
 
         Git git = Git.open(new java.io.File(microservice.getGitLocation()));
         if(ecosystem.getGitCredentials()!=null){
-            git.fetch().setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials())).setRemoveDeletedRefs(true).call();
+            git.fetch().setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials())).setRemoveDeletedRefs(true);
         }else{
             git.fetch().setRemoveDeletedRefs(true).call();
         }
