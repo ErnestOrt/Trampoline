@@ -93,6 +93,6 @@ No, information introduced will be stored in a settings file along with scripts 
 ### Contributing
 Start Admin Spring Boot locally and then click the star button to make the author and his neighbors happy :blush:. Then fork the repository and submit a pull request for whatever change you want to be added to this project.
 
-If you have any questions, just open an issue.
+If you have any questions or improvement proposal, just open an issue.
 
 # Enjoy it Folks!
