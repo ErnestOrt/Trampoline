@@ -4,7 +4,8 @@ import java.util.Arrays;
 
 public enum BuildTools {
     MAVEN("maven"),
-    GRADLE("gradle");
+    GRADLE("gradle"),
+    JAR("jar");
 
     private String code;
 

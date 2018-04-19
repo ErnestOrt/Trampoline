@@ -93,7 +93,7 @@ public class GitManager {
         CloneCommand cloneCommand = Git.cloneRepository();
 
         if(ecosystem.getGitCredentials()!=null){
-            cloneCommand.setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials())).call();
+            cloneCommand.setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials()));
         }
         cloneCommand.setURI(gitUrl).setDirectory(new File(destinationFolder)).call();
     }
