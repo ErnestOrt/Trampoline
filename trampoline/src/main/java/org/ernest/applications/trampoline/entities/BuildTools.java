@@ -1,7 +1,10 @@
 package org.ernest.applications.trampoline.entities;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 
+@Getter
 public enum BuildTools {
     MAVEN("maven"),
     GRADLE("gradle");
@@ -10,10 +13,6 @@ public enum BuildTools {
 
     BuildTools(String code){
         this.code = code;
-    }
-
-    public String getCode() {
-        return code;
     }
 
     public static BuildTools getByCode(String code) {
