@@ -55,7 +55,7 @@
                     <div class="col-lg-4 col-md-5">
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">Groups Created</h4>
+                                <h4 class="title">Microservice Groups Created</h4>
                             </div>
                             <div class="content">
                                 <ul class="list-unstyled team-members">
@@ -97,18 +97,17 @@
                         </div>
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">Running Instances Registered</h4>
+                                <h4 class="title">External Instances Registered</h4>
                             </div>
                             <div class="content">
                                 <ul class="list-unstyled team-members">
-                                    <li th:each="microservice : ${microservices}">
+                                    <li th:each="externalInstance : ${externalInstances}">
                                         <div class="row">
                                             <div class="col-xs-7">
-                                                <span th:text="${microservice.name}"></span>
+                                                <span th:text="${externalInstance.name}"></span>
                                             </div>
                                             <div class="col-xs-5 text-right">
-                                                <btn class="btn btn-sm btn-primary btn-icon" th:onclick="'showMicroserviceInformation(\'' + ${microservice.id} + '\')'"><i class="fa fa-pencil"></i></btn>
-                                                <btn class="btn btn-sm btn-danger btn-icon" th:onclick="'removeMicroservice(\'' + ${microservice.id} + '\')'"><i class="fa fa-trash"></i></btn>
+                                                <btn class="btn btn-sm btn-danger btn-icon" th:onclick="'removeExternalInstance(\'' + ${externalInstance.id} + '\')'"><i class="fa fa-trash"></i></btn>
                                             </div>
                                         </div>
                                     </li>
@@ -176,31 +175,37 @@
                             <div class="col-md-4">
                                 <div class="card">
                                     <div class="header">
-                                        <h4 class="title">Register Running Instance <i class="fa fa-info-circle" data-placement="left" data-toggle="git-popover" data-content="It can happen that instances are deployed using other methods, but Trampoline looks amazing to have them all under one dashboard, isn't it?"></i></h4>
+                                        <h4 class="title">Register External Instance <i class="fa fa-info-circle" data-placement="left" data-toggle="git-popover" data-content="It can happen that instances are deployed using other methods, but Trampoline looks amazing to have them all under one dashboard, isn't it?"></i></h4>
                                     </div>
                                     <div class="content">
                                         <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group" id="form-running-instance">
-                                                    <label>Running Instance Name</label>
-                                                    <input id="input-running-instance-name" type="text" class="form-control border-input" placeholder="Ex: ms-upload"/>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="form-external-instance-name">
+                                                    <label>Name</label>
+                                                    <input id="input-external-instance-name" type="text" class="form-control border-input" placeholder="Ex: ms-upload"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="form-group">
+                                                <div class="form-group" id="form-external-instance-actuator-prefix">
+                                                    <label>Actuator prefix</label>
+                                                    <input id="input-external-instance-actuator-prefix" type="text" class="form-control border-input" placeholder="Ex: /actuator"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="form-external-instance-ip">
                                                     <label>IP</label>
-                                                    <input id="input-running-instance-ip" type="text" class="form-control border-input" placeholder="Ex: 10.3.1.203"/>
+                                                    <input id="input-external-instance-ip" type="text" class="form-control border-input" placeholder="Ex: 10.3.1.203"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="form-group">
+                                                <div class="form-group" id="form-external-instance-port">
                                                     <label>Port</label>
-                                                    <input id="input-running-instance-port" type="text" class="form-control border-input" placeholder="Ex: 8877"/>
+                                                    <input id="input-external-instance-port" type="text" class="form-control border-input" placeholder="Ex: 8877"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="text-center">
-                                            <button onclick="" class="btn btn-success btn-fill btn-wd">Register Instance</button>
+                                            <button onclick="setExternalInstance()" class="btn btn-success btn-fill btn-wd">Register Instance</button>
                                         </div>
                                         <div class="clearfix"></div>
                                     </div>
@@ -471,7 +476,7 @@
 <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
-<script type="text/javascript" th:src="@{/v2/js/app/settings.js?v3.11}"></script>
+<script type="text/javascript" th:src="@{/v2/js/app/settings.js?v3.15}"></script>
 <script type="text/javascript" th:src="@{/v2/js/app/loading.js?v3.7}"></script>
 
 <script th:inline="javascript">

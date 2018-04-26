@@ -209,4 +209,27 @@ public class EcosystemManager {
 		ecosystem.setGitCredentials(null);
 		fileManager.saveEcosystem(ecosystem);
 	}
+
+    public void setNewExternalInstance(String name, String port, String actuatorPrefix, String ip) {
+		Ecosystem ecosystem = fileManager.getEcosystem();
+
+		log.info("Creating new external instance: [{}]", name);
+		ExternalInstance externalInstance = new ExternalInstance();
+		externalInstance.setId(UUID.randomUUID().toString());
+		externalInstance.setName(name);
+		externalInstance.setIp(ip);
+		externalInstance.setActuatorPrefix(actuatorPrefix);
+		externalInstance.setPort(port);
+
+		log.info("Saving external instance: [{}]", externalInstance.toString());
+		ecosystem.getExternalInstances().add(externalInstance);
+		fileManager.saveEcosystem(ecosystem);
+    }
+
+	public void removeExternalInstance(String idToBeDeleted) {
+		log.info("Removing microservice id: [{}]", idToBeDeleted);
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		ecosystem.setExternalInstances(ecosystem.getExternalInstances().stream().filter(i -> !i.getId().equals(idToBeDeleted)).collect(Collectors.toList()));
+		fileManager.saveEcosystem(ecosystem);
+	}
 }

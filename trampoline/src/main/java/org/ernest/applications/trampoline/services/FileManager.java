@@ -60,33 +60,46 @@ public class FileManager {
 
     private void updateMicroservicesInformationStored(Ecosystem ecosystem) {
 		boolean ecosystemChanged = false;
-        if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null)){
-            ecosystem.getMicroservices().stream().filter(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null).forEach(m ->{
-                m.setVmArguments("");
-                m.setActuatorPrefix("");
-                m.setBuildTool(BuildTools.MAVEN);
-                createScript(m);
-            });
-			ecosystemChanged = true;
-        }
+		ecosystemChanged = createBasicInformation(ecosystem, ecosystemChanged);
+		ecosystemChanged = createBuildTool(ecosystem, ecosystemChanged);
+		ecosystemChanged = createVersion(ecosystem, ecosystemChanged, currentVersion);
 
-        if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getBuildTool() == null)){
-            ecosystem.getMicroservices().stream().filter(m -> m.getBuildTool() == null).forEach(m -> m.setBuildTool(BuildTools.MAVEN));
-			ecosystemChanged = true;
-        }
+		if(ecosystemChanged){
+			saveEcosystem(ecosystem);
+		}
+    }
 
-        if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getVersion() == null)){
+	private boolean createVersion(Ecosystem ecosystem, boolean ecosystemChanged, float currentVersion) {
+		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getVersion() == null)){
             ecosystem.getMicroservices().stream().filter(m -> m.getVersion() == null).forEach(m -> {
                 m.setVersion(currentVersion);
                 createScript(m);
             });
 			ecosystemChanged = true;
         }
+		return ecosystemChanged;
+	}
 
-        if(ecosystemChanged){
-			saveEcosystem(ecosystem);
+	private boolean createBuildTool(Ecosystem ecosystem, boolean ecosystemChanged) {
+		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getBuildTool() == null)){
+            ecosystem.getMicroservices().stream().filter(m -> m.getBuildTool() == null).forEach(m -> m.setBuildTool(BuildTools.MAVEN));
+			ecosystemChanged = true;
+        }
+		return ecosystemChanged;
+	}
+
+	private boolean createBasicInformation(Ecosystem ecosystem, boolean ecosystemChanged) {
+		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null)){
+			ecosystem.getMicroservices().stream().filter(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null).forEach(m ->{
+				m.setVmArguments("");
+				m.setActuatorPrefix("");
+				m.setBuildTool(BuildTools.MAVEN);
+				createScript(m);
+			});
+			ecosystemChanged = true;
 		}
-    }
+		return ecosystemChanged;
+	}
 
 	public void saveEcosystem(Ecosystem ecosystem) throws SavingEcosystemException {
 		log.info("Saving Ecosystem");

@@ -41,6 +41,7 @@ public class InstancesController {
     public String getInstanceView(Model model) {
 		Ecosystem ecosystem = ecosystemManager.getEcosystem();
 		model.addAttribute("microservices", ecosystem.getMicroservices());
+		model.addAttribute("externalInstances", ecosystem.getExternalInstances());
 		model.addAttribute("instances", ecosystem.getInstances());
 		model.addAttribute("microservicesgroups", ecosystem.getMicroservicesGroups());
 

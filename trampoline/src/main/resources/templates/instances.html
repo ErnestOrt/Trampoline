@@ -82,18 +82,18 @@
                     <div class="col-lg-2 col-md-2">
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">Running Instance</h4>
+                                <h4 class="title">External Instance</h4>
                                 <p class="category">Select an instance</p>
                             </div>
 
                             <div class="content">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="form-group" id="form-running-instance">
+                                        <div class="form-group" id="form-external-instance">
                                             <label>Group*</label>
-                                            <select id="input-running-instance" class="form-control border-input">
+                                            <select id="input-external-instance" class="form-control border-input">
                                                 <option value="-1">Select one instance...</option>
-                                                <option th:each="group : ${microservicesgroups}" th:text="${group.name}" th:value="${group.id}"></option>
+                                                <option th:each="externalInstance : ${externalInstances}" th:text="${externalInstance.name}" th:value="${externalInstance.id}"></option>
                                             </select>
                                         </div>
                                     </div>
