@@ -63,11 +63,20 @@ public class FileManager {
 		ecosystemChanged = createBasicInformation(ecosystem, ecosystemChanged);
 		ecosystemChanged = createBuildTool(ecosystem, ecosystemChanged);
 		ecosystemChanged = createVersion(ecosystem, ecosystemChanged, currentVersion);
+		ecosystemChanged = createIp(ecosystem, ecosystemChanged);
 
 		if(ecosystemChanged){
 			saveEcosystem(ecosystem);
 		}
     }
+
+	private boolean createIp(Ecosystem ecosystem, boolean ecosystemChanged) {
+		if(ecosystem.getInstances().stream().anyMatch(i -> i.getIp() == null)){
+			ecosystem.getInstances().stream().filter(i -> i.getIp() == null).forEach(i -> i.setIp("127.0.0.1"));
+			ecosystemChanged = true;
+		}
+		return ecosystemChanged;
+	}
 
 	private boolean createVersion(Ecosystem ecosystem, boolean ecosystemChanged, float currentVersion) {
 		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getVersion() == null)){

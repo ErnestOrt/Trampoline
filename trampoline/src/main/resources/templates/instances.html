@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                    <button onclick="startGroup()" class="btn btn-success btn-fill btn-wd">Add</button>
+                                    <button onclick="addExternalInstance()" class="btn btn-success btn-fill btn-wd">Add</button>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -192,7 +192,7 @@
                                             <td th:id="'td-port-' + ${instance.id}"  class="center" th:text="${instance.port}"></td>
                                             <td class="center"><span class="label label-warning" th:id="'label-status-' + ${instance.id}">Waiting</span></td>
                                             <td class="center"><button type="button" th:onclick="'showInfo(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-success btn-sm"><i class="fa fa-lg fa-info-circle" aria-hidden="true"></i></button></td>
-                                            <td class="center"><button type="button" th:onclick="'window.open(\'http://localhost:'+${instance.port}+'/'+${instance.actuatorPrefix}+'/logfile\', \'_blank\');'" class="btn btn-primary btn-sm"><i class="fa fa-lg fa-clipboard" aria-hidden="true"></i></button></td>
+                                            <td class="center"><button type="button" th:onclick="'window.open(\'http://'+${instance.ip}+':'+${instance.port}+'/'+${instance.actuatorPrefix}+'/logfile\', \'_blank\');'" class="btn btn-primary btn-sm"><i class="fa fa-lg fa-clipboard" aria-hidden="true"></i></button></td>
                                             <td class="center"><button type="button" th:onclick="'showTraces(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-warning btn-sm"><i class="fa fa-lg fa-book" aria-hidden="true"></i></button></td>
                                             <td class="center"><button type="button" th:onclick="'showMetrics(\'' + ${instance.id} + '\', \'' + ${instance.name} + '\', \'' + ${instance.port} + '\')'" class="btn btn-info btn-sm"><i class="fa fa-lg fa-line-chart" aria-hidden="true"></i></button></td>
                                             <td class="center"><button type="button" th:onclick="'restartInstance(\'' + ${instance.id} + '\')'" class="btn btn-danger btn-sm"><i class="fa fa-lg fa-undo" aria-hidden="true"></i></button></td>

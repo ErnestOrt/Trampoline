@@ -109,5 +109,12 @@ public class InstancesController {
 	public void startGroup(@RequestParam(value="id") String id)  {
 		ecosystemManager.startGroup(id);
 	}
+
+	@RequestMapping(value= "/addexternalinstance", method = RequestMethod.POST)
+	@ResponseBody
+	public void addExternalInstance(@RequestParam(value="id") String id)  {
+		ecosystemManager.addExternalInstance(id);
+	}
+
 }
 
