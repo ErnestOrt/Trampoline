@@ -1,5 +1,11 @@
 package org.ernest.applications.trampoline.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Microservice {
 
 	private String id;
@@ -9,6 +15,7 @@ public class Microservice {
 	private String defaultPort;
 	private String actuatorPrefix;
 	private String vmArguments;
+	private String dependsOn;
 	private BuildTools buildTool;
 	private Float version;
 	
@@ -48,6 +55,16 @@ public class Microservice {
 	public void setActuatorPrefix(String actuatorPrefix) {
 		this.actuatorPrefix = actuatorPrefix;
 	}
+	public String getDependsOn() {
+		return dependsOn;
+	}
+	@JsonIgnore
+	public List<String> getDependsOnList() {
+		return Arrays.stream(dependsOn.split(",")).map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
+	}
+	public void setDependsOn(String dependsOn) {
+		this.dependsOn = dependsOn;
+	}
 
 	public BuildTools getBuildTool() {
 		return buildTool;
@@ -83,8 +100,10 @@ public class Microservice {
 				", defaultPort='" + defaultPort + '\'' +
 				", actuatorPrefix='" + actuatorPrefix + '\'' +
 				", vmArguments='" + vmArguments + '\'' +
+				", dependsOn='" + dependsOn + '\'' +
 				", buildTool=" + buildTool +
 				", version=" + version +
 				'}';
 	}
+
 }

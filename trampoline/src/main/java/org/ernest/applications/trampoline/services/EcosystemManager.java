@@ -1,7 +1,11 @@
 package org.ernest.applications.trampoline.services;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.ernest.applications.trampoline.collectors.TraceCollector;
@@ -26,6 +30,8 @@ public class EcosystemManager {
 
 	@Autowired
 	FileManager fileManager;
+
+	private Executor dependsOnExecutor = Executors.newCachedThreadPool();
 	
 	public Ecosystem getEcosystem() throws CreatingSettingsFolderException, ReadingEcosystemException {
 		return fileManager.getEcosystem();
@@ -45,7 +51,7 @@ public class EcosystemManager {
 		fileManager.saveEcosystem(ecosystem);
 	}
 	
-	public void setNewMicroservice(String name, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments, String buildTool, String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+	public void setNewMicroservice(String name, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments, String dependsOn, String buildTool, String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 
 		log.info("Creating new microservice name: [{}]", name);
@@ -56,6 +62,7 @@ public class EcosystemManager {
 		microservice.setDefaultPort(defaultPort);
 		microservice.setActuatorPrefix(actuatorPrefix);
 		microservice.setVmArguments(vmArguments);
+		microservice.setDependsOn(dependsOn);
 		microservice.setBuildTool(BuildTools.getByCode(buildTool));
 		microservice.setGitLocation(gitLocation);
 		fileManager.createScript(microservice);
@@ -97,8 +104,12 @@ public class EcosystemManager {
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
 		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).findAny().get();
-		fileManager.runScript(microservice, ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
-		
+
+		dependsOnExecutor.execute(() -> {
+			waitForDependencies(microservice.getDependsOnList());
+			fileManager.runScript(microservice, ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
+		});
+
 		Instance instance = new Instance();
 		instance.setId(UUID.randomUUID().toString());
 		instance.setPort(port);
@@ -109,6 +120,27 @@ public class EcosystemManager {
 		instance.setMicroserviceId(id);
 		ecosystem.getInstances().add(instance);
 		fileManager.saveEcosystem(ecosystem);
+	}
+
+	private void waitForDependencies(List<String> dependencies) {
+		boolean dependenciesReady = false;
+		while (!dependenciesReady) {
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e) {
+				log.error("Sleep interrupted exception: {}", e);
+			}
+			for (String dependency : dependencies) {
+				try {
+					new ClientRequest(dependency).get(String.class);
+					dependenciesReady = true;
+				} catch (Exception e) {
+					log.info("Waiting for dependency to start: [{}]", dependency);
+					dependenciesReady = false;
+					break;
+				}
+			}
+		}
 	}
 
 	public void killInstance(String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, ShuttingDownInstanceException {
@@ -171,7 +203,7 @@ public class EcosystemManager {
 		}
 	}
 
-	public void updateMicroservice(String id, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments, String gitLocation) {
+	public void updateMicroservice(String id, String pomLocation, String defaultPort, String actuatorPrefix, String vmArguments, String dependsOn, String gitLocation) {
 		log.info("Updating microservice id: [{}]", id);
 		Ecosystem ecosystem = fileManager.getEcosystem();
 
@@ -180,6 +212,7 @@ public class EcosystemManager {
 		microservice.setDefaultPort(defaultPort);
 		microservice.setActuatorPrefix(actuatorPrefix);
 		microservice.setVmArguments(vmArguments);
+		microservice.setDependsOn(dependsOn);
 		microservice.setGitLocation(gitLocation);
 
 		fileManager.createScript(microservice);

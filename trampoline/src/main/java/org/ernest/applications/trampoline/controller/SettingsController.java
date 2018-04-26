@@ -62,8 +62,9 @@ public class SettingsController {
 	@ResponseBody
 	public void setNewMicroservice(@RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation,
 								   @RequestParam(value="defaultPort") String defaultPort, @RequestParam(value="actuatorPrefix") String actuatorPrefix,
-								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="buildTool") String buildTool, @RequestParam(value="gitLocation") String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
-		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort, actuatorPrefix, vmArguments, buildTool, gitLocation);
+								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="dependsOn") String dependsOn,
+								   @RequestParam(value="buildTool") String buildTool, @RequestParam(value="gitLocation") String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort, actuatorPrefix, vmArguments, dependsOn, buildTool, gitLocation);
 	}
 
 	@RequestMapping(value= "/setnewmicroservice/git", method = RequestMethod.POST)
@@ -71,17 +72,19 @@ public class SettingsController {
 	public void setNewMicroserviceFromGit(@RequestParam(value="gitRepo") String gitRepo, @RequestParam(value="destinationFolder") String destinationFolder,
 										  @RequestParam(value="name") String name, @RequestParam(value="pomLocation") String pomLocation,
 								   @RequestParam(value="defaultPort") String defaultPort, @RequestParam(value="actuatorPrefix") String actuatorPrefix,
-								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="buildTool") String buildTool, @RequestParam(value="gitLocation") String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException, GitAPIException {
+								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="dependsOn") String dependsOn,
+										  @RequestParam(value="buildTool") String buildTool, @RequestParam(value="gitLocation") String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException, GitAPIException {
 		gitManager.cloneRepository(gitRepo, destinationFolder);
-		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort, actuatorPrefix, vmArguments, buildTool, gitLocation);
+		ecosystemManager.setNewMicroservice(name, pomLocation, defaultPort, actuatorPrefix, vmArguments, dependsOn, buildTool, gitLocation);
 	}
 
 	@RequestMapping(value= "/updatemicroservice", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateMicroservice(@RequestParam(value="id") String id, @RequestParam(value="pomLocation") String pomLocation,
 								   @RequestParam(value="defaultPort") String defaultPort, @RequestParam(value="actuatorPrefix") String actuatorPrefix,
-								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="gitLocation") String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
-		ecosystemManager.updateMicroservice(id, pomLocation, defaultPort, actuatorPrefix, vmArguments, gitLocation);
+								   @RequestParam(value="vmArguments") String vmArguments, @RequestParam(value="dependsOn") String dependsOn,
+								   @RequestParam(value="gitLocation") String gitLocation) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+		ecosystemManager.updateMicroservice(id, pomLocation, defaultPort, actuatorPrefix, vmArguments, dependsOn, gitLocation);
 	}
 
 	@RequestMapping(value= "/removemicroservice", method = RequestMethod.POST)

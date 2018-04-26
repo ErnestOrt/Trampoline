@@ -229,6 +229,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group" id="form-git-newmicroservice-depends-on">
+                                            <label>Depends On</label>
+                                            <input  id="input-git-newmicroservice-depends-on" type="text" class="form-control border-input" placeholder="Ex: http://localhost:8081 or 8081"/>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="text-center">
                                     <button onclick="setNewMicroserviceFromGit()" class="btn btn-success btn-fill btn-wd">Clone and Register Microservice</button>
                                 </div>
@@ -288,6 +296,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="form-newmicroservice-depends-on">
+                                                <label>Depends On</label>
+                                                <input  id="input-newmicroservice-depends-on" type="text" class="form-control border-input" placeholder="Ex: http://localhost:8081 or 8081"/>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="text-center">
                                         <button onclick="setNewMicroservice()" class="btn btn-success btn-fill btn-wd">Register Microservice</button>
                                     </div>
@@ -342,6 +358,7 @@
                         <p>Git Repo Root Location:<br/><input  id="input-update-gitLocation" type="email" class="form-control border-input" placeholder="Ex: /Users/ernest/Documents/workarea/microservice-1"/></p>
                         <p>Actuator Prefix:<br/><input  id="input-update-actuator-prefix" type="email" class="form-control border-input" placeholder="Ex: /service-one"/></p>
                         <p>VM Arguments:<br/><input  id="input-update-vm-arguments" type="email" class="form-control border-input" placeholder="Ex: -Dmy.arg.one=false -Dmy.arg.two=true"/></p>
+                        <p>Depends On:<input  id="input-update-depends-on" type="text" class="form-control border-input" placeholder="Ex: http://localhost:8081 or 8081"/></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" onclick="updateMicroservice()" class="btn btn-success">Save</button>

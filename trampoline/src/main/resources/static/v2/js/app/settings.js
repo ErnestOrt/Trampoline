@@ -71,7 +71,7 @@ function setNewMicroservice(){
 			    url : "/settings/setnewmicroservice",
 			    type: "POST",
 			    data : {name: $("#input-newmicroservice-name").val(), pomLocation: $("#input-newmicroservice-pomlocation").val(), defaultPort: $("#input-newmicroservice-defaultport").val(),
-			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val(), vmArguments: $("#input-newmicroservice-vmarguments").val(),
+			    	    actuatorPrefix: $("#input-newmicroservice-actuatorprefix").val(), vmArguments: $("#input-newmicroservice-vmarguments").val(), dependsOn: $("#input-newmicroservice-depends-on").val(),
 			    	    buildTool: $("#input-newmicroservice-build-tool").val(), gitLocation: $("#input-newmicroservice-gitLocation").val()},
 			    success: function(data, textStatus, jqXHR) { location.reload(); },
                  error: function (request, status, error) {
@@ -112,7 +112,8 @@ function showMicroserviceInformation(microserviceId){
 	        $("#input-update-default-port").val(data.defaultPort);
 	        $("#input-update-actuator-prefix").val(data.actuatorPrefix);
 	        $("#input-update-vm-arguments").val(data.vmArguments);
-	        $("#input-update-gitLocation").val(data.gitLocation);
+            $("#input-update-depends-on").val(data.dependsOn);
+            $("#input-update-gitLocation").val(data.gitLocation);
 	        $('.front-loading').hide();
 	        $("#modal-microservice-information").modal("show");
 	    },
@@ -136,6 +137,7 @@ function copyMsInfo(microserviceId){
 	        $("#input-newmicroservice-defaultport").val(data.defaultPort);
 	        $("#input-newmicroservice-actuatorprefix").val(data.actuatorPrefix);
 	        $("#input-newmicroservice-vmarguments").val(data.vmArguments);
+            $("#input-newmicroservice-depends-on").val(data.dependsOn);
 	        $("#input-newmicroservice-gitLocation").val(data.gitLocation);
 	        $('.front-loading').hide();
 	    },
@@ -229,6 +231,7 @@ function updateMicroservice(){
                     defaultPort: $("#input-update-default-port").val(),
                     actuatorPrefix: $("#input-update-actuator-prefix").val(),
                     vmArguments: $("#input-update-vm-arguments").val(),
+                    dependsOn: $("#input-update-depends-on").val(),
                     pomLocation: $("#input-update-pomLocation").val(),
                     gitLocation: $("#input-update-gitLocation").val()},
             success: function(data, textStatus, jqXHR) { location.reload(); },
@@ -367,6 +370,7 @@ function setNewMicroserviceFromGit(){
                         defaultPort: $("#input-git-newmicroservice-defaultport").val(),
                         actuatorPrefix: $("#input-git-newmicroservice-actuatorprefix").val(),
                         vmArguments: $("#input-git-newmicroservice-vmarguments").val(),
+                        dependsOn: $("#input-git-newmicroservice-depends-on").val(),
                         buildTool: $("#input-git-newmicroservice-build-tool").val(),
                         gitLocation: $("#input-git-newmicroservice-gitLocation").val()},
                 success: function(data, textStatus, jqXHR) { location.reload(); },
