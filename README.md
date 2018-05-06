@@ -91,6 +91,11 @@ If you don't have git in your local machine you can easily solve it by adding cr
 
 No, information introduced will be stored in a settings file along with scripts to launch each microservice :grin:. These files are stored in a `trampoline` folder inside your `Documents` folder on Mac and Linux or inside the `Temp` folder on Windows.
 
+* External Instances will be stopped?
+
+No, only instances under '127.0.0.1' will be stopped using `/shutdown` endpoint.
+
+
 ### Contributing
 Start Admin Spring Boot locally and then click the star button to make the author and his neighbors happy :blush:. Then fork the repository and submit a pull request for whatever change you want to be added to this project.
 
