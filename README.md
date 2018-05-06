@@ -93,7 +93,7 @@ No, information introduced will be stored in a settings file along with scripts 
 
 * External Instances will be stopped?
 
-No, only instances under '127.0.0.1' will be stopped using `/shutdown` endpoint.
+No, only instances under `127.0.0.1` will be stopped using `/shutdown` endpoint.
 
 
 ### Contributing
