@@ -13,7 +13,7 @@ Are you Admin Spring Boot locally? Are you **tired of that set of scripts**? Rel
 
 The aim is to **help during the course of developing an application based on the paradigm of microservices with _Spring Boot_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **start instances**, **restart** and **kill them**.
 
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_12.png)
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_13.png)
 
 Also you will be able to:
 
@@ -25,6 +25,7 @@ Also you will be able to:
 * See Git branch and last commit on instances
 * Checkout branch, pull code and restart instances with a single mouse click
 * Define microservices groups and launch them all with one click
+* Monitor microservies deployed on other machines.
 
 ### Requirements
 

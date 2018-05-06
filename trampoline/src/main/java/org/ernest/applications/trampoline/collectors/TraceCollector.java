@@ -56,7 +56,7 @@ public class TraceCollector {
             traceActuator.setDate(traceJson.getString("timestamp"));
             traceActuator.setMethod(traceJson.getJSONObject("request").getString("method"));
             traceActuator.setPath(traceJson.getJSONObject("request").getString("uri"));
-            traceActuator.setStatus(traceJson.getJSONObject("response").getString("status"));
+            traceActuator.setStatus(String.valueOf(traceJson.getJSONObject("response").getInt("status")));
             traces.add(traceActuator);
         }
 

@@ -113,17 +113,20 @@ public class EcosystemManager {
 	}
 
 	public void killInstance(String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, ShuttingDownInstanceException {
-		log.info("Stopping instances id: [{}]", id);
+		log.info("Removing instance id: [{}]", id);
 
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		Instance instance = ecosystem.getInstances().stream().filter(i -> i.getId().equals(id)).collect(Collectors.toList()).get(0);
-		
-		try {
-			new ClientRequest("http://"+instance.getIp()+":" + instance.getPort() + instance.getActuatorPrefix() + "/shutdown").post(String.class);
-		} catch (Exception e) {
-			log.error("Stopping instances id: [{}]", id);
+
+		if (instance.getIp().equals("127.0.0.1")) {
+			log.info("Stopping instance id: [{}]", id);
+			try {
+				new ClientRequest("http://"+instance.getIp()+":" + instance.getPort() + instance.getActuatorPrefix() + "/shutdown").post(String.class);
+			} catch (Exception e) {
+				log.error("Stopping instance id: [{}]", id);
+			}
 		}
-		
+
 		ecosystem.setInstances(ecosystem.getInstances().stream().filter(i -> !i.getId().equals(id)).collect(Collectors.toList()));
 		fileManager.saveEcosystem(ecosystem);
 	}
