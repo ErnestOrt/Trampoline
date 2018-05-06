@@ -42,6 +42,7 @@ public class SettingsController {
 
 		model.addAttribute("microservices", ecosystem.getMicroservices());
 		model.addAttribute("microservicesgroups", ecosystem.getMicroservicesGroups());
+		model.addAttribute("externalInstances", ecosystem.getExternalInstances());
 		model.addAttribute("mavenHomeLocation", ecosystem.getMavenHomeLocation());
 		model.addAttribute("mavenBinaryLocationMessage", ecosystem.getMavenBinaryLocation() == null ? "Set Maven Binary Location if necessary. Otherwise it will automatically be searched in a bin folder inside your Maven Home Location" : ecosystem.getMavenBinaryLocation());
 		model.addAttribute("mavenHomeLocationMessage", ecosystem.getMavenHomeLocation() == null ? "Please set maven Home Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenHomeLocation());
@@ -154,4 +155,20 @@ public class SettingsController {
 	public void cleanGitCred() {
 		gitManager.cleanCred();
 	}
+
+	@RequestMapping(value= "/setexternalinstance", method = RequestMethod.POST)
+	@ResponseBody
+	public void setExternalInstance(@RequestParam(value="name") String name, @RequestParam(value="port") String port,
+									@RequestParam(value="actuatorPrefix") String actuatorPrefix, @RequestParam(value="ip") String ip) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+		ecosystemManager.setNewExternalInstance(name, port, actuatorPrefix, ip);
+	}
+
+	@RequestMapping(value= "/removeexternalinstance", method = RequestMethod.POST)
+	@ResponseBody
+	public void removeExternalInstance(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException{
+		ecosystemManager.removeExternalInstance(id);
+	}
+
+
+
 }
