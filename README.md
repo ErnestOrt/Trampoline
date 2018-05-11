@@ -1,7 +1,7 @@
 # Trampoline [![Twitter](https://img.shields.io/twitter/follow/espadrine.svg?style=social&logo=twitter&label=Follow)](https://twitter.com/TrampolineSB) 
 
 
-[![Build Status](https://travis-ci.org/stunstunstun/awesome-spring-boot.svg?branch=master)](https://travis-ci.org/stunstunstun/awesome-spring-boot) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/Trampoline-springboot/Lobby)
+[![Build Status](https://travis-ci.org/ErnestOrt/Trampoline.svg?branch=master)](https://travis-ci.org/ErnestOrt/Trampoline) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/Trampoline-springboot/Lobby)
 
 *NOTE: If you want to use examples provided (microservice-example-gradle & microservice-example-maven), please, clone the repository instead of downloading release zip. They need .git folder due to git related plugins specified on pom.xml and build.gradle*
 
