@@ -1,17 +1,15 @@
 package org.ernest.applications.trampoline.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
+@Data
 public class Instance {
 
-	private String id;
-	private String name;
-	private String pomLocation;
-	private String port;
-	private String actuatorPrefix;
-	private String vmArguments;
-	private String microserviceId;
+    private String id;
+    private String name;
+    private String pomLocation;
+    private String port;
+    private String actuatorPrefix;
+    private String vmArguments;
+    private String microserviceId;
 }

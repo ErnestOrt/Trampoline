@@ -1,13 +1,11 @@
 package org.ernest.applications.trampoline.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter
-@Getter
+@Data
 public class Ecosystem {
 
 	private GitCredentials gitCredentials;

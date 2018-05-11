@@ -1,5 +1,8 @@
 package org.ernest.applications.trampoline.entities;
 
+import lombok.Getter;
+
+@Getter
 public enum StatusInstance {
 
 	DEPLOYED("deployed"),
@@ -11,7 +14,4 @@ public enum StatusInstance {
 		this.code = code;
 	}
 	
-	public String getCode(){
-		return code;
-	}
 }

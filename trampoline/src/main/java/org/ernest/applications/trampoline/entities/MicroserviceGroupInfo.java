@@ -1,12 +1,10 @@
 package org.ernest.applications.trampoline.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 public class MicroserviceGroupInfo {
     private String name;
     private List<String> microservicesNames;

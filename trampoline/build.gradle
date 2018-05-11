@@ -4,16 +4,24 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+        jcenter()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
+plugins {
+	id 'java'
+	id 'eclipse'
+	id 'org.springframework.boot' version '2.0.0.RELEASE'
+	id "io.spring.dependency-management" version "1.0.5.RELEASE"
+	id 'io.franzbecker.gradle-lombok' version '1.14'
+}
+
+lombok {
+	version = '1.16.20'
+}
 
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
