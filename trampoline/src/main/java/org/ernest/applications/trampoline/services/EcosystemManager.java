@@ -1,23 +1,18 @@
 package org.ernest.applications.trampoline.services;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import org.ernest.applications.trampoline.collectors.TraceCollector;
 import org.ernest.applications.trampoline.entities.*;
-import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
-import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
-import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
-import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptException;
-import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
-import org.ernest.applications.trampoline.exceptions.ShuttingDownInstanceException;
+import org.ernest.applications.trampoline.exceptions.*;
 import org.ernest.applications.trampoline.utils.PortsChecker;
 import org.jboss.resteasy.client.ClientRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class EcosystemManager {
