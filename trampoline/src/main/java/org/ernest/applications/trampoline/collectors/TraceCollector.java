@@ -34,12 +34,12 @@ public class TraceCollector {
 
         String url;
         try {
-            url = "http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/trace";
+            url = "http://"+instance.getIp()+":" + instance.getPort() + instance.getActuatorPrefix() + "/trace";
             log.info("Reading traces Spring Boot 1.x for instance id: [{}] using url: [{}]", idInstance, url);
             traceArrayJson = new JSONArray(new RestTemplate().getForObject(url, String.class));
             buildTracesV1x(traces, traceArrayJson);
         }catch (Exception e){
-            url = "http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/httptrace";
+            url = "http://"+instance.getIp()+":" + instance.getPort() + instance.getActuatorPrefix() + "/httptrace";
             log.info("Reading traces Spring Boot 2.x for instance id: [{}] using url: [{}]", idInstance, url);
             traceArrayJson = new JSONObject(new RestTemplate().getForObject(url, String.class)).getJSONArray("traces");
             buildTracesV2x(traces, traceArrayJson);
@@ -56,7 +56,7 @@ public class TraceCollector {
             traceActuator.setDate(traceJson.getString("timestamp"));
             traceActuator.setMethod(traceJson.getJSONObject("request").getString("method"));
             traceActuator.setPath(traceJson.getJSONObject("request").getString("uri"));
-            traceActuator.setStatus(traceJson.getJSONObject("response").getString("status"));
+            traceActuator.setStatus(String.valueOf(traceJson.getJSONObject("response").getInt("status")));
             traces.add(traceActuator);
         }
 

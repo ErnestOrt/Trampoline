@@ -96,6 +96,7 @@ public class EcosystemManager {
 		
 		Instance instance = new Instance();
 		instance.setId(UUID.randomUUID().toString());
+		instance.setIp("127.0.0.1");
 		instance.setPort(port);
 		instance.setName(microservice.getName());
 		instance.setPomLocation(microservice.getPomLocation());
@@ -107,17 +108,20 @@ public class EcosystemManager {
 	}
 
 	public void killInstance(String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, ShuttingDownInstanceException {
-		log.info("Stopping instances id: [{}]", id);
+		log.info("Removing instance id: [{}]", id);
 
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		Instance instance = ecosystem.getInstances().stream().filter(i -> i.getId().equals(id)).collect(Collectors.toList()).get(0);
-		
-		try {
-			new ClientRequest("http://localhost:" + instance.getPort() + instance.getActuatorPrefix() + "/shutdown").post(String.class);
-		} catch (Exception e) {
-			log.error("Stopping instances id: [{}]", id);
+
+		if (instance.getIp().equals("127.0.0.1")) {
+			log.info("Stopping instance id: [{}]", id);
+			try {
+				new ClientRequest("http://"+instance.getIp()+":" + instance.getPort() + instance.getActuatorPrefix() + "/shutdown").post(String.class);
+			} catch (Exception e) {
+				log.error("Stopping instance id: [{}]", id);
+			}
 		}
-		
+
 		ecosystem.setInstances(ecosystem.getInstances().stream().filter(i -> !i.getId().equals(id)).collect(Collectors.toList()));
 		fileManager.saveEcosystem(ecosystem);
 	}
@@ -134,7 +138,7 @@ public class EcosystemManager {
 
 	private boolean isDeployed(Instance instance) {
 		try{
-			new ClientRequest("http://localhost:" + instance.getPort() + instance.getActuatorPrefix() + "/env").get(String.class);
+			new ClientRequest("http://"+instance.getIp()+":" + instance.getPort() + instance.getActuatorPrefix() + "/env").get(String.class);
 		}catch(Exception e){
 			return false;
 		}
@@ -202,6 +206,46 @@ public class EcosystemManager {
 		log.info("Cleaning GIT Credentials");
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		ecosystem.setGitCredentials(null);
+		fileManager.saveEcosystem(ecosystem);
+	}
+
+    public void setNewExternalInstance(String name, String port, String actuatorPrefix, String ip) {
+		Ecosystem ecosystem = fileManager.getEcosystem();
+
+		log.info("Creating new external instance: [{}]", name);
+		ExternalInstance externalInstance = new ExternalInstance();
+		externalInstance.setId(UUID.randomUUID().toString());
+		externalInstance.setName(name);
+		externalInstance.setIp(ip);
+		externalInstance.setActuatorPrefix(actuatorPrefix);
+		externalInstance.setPort(port);
+
+		log.info("Saving external instance: [{}]", externalInstance.toString());
+		ecosystem.getExternalInstances().add(externalInstance);
+		fileManager.saveEcosystem(ecosystem);
+    }
+
+	public void removeExternalInstance(String idToBeDeleted) {
+		log.info("Removing microservice id: [{}]", idToBeDeleted);
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		ecosystem.setExternalInstances(ecosystem.getExternalInstances().stream().filter(i -> !i.getId().equals(idToBeDeleted)).collect(Collectors.toList()));
+		fileManager.saveEcosystem(ecosystem);
+	}
+
+	public void addExternalInstance(String id) {
+		log.info("Adding external instance id: [{}]", id);
+		Ecosystem ecosystem = fileManager.getEcosystem();
+
+		ExternalInstance externalInstance = ecosystem.getExternalInstances().stream().filter(i -> i.getId().equals(id)).findAny().get();
+
+		Instance instance = new Instance();
+		instance.setId(UUID.randomUUID().toString());
+		instance.setIp(externalInstance.getIp());
+		instance.setPort(externalInstance.getPort());
+		instance.setName(externalInstance.getName());
+		instance.setActuatorPrefix(externalInstance.getActuatorPrefix());
+		instance.setMicroserviceId(id);
+		ecosystem.getInstances().add(instance);
 		fileManager.saveEcosystem(ecosystem);
 	}
 }

@@ -11,4 +11,3 @@ public class InstanceGitInfo {
     private String commitOwner;
     private String commitDate;
 }
-
