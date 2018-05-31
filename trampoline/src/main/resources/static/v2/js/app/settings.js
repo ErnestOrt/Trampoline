@@ -55,6 +55,44 @@ function setMavenInformation(){
 	}
 }
 
+function setExternalInstance(){
+    var fieldsToCheck = [];
+    fieldsToCheck.push("external-instance-name");
+    fieldsToCheck.push("external-instance-actuator-prefix");
+    fieldsToCheck.push("external-instance-ip");
+    fieldsToCheck.push("external-instance-port");
+    if(!cheackEmptyValuesForm(fieldsToCheck)){
+        $('.front-loading').show();
+            $.ajax({
+                url : "/settings/setexternalinstance",
+                type: "POST",
+                data : {name: $("#input-external-instance-name").val(), port: $("#input-external-instance-port").val(),
+                        actuatorPrefix: $("#input-external-instance-actuator-prefix").val(), ip: $("#input-external-instance-ip").val()},
+                success: function(data, textStatus, jqXHR) { location.reload(); },
+                 error: function (request, status, error) {
+                      $('.front-loading').hide();
+                       showNotification('danger', "Error occurred when trying to register an external instance. Check Logs for more info");
+
+                   }
+            });
+    }
+}
+
+function removeExternalInstance(instanceId){
+    $('.front-loading').show();
+	$.ajax({
+	    url : "/settings/removeexternalinstance",
+	    type: "POST",
+	    data : {id: instanceId},
+	    success: function(data, textStatus, jqXHR) { location.reload(); },
+        error: function (request, status, error) {
+              $('.front-loading').hide();
+               showNotification('danger', "Error occurred when trying to remove an external. Check Logs for more info");
+           }
+	});
+}
+
+
 function setNewMicroservice(){
 	if($("#input-hidden-mavenhomelocation").val() == '' && $("#input-newmicroservice-build-tool").val() == 'maven'){
 		$("#form-mavenhomelocation").addClass("has-error");

@@ -80,7 +80,7 @@ public class MetricsCollector {
     private Metrics buildMetricsFromJsonResponseV1x(Instance instance) throws JSONException {
         Metrics metrics = new Metrics();
 
-        String url = "http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/metrics";
+        String url = "http://"+instance.getIp()+":" + instance.getPort() + instance.getActuatorPrefix() + "/metrics";
         log.info("Reading metrics Spring Boot 1.x for instance id: [{}] using url: [{}]", instance.getId(), url);
 
         JSONObject metricsJson = new JSONObject(new RestTemplate().getForObject(url, String.class));
@@ -109,7 +109,7 @@ public class MetricsCollector {
     }
 
     private Long getValueMetric(Instance instance, String key) throws JSONException {
-        JSONObject metricsJson = new JSONObject(new RestTemplate().getForObject("http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/metrics/"+key, String.class));
+        JSONObject metricsJson = new JSONObject(new RestTemplate().getForObject("http://"+instance.getIp()+":" + instance.getPort() + instance.getActuatorPrefix() + "/metrics/"+key, String.class));
         return Long.valueOf(metricsJson.getJSONArray("measurements").getJSONObject(0).getInt("value"));
     }
 }

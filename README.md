@@ -13,18 +13,19 @@ Are you Admin Spring Boot locally? Are you **tired of that set of scripts**? Rel
 
 The aim is to **help during the course of developing an application based on the paradigm of microservices with _Spring Boot_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **start instances**, **restart** and **kill them**.
 
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_12.png)
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_13.png)
 
 Also you will be able to:
 
 * Admin Spring Boot locally (fully support for v1.x and v2.x)
 * Use configurable Actuator Endpoints and VM arguments
-* Register nicroservices directly from a GIT url
+* Register microservices directly from a GIT URL
 * Monitor memory usage for each instance, capturing their metrics every 30 seconds
 * Monitor instances and trace information at any point in time
 * See Git branch and last commit on instances
 * Checkout branch, pull code and restart instances with a single mouse click
 * Define microservices groups and launch them all with one click
+* Monitor microservies deployed on other machines.
 
 ### Requirements
 
@@ -90,9 +91,14 @@ If you don't have git in your local machine you can easily solve it by adding cr
 
 No, information introduced will be stored in a settings file along with scripts to launch each microservice :grin:. These files are stored in a `trampoline` folder inside your `Documents` folder on Mac and Linux or inside the `Temp` folder on Windows.
 
+* External Instances will be stopped?
+
+No, only instances under `127.0.0.1` will be stopped using `/shutdown` endpoint.
+
+
 ### Contributing
 Start Admin Spring Boot locally and then click the star button to make the author and his neighbors happy :blush:. Then fork the repository and submit a pull request for whatever change you want to be added to this project.
 
-If you have any questions, just open an issue.
+If you have any questions or improvement proposal, just open an issue.
 
 # Enjoy it Folks!

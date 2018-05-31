@@ -3,18 +3,26 @@ package org.ernest.applications.trampoline.entities;
 public class Instance {
 
 	private String id;
+	private String ip;
 	private String name;
 	private String pomLocation;
 	private String port;
 	private String actuatorPrefix;
 	private String vmArguments;
 	private String microserviceId;
-	
+
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 	public String getName() {
 		return name;
@@ -59,6 +67,7 @@ public class Instance {
 	public String toString() {
 		return "Instance{" +
 				"id='" + id + '\'' +
+				", ip='" + ip + '\'' +
 				", name='" + name + '\'' +
 				", pomLocation='" + pomLocation + '\'' +
 				", port='" + port + '\'' +

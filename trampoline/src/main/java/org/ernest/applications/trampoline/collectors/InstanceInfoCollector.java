@@ -32,7 +32,7 @@ public class InstanceInfoCollector {
         info.setCommitOwner("-");
         info.setCommitDate("-");
         try {
-            String url = "http://127.0.0.1:" + instance.getPort() + instance.getActuatorPrefix() + "/info";
+            String url = "http://"+instance.getIp()+":" + instance.getPort() + instance.getActuatorPrefix() + "/info";
 
             log.info("Reading GIT info Spring Boot 1.x for instance id: [{}] using url: [{}]", idInstance, url);
             JSONObject infoJson = new JSONObject(new RestTemplate().getForObject(url, String.class));

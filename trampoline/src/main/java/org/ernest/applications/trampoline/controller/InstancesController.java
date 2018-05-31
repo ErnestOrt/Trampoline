@@ -41,6 +41,7 @@ public class InstancesController {
     public String getInstanceView(Model model) {
 		Ecosystem ecosystem = ecosystemManager.getEcosystem();
 		model.addAttribute("microservices", ecosystem.getMicroservices());
+		model.addAttribute("externalInstances", ecosystem.getExternalInstances());
 		model.addAttribute("instances", ecosystem.getInstances());
 		model.addAttribute("microservicesgroups", ecosystem.getMicroservicesGroups());
 
@@ -108,5 +109,12 @@ public class InstancesController {
 	public void startGroup(@RequestParam(value="id") String id)  {
 		ecosystemManager.startGroup(id);
 	}
+
+	@RequestMapping(value= "/addexternalinstance", method = RequestMethod.POST)
+	@ResponseBody
+	public void addExternalInstance(@RequestParam(value="id") String id)  {
+		ecosystemManager.addExternalInstance(id);
+	}
+
 }
 

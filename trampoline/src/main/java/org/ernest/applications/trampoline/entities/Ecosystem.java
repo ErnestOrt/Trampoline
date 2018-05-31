@@ -9,6 +9,7 @@ public class Ecosystem {
 	private String mavenBinaryLocation;
 	private String mavenHomeLocation;
 	private List<Microservice> microservices;
+	private List<ExternalInstance> externalInstances;
 	private List<Instance> instances;
 	private List<MicroservicesGroup> microservicesGroups;
 	
@@ -16,6 +17,7 @@ public class Ecosystem {
 		microservices = new ArrayList<>();
 		instances = new ArrayList<>();
 		microservicesGroups = new ArrayList<>();
+		externalInstances = new ArrayList<>();
 	}
 
 	public String getMavenBinaryLocation() {
@@ -64,5 +66,13 @@ public class Ecosystem {
 
 	public void setGitCredentials(GitCredentials gitCredentials) {
 		this.gitCredentials = gitCredentials;
+	}
+
+	public List<ExternalInstance> getExternalInstances() {
+		return externalInstances;
+	}
+
+	public void setExternalInstances(List<ExternalInstance> externalInstances) {
+		this.externalInstances = externalInstances;
 	}
 }
