@@ -1,17 +1,12 @@
 package org.ernest.applications.trampoline.services;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.apache.commons.io.FileUtils;
 import org.ernest.applications.trampoline.entities.BuildTools;
 import org.ernest.applications.trampoline.entities.Ecosystem;
 import org.ernest.applications.trampoline.entities.Microservice;
-import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
-import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
-import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
-import org.ernest.applications.trampoline.exceptions.RunningMicroserviceScriptException;
-import org.ernest.applications.trampoline.exceptions.SavingEcosystemException;
+import org.ernest.applications.trampoline.exceptions.*;
 import org.ernest.applications.trampoline.utils.ScriptContentsProvider;
 import org.ernest.applications.trampoline.utils.VMParser;
 import org.slf4j.Logger;
@@ -19,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import java.io.File;
+import java.io.IOException;
 
 @Component
 public class FileManager {
@@ -59,23 +54,29 @@ public class FileManager {
     }
 
     private void updateMicroservicesInformationStored(Ecosystem ecosystem) {
-        boolean ecosystemChanged = false;
-        if (ecosystem.getMicroservices().stream().anyMatch(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null)) {
-            ecosystem.getMicroservices().stream().filter(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null).forEach(m -> {
-                m.setVmArguments("");
-                m.setActuatorPrefix("");
-                m.setBuildTool(BuildTools.MAVEN);
-                createScript(m);
-            });
-            ecosystemChanged = true;
-        }
-
-        if (ecosystem.getMicroservices().stream().anyMatch(m -> m.getBuildTool() == null)) {
-            ecosystem.getMicroservices().stream().filter(m -> m.getBuildTool() == null).forEach(m -> m.setBuildTool(BuildTools.MAVEN));
-            ecosystemChanged = true;
-        }
-
         if (ecosystem.getMicroservices().stream().anyMatch(m -> m.getVersion() == null)) {
+            boolean ecosystemChanged = false;
+            ecosystemChanged = createBasicInformation(ecosystem, ecosystemChanged);
+            ecosystemChanged = createBuildTool(ecosystem, ecosystemChanged);
+            ecosystemChanged = createVersion(ecosystem, ecosystemChanged, currentVersion);
+            ecosystemChanged = createIp(ecosystem, ecosystemChanged);
+
+            if (ecosystemChanged) {
+                saveEcosystem(ecosystem);
+            }
+        }
+    }
+
+    private boolean createIp(Ecosystem ecosystem, boolean ecosystemChanged) {
+		if(ecosystem.getInstances().stream().anyMatch(i -> i.getIp() == null)){
+			ecosystem.getInstances().stream().filter(i -> i.getIp() == null).forEach(i -> i.setIp("127.0.0.1"));
+			ecosystemChanged = true;
+		}
+		return ecosystemChanged;
+	}
+
+	private boolean createVersion(Ecosystem ecosystem, boolean ecosystemChanged, float currentVersion) {
+		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getVersion() == null)){
             ecosystem.getMicroservices().stream().filter(m -> m.getVersion() == null).forEach(m -> {
                 m.setVersion(currentVersion);
                 createScript(m);
@@ -83,9 +84,7 @@ public class FileManager {
             ecosystemChanged = true;
         }
 
-        if (ecosystemChanged) {
-            saveEcosystem(ecosystem);
-        }
+        return ecosystemChanged;
     }
 
     public void saveEcosystem(Ecosystem ecosystem) throws SavingEcosystemException {
@@ -138,30 +137,24 @@ public class FileManager {
     public void createScript(Microservice microservice) throws CreatingMicroserviceScriptException {
         log.info("Creating deployment script for microservice [{}]", microservice.getId());
         try {
-            if (System.getProperties().getProperty("os.name").contains("Windows")) {
-                try {
-                    FileUtils.forceDelete(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"));
-                } catch (Exception e) {
-                }
+            if(System.getProperties().getProperty("os.name").contains("Windows")){
+                try{FileUtils.forceDelete(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"));}catch (Exception e){}
 
-                if (microservice.getBuildTool().equals(BuildTools.MAVEN)) {
+                if(microservice.getBuildTool().equals(BuildTools.MAVEN)) {
                     FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"), ScriptContentsProvider.getMavenWindows(microservice.getPomLocation()));
                 } else if (microservice.getBuildTool().equals(BuildTools.JAR)) {
                     FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"), ScriptContentsProvider.getJar(microservice.getPomLocation()));
-                } else {
+                } else{
                     FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".txt"), ScriptContentsProvider.getGradleWindows(microservice.getPomLocation()));
                 }
-            } else {
-                try {
-                    FileUtils.forceDelete(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"));
-                } catch (Exception e) {
-                }
+            }else{
+                try{FileUtils.forceDelete(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"));}catch (Exception e){}
 
-                if (microservice.getBuildTool().equals(BuildTools.MAVEN)) {
-                    FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"), ScriptContentsProvider.getMavenUnix(microservice.getPomLocation()));
-                } else if (microservice.getBuildTool().equals(BuildTools.JAR)) {
+                if(microservice.getBuildTool().equals(BuildTools.MAVEN)) {
+                    FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"),ScriptContentsProvider.getMavenUnix(microservice.getPomLocation()));
+                }else if (microservice.getBuildTool().equals(BuildTools.JAR)) {
                     FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"), ScriptContentsProvider.getJar(microservice.getPomLocation()));
-                } else {
+                } else{
                     FileUtils.writeStringToFile(new File(getSettingsFolder() + "/" + microservice.getId() + ".sh"), ScriptContentsProvider.getGradleUnix(microservice.getPomLocation()));
                 }
             }
@@ -170,6 +163,27 @@ public class FileManager {
             throw new CreatingMicroserviceScriptException();
         }
     }
+
+	private boolean createBuildTool(Ecosystem ecosystem, boolean ecosystemChanged) {
+		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getBuildTool() == null)){
+            ecosystem.getMicroservices().stream().filter(m -> m.getBuildTool() == null).forEach(m -> m.setBuildTool(BuildTools.MAVEN));
+			ecosystemChanged = true;
+        }
+		return ecosystemChanged;
+	}
+
+	private boolean createBasicInformation(Ecosystem ecosystem, boolean ecosystemChanged) {
+		if(ecosystem.getMicroservices().stream().anyMatch(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null)){
+			ecosystem.getMicroservices().stream().filter(m -> m.getActuatorPrefix() == null || m.getVmArguments() == null).forEach(m ->{
+				m.setVmArguments("");
+				m.setActuatorPrefix("");
+				m.setBuildTool(BuildTools.MAVEN);
+				createScript(m);
+			});
+			ecosystemChanged = true;
+		}
+		return ecosystemChanged;
+	}
 
     public String getSettingsFolder() {
         if (System.getProperties().getProperty("os.name").contains("Mac")) {

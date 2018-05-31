@@ -20,6 +20,26 @@ function startGroup(){
     }
 }
 
+function addExternalInstance(){
+    if($("#input-external-instance").val() == "-1"){
+        $("#form-external-instance").addClass("has-error");
+    }else{
+        $('.front-loading').show();
+        $.ajax({
+            url : "/instances/addexternalinstance",
+            type: "POST",
+            data : {id: $("#input-external-instance").val()},
+            success: function(data, textStatus, jqXHR) {
+              location.reload();
+            },
+            error: function (request, status, error) {
+                $('.front-loading').hide();
+                showNotification('danger', "Error occurred when trying to add an esternal instance. Check Logs for more info");
+             }
+        });
+    }
+}
+
 function restartInstance(instanceId){
     $('.front-loading').show();
     $.ajax({
