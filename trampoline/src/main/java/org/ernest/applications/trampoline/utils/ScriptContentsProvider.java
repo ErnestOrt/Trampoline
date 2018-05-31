@@ -18,4 +18,9 @@ public class ScriptContentsProvider {
     public static String getGradleUnix(String pomLocation){
         return "export SERVER_PORT=$1; export ENDPOINTS_SHUTDOWN_ENABLED=true; export MANAGEMENT_SECURITY_ENABLED=false; export MANAGEMENT_INFO_GIT_MODE=full; export MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=*; export MANAGEMENT_ENDPOINT_SHUTDOWN_ENABLED=true $2; cd " + pomLocation + "; ./gradlew bootRun";
     }
+
+    public static String getJar(String jarLocation){
+        return "java -Dserver.port=$1 "
+                + "-Dendpoints.shutdown.enabled=true -Dmanagement.security.enabled=false -Dmanagement.info.git.mode=full -Dmanagement.endpoints.web.exposure.include=* -Dmanagement.endpoint.shutdown.enabled=true $2 -jar \""+jarLocation+"\"";
+    }
 }
