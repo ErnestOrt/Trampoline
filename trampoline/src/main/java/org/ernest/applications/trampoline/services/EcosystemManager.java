@@ -73,12 +73,13 @@ public class EcosystemManager {
 		fileManager.saveEcosystem(ecosystem);
 	}
 
-	public void setMicroserviceGroup(String name, List<String> idsMicroservicesGroup) {
+	public void setMicroserviceGroup(String name, List<String> idsMicroservicesGroup, List<Integer> delaysMicroservicesGroup) {
 		log.info("Creating group name: [{}] with microservices [{}]", name, idsMicroservicesGroup.stream().collect(Collectors.joining(",")));
 		MicroservicesGroup microservicesGroup = new MicroservicesGroup();
 		microservicesGroup.setId(UUID.randomUUID().toString());
 		microservicesGroup.setName(name);
 		microservicesGroup.setMicroservicesIds(idsMicroservicesGroup);
+		microservicesGroup.setMicroservicesDelays(delaysMicroservicesGroup);
 
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		ecosystem.getMicroservicesGroups().add(microservicesGroup);

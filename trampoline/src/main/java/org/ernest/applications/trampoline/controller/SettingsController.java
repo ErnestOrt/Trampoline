@@ -99,8 +99,8 @@ public class SettingsController {
 
 	@RequestMapping(value= "/setmicroservicesgroup", method = RequestMethod.POST)
 	@ResponseBody
-	public void getMicroserviceInfo(@RequestParam(value="name") String name, @RequestParam(value="idsMicroservicesGroup[]") List<String> idsMicroservicesGroup) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
-		ecosystemManager.setMicroserviceGroup(name, idsMicroservicesGroup);
+	public void getMicroserviceInfo(@RequestParam(value="name") String name, @RequestParam(value="idsMicroservicesGroup[]") List<String> idsMicroservicesGroup, @RequestParam(value="delaysMicroservicesGroup[]") List<Integer> delaysMicroservicesGroup) throws CreatingSettingsFolderException, ReadingEcosystemException, CreatingMicroserviceScriptException, SavingEcosystemException {
+		ecosystemManager.setMicroserviceGroup(name, idsMicroservicesGroup, delaysMicroservicesGroup);
 	}
 
 	@RequestMapping(value= "/groupinfo", method = RequestMethod.POST)
