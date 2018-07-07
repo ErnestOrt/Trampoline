@@ -367,7 +367,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <a onclick="changeSelectedClass(this)" th:each="microservice : ${microservices}" href="#" class="btn btn-default microservice-group-form" role="button" th:text="${microservice.name}" th:attr="data-id=${microservice.id}"></a>
+                                        <a onclick="changeSelectedClass(this)" th:each="microservice : ${microservices}" href="#" class="btn btn-default microservice-group-form" role="button" th:text="${microservice.name}" th:attr="data-id=${microservice.id}, data-name=${microservice.name}"></a>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -450,6 +450,30 @@
                     <div class="modal-body">
                         <p>Name:<br/><span class="text-success" id="modal-group-name"></span></p>
                         <p>Microservices included:<br/><span class="text-success" id="modal-group-list"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="modal-group-definition" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Microservices Group Definition <small id="title-group-definition"></small></h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="table-group-definition" class="table table-striped">
+                            <thead>
+                                <th>Name</th>
+                                <th>Start at (sec)</th>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

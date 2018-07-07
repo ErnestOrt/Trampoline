@@ -10,7 +10,7 @@ function changeSelectedClass(element) {
     }
 }
 
-function createGroup(){
+/*function createGroup(){
     idsMicroservicesGroup = [];
     $( ".microservice-group-form.btn-success" ).each(function( index ) {
         idsMicroservicesGroup.push($( this ).data("id"));
@@ -33,6 +33,28 @@ function createGroup(){
                       showNotification('danger', "Error occurred when trying to create a group. Check Logs for more info");
                    }
             });
+    }
+}*/
+
+function createGroup(){
+    idsMicroservicesGroup = [];
+    $( ".microservice-group-form.btn-success" ).each(function( index ) {
+        idsMicroservicesGroup.push($( this ).data("id"));
+    });
+    if($("#input-groupname").val() == ''){
+        $("#form-groupname").addClass("has-error");
+    }else if(idsMicroservicesGroup.length<2){
+        $("#form-groupname").removeClass("has-error");
+        showNotification('danger', "You must select <b>at least two microservices</b> to register a group. <b>Remember to register microservices first</b>.");
+    }else{
+        $("#title-group-definition").html($("#input-groupname").val());
+        $("#table-group-definition > tbody").html("");
+
+        $( ".microservice-group-form.btn-success" ).each(function( index ) {
+            $('#table-group-definition tr:last').after('<tr class="even gradeA"><td>'+$( this ).data("name")+'</td><td><input id="'+$( this ).data("id")+'" type="text" class="form-control border-input" value="0"/></td></tr>');
+        });
+
+        $("#modal-group-definition").modal("show");
     }
 }
 
