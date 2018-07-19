@@ -2,6 +2,7 @@ package org.ernest.applications.trampoline.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.ernest.applications.trampoline.entities.BuildTools;
@@ -64,11 +65,20 @@ public class FileManager {
 		ecosystemChanged = createBuildTool(ecosystem, ecosystemChanged);
 		ecosystemChanged = createVersion(ecosystem, ecosystemChanged, currentVersion);
 		ecosystemChanged = createIp(ecosystem, ecosystemChanged);
+		ecosystemChanged = createGroupDelays(ecosystem, ecosystemChanged);
 
 		if(ecosystemChanged){
 			saveEcosystem(ecosystem);
 		}
     }
+
+	private boolean createGroupDelays(Ecosystem ecosystem, boolean ecosystemChanged) {
+		if(ecosystem.getMicroservicesGroups().stream().anyMatch(i -> i.getMicroservicesDelays() == null)){
+			ecosystem.getMicroservicesGroups().stream().filter(i -> i.getMicroservicesDelays() == null).forEach(i -> i.setMicroservicesDelays(i.getMicroservicesIds().stream().map(s -> new Integer(0)).collect(Collectors.toList())));
+			ecosystemChanged = true;
+		}
+		return ecosystemChanged;
+	}
 
 	private boolean createIp(Ecosystem ecosystem, boolean ecosystemChanged) {
 		if(ecosystem.getInstances().stream().anyMatch(i -> i.getIp() == null)){

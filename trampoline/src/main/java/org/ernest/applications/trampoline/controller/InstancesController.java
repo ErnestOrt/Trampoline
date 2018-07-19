@@ -62,13 +62,13 @@ public class InstancesController {
 
 	@RequestMapping(value= "/startinstance", method = RequestMethod.POST)
 	@ResponseBody
-	public void startInstance(@RequestParam(value="id") String id, @RequestParam(value="port") String port, @RequestParam(value="vmArguments") String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException {
-		ecosystemManager.startInstance(id, port, vmArguments);
+	public void startInstance(@RequestParam(value="id") String id, @RequestParam(value="port") String port, @RequestParam(value="vmArguments") String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException, InterruptedException {
+		ecosystemManager.startInstance(id, port, vmArguments, 0);
 	}
 
 	@RequestMapping(value= "/restartinstance", method = RequestMethod.POST)
 	@ResponseBody
-	public void restartInstance(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, ShuttingDownInstanceException {
+	public void restartInstance(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, ShuttingDownInstanceException, InterruptedException {
 		ecosystemManager.restartInstance(id);
 	}
 
@@ -106,7 +106,7 @@ public class InstancesController {
 
 	@RequestMapping(value= "/startgroup", method = RequestMethod.POST)
 	@ResponseBody
-	public void startGroup(@RequestParam(value="id") String id)  {
+	public void startGroup(@RequestParam(value="id") String id) throws InterruptedException {
 		ecosystemManager.startGroup(id);
 	}
 

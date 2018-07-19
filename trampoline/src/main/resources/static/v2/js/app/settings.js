@@ -12,6 +12,30 @@ function changeSelectedClass(element) {
 
 function createGroup(){
     idsMicroservicesGroup = [];
+    delaysMicroservicesGroup = [];
+
+    $( ".group-definition-ms" ).each(function( index ) {
+        idsMicroservicesGroup.push($( this ).data("id"));
+        delaysMicroservicesGroup.push($( this ).val());
+    });
+
+     $.ajax({
+            url : "/settings/setmicroservicesgroup",
+            type: "POST",
+            data : {name:  $("#input-groupname").val(),
+                    idsMicroservicesGroup: idsMicroservicesGroup,
+                    delaysMicroservicesGroup: delaysMicroservicesGroup},
+            success: function(data, textStatus, jqXHR) {location.reload();},
+            error: function (request, status, error) {
+                 $('.front-loading').hide();
+                  showNotification('danger', "Error occurred when trying to create a group. Check Logs for more info");
+               }
+        });
+
+}
+
+function defineGroup(){
+    idsMicroservicesGroup = [];
     $( ".microservice-group-form.btn-success" ).each(function( index ) {
         idsMicroservicesGroup.push($( this ).data("id"));
     });
@@ -21,20 +45,32 @@ function createGroup(){
         $("#form-groupname").removeClass("has-error");
         showNotification('danger', "You must select <b>at least two microservices</b> to register a group. <b>Remember to register microservices first</b>.");
     }else{
-        $("#modal-microservice-information").modal("show");
-         $.ajax({
-                url : "/settings/setmicroservicesgroup",
-                type: "POST",
-                data : {name:  $("#input-groupname").val(),
-                        idsMicroservicesGroup: idsMicroservicesGroup},
-                success: function(data, textStatus, jqXHR) {location.reload();},
-                error: function (request, status, error) {
-                     $('.front-loading').hide();
-                      showNotification('danger', "Error occurred when trying to create a group. Check Logs for more info");
-                   }
-            });
+        $("#title-group-definition").html($("#input-groupname").val());
+        $("#table-group-definition > tbody").html("");
+
+        $( ".microservice-group-form.btn-success" ).each(function( index ) {
+            $('#table-group-definition > tbody').append('<tr class="even gradeA"><td>'+$( this ).data("name")+'</td><td><input class="group-definition-ms" data-id="'+$( this ).data("id")+'" type="text" class="form-control border-input" value="0"/></td>'+
+                                                        '<td>'+
+                                                            '<input id="group-item-'+index+'" class="group-definition-ms-order" value="'+(index+1)+'" onchange="sortGroupRows()"/>'+
+                                                        '</td></tr>');
+        });
+
+        $("#modal-group-definition").modal("show");
     }
 }
+
+function sortGroupRows(){
+    var tb = $('#table-group-definition > tbody');
+    var rows = tb.find('tr');
+    rows.sort(function(a, b) {
+    console.log(a)
+        var keyA = $(a).find('.group-definition-ms-order').val();
+        var keyB = $(b).find('.group-definition-ms-order').val();
+        return keyA - keyB;
+    });
+    $.each(rows, function(index, row) {
+        tb.append(row);
+    });}
 
 function setMavenInformation(){
 	if($("#input-mavenhomelocation").val() == ''){

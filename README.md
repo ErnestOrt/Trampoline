@@ -1,4 +1,4 @@
-# Trampoline [![Twitter](https://img.shields.io/twitter/follow/espadrine.svg?style=social&logo=twitter&label=Follow)](https://twitter.com/TrampolineSB) 
+# Trampoline [![Twitter](https://img.shields.io/twitter/follow/espadrine.svg?style=social&logo=twitter&label=Follow)](https://twitter.com/TrampolineSB)
 
 
 [![Build Status](https://travis-ci.org/stunstunstun/awesome-spring-boot.svg?branch=master)](https://travis-ci.org/stunstunstun/awesome-spring-boot) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/Trampoline-springboot/Lobby)
@@ -13,7 +13,7 @@ Are you Admin Spring Boot locally? Are you **tired of that set of scripts**? Rel
 
 The aim is to **help during the course of developing an application based on the paradigm of microservices with _Spring Boot_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **start instances**, **restart** and **kill them**.
 
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_13.png)
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_14.png)
 
 Also you will be able to:
 
@@ -25,7 +25,7 @@ Also you will be able to:
 * See Git branch and last commit on instances
 * Checkout branch, pull code and restart instances with a single mouse click
 * Define microservices groups and launch them all with one click
-* Monitor microservies deployed on other machines.
+* Monitor microservies deployed on other machines
 
 ### Requirements
 
@@ -49,8 +49,12 @@ To Admin Spring Boot locally:
 
 ### FAQ
 
+* How microservices groups are launched?
+
+All microservices are launched secuantially, folowing the order specified, applying defined delay for each instance. 
+
 * Which build tools are Trampoline compatible with in my microservices?
-	
+
 You can use Apache Maven or Gradle Wrapper.
 
 * Can I run it on any OS?

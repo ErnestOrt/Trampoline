@@ -367,13 +367,13 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <a onclick="changeSelectedClass(this)" th:each="microservice : ${microservices}" href="#" class="btn btn-default microservice-group-form" role="button" th:text="${microservice.name}" th:attr="data-id=${microservice.id}"></a>
+                                        <a onclick="changeSelectedClass(this)" th:each="microservice : ${microservices}" href="#" class="btn btn-default microservice-group-form" role="button" th:text="${microservice.name}" th:attr="data-id=${microservice.id}, data-name=${microservice.name}"></a>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <br/>
                                     <div class="text-center">
-                                        <button onclick="createGroup()" class="btn btn-success btn-fill btn-wd">Create Group</button>
+                                        <button onclick="defineGroup()" class="btn btn-success btn-fill btn-wd">Create Group</button>
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
@@ -459,6 +459,32 @@
             </div>
         </div>
 
+        <div id="modal-group-definition" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Microservices Group Definition <small id="title-group-definition"></small></h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="table-group-definition" class="table table-striped">
+                            <thead>
+                                <th>Name</th>
+                                <th>Start at (sec)</th>
+                                <th>Launching Order</th>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="createGroup()" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
 
 
         <footer class="footer">
@@ -476,7 +502,7 @@
 <script type="text/javascript" th:src="@{/v2/js/bootstrap-notify.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/paper-dashboard.js}"></script>
 <script type="text/javascript" th:src="@{/v2/js/demo.js}"></script>
-<script type="text/javascript" th:src="@{/v2/js/app/settings.js?v3.15}"></script>
+<script type="text/javascript" th:src="@{/v2/js/app/settings.js?v3.16}"></script>
 <script type="text/javascript" th:src="@{/v2/js/app/loading.js?v3.7}"></script>
 
 <script th:inline="javascript">

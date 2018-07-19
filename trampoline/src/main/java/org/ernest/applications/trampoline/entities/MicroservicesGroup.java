@@ -8,6 +8,7 @@ public class MicroservicesGroup {
     private String id;
     private String name;
     private List<String> microservicesIds;
+    private List<Integer> microservicesDelays;
 
     public String getId() {
         return id;
@@ -33,5 +34,11 @@ public class MicroservicesGroup {
         this.microservicesIds = microservicesIds;
     }
 
+    public List<Integer> getMicroservicesDelays() {
+        return microservicesDelays;
+    }
 
+    public void setMicroservicesDelays(List<Integer> microservicesDelays) {
+        this.microservicesDelays = microservicesDelays;
+    }
 }
