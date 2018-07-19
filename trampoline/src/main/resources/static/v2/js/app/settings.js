@@ -49,12 +49,28 @@ function defineGroup(){
         $("#table-group-definition > tbody").html("");
 
         $( ".microservice-group-form.btn-success" ).each(function( index ) {
-            $('#table-group-definition tr:last').after('<tr class="even gradeA"><td>'+$( this ).data("name")+'</td><td><input class="group-definition-ms" data-id="'+$( this ).data("id")+'" type="text" class="form-control border-input" value="0"/></td></tr>');
+            $('#table-group-definition > tbody').append('<tr class="even gradeA"><td>'+$( this ).data("name")+'</td><td><input class="group-definition-ms" data-id="'+$( this ).data("id")+'" type="text" class="form-control border-input" value="0"/></td>'+
+                                                        '<td>'+
+                                                            '<input id="group-item-'+index+'" class="group-definition-ms-order" value="'+(index+1)+'" onchange="sortGroupRows()"/>'+
+                                                        '</td></tr>');
         });
 
         $("#modal-group-definition").modal("show");
     }
 }
+
+function sortGroupRows(){
+    var tb = $('#table-group-definition > tbody');
+    var rows = tb.find('tr');
+    rows.sort(function(a, b) {
+    console.log(a)
+        var keyA = $(a).find('.group-definition-ms-order').val();
+        var keyB = $(b).find('.group-definition-ms-order').val();
+        return keyA - keyB;
+    });
+    $.each(rows, function(index, row) {
+        tb.append(row);
+    });}
 
 function setMavenInformation(){
 	if($("#input-mavenhomelocation").val() == ''){

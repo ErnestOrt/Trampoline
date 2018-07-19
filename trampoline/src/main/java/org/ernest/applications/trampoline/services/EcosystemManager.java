@@ -93,11 +93,13 @@ public class EcosystemManager {
 		fileManager.saveEcosystem(ecosystem);
 	}
 
-	public void startInstance(String id, String port, String vmArguments) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException{
-		log.info("Starting instances id: [{}] port: [{}] vmArguments: [{}]", id, port, vmArguments);
+	public void startInstance(String id, String port, String vmArguments, Integer startingDelay) throws CreatingSettingsFolderException, ReadingEcosystemException, RunningMicroserviceScriptException, SavingEcosystemException, InterruptedException {
+		log.info("Starting instances id: [{}] port: [{}] vmArguments: [{}] startingDelay: [{}]", id, port, vmArguments, startingDelay);
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		
 		Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(id)).findAny().get();
+		Thread.sleep(startingDelay*1000);
+		log.info("Launching script to start instances id: [{}]", id);
 		fileManager.runScript(microservice, ecosystem.getMavenBinaryLocation(), ecosystem.getMavenHomeLocation(), port, vmArguments);
 		
 		Instance instance = new Instance();
@@ -151,16 +153,19 @@ public class EcosystemManager {
 		return true;
 	}
 
-	public void startGroup(String id) {
+	public void startGroup(String id) throws InterruptedException {
 		log.info("Starting group id: [{}]", id);
-		MicroservicesGroup group = fileManager.getEcosystem().getMicroservicesGroups().stream().filter(g -> g.getId().equals(id)).findFirst().get();
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		MicroservicesGroup group = ecosystem.getMicroservicesGroups().stream().filter(g -> g.getId().equals(id)).findFirst().get();
 
-		fileManager.getEcosystem().getMicroservices().stream()
-													 .filter(m->group.getMicroservicesIds().contains(m.getId()))
-													 .forEach(m->prepareMicroservice(m));
+		for(int index = 0; index < group.getMicroservicesIds().size(); index++){
+			int microserviceIndex = index;
+			Microservice microservice = ecosystem.getMicroservices().stream().filter(m->m.getId().equals(group.getMicroservicesIds().get(microserviceIndex))).findAny().get();
+			prepareMicroservice(microservice, group.getMicroservicesDelays().get(microserviceIndex));
+		}
 	}
 
-	private void prepareMicroservice(Microservice microservice) {
+	private void prepareMicroservice(Microservice microservice, Integer startingDelay) throws InterruptedException {
 		int port = Integer.parseInt(microservice.getDefaultPort());
 		boolean instanceStarted = false;
 		List<Instance> instances = fileManager.getEcosystem().getInstances();
@@ -168,7 +173,7 @@ public class EcosystemManager {
 		while(!instanceStarted) {
 			final int portToBeLaunched = port;
 			if (PortsChecker.available(portToBeLaunched) && !instances.stream().anyMatch(i -> i.getPort().equals(String.valueOf(portToBeLaunched)))) {
-				startInstance(microservice.getId(), String.valueOf(port), "");
+				startInstance(microservice.getId(), String.valueOf(port), "", startingDelay);
 				instanceStarted = true;
 			}else{
 				port++;
@@ -193,12 +198,12 @@ public class EcosystemManager {
 		fileManager.saveEcosystem(ecosystem);
 	}
 
-	public void restartInstance(String instanceId) {
+	public void restartInstance(String instanceId) throws InterruptedException {
 		log.info("Restarting instance id: [{}]", instanceId);
 		Ecosystem ecosystem = fileManager.getEcosystem();
 		Instance instance = ecosystem.getInstances().stream().filter(i -> i.getId().equals(instanceId)).findFirst().get();
 		killInstance(instance.getId());
-		startInstance(instance.getMicroserviceId(), instance.getPort(), instance.getVmArguments());
+		startInstance(instance.getMicroserviceId(), instance.getPort(), instance.getVmArguments(), 0);
 	}
 
 	public void saveGitCred(String user, String pass) {

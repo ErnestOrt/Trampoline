@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -111,9 +113,15 @@ public class SettingsController {
 
 		MicroserviceGroupInfo info = new MicroserviceGroupInfo();
 		info.setName(microservicesGroup.getName());
+
+		Map<String, Integer> delays = new HashMap<>();
+		for (int index = 0; index < microservicesGroup.getMicroservicesIds().size(); index++){
+			delays.put(microservicesGroup.getMicroservicesIds().get(index), microservicesGroup.getMicroservicesDelays().get(index));
+		}
+
 		info.setMicroservicesNames(microservices.stream()
 				                                .filter(m->microservicesGroup.getMicroservicesIds().contains(m.getId()))
-				                                .map(Microservice::getName)
+				                                .map(microservice -> microservice.getName() +" ["+delays.get(microservice.getId())+" sec]")
 				                                .collect(Collectors.toList()));
 		return info;
 	}
@@ -141,7 +149,13 @@ public class SettingsController {
 	public void checkoutAndPullAndRestart(@RequestParam(value="id") String id, @RequestParam(value="branchName") String branchName) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException, IOException, GitAPIException {
 		gitManager.checkoutAndPull(id, branchName);
 		List<String> intancesIds = ecosystemManager.getEcosystem().getInstances().stream().filter(i-> i.getMicroserviceId().equals(id)).map(Instance::getId).collect(Collectors.toList());
-		intancesIds.forEach(intancesId-> ecosystemManager.restartInstance(intancesId));
+		intancesIds.forEach(intancesId-> {
+			try {
+				ecosystemManager.restartInstance(intancesId);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	@RequestMapping(value= "/git/config/save", method = RequestMethod.POST)
