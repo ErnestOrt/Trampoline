@@ -7,7 +7,12 @@ import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.transport.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.OpenSshConfig;
+import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.util.FS;
 import org.ernest.applications.trampoline.entities.Ecosystem;
 import org.ernest.applications.trampoline.entities.GitCredentials;
 import org.ernest.applications.trampoline.entities.Microservice;
@@ -20,6 +25,10 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.stream.Collectors;
+
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 @Component
 public class GitManager {
@@ -36,13 +45,19 @@ public class GitManager {
         log.info("Reading GIT Branches for microservice id: [{}]", microserviceId);
         MicroserviceGitInfo microserviceGitInfo = new MicroserviceGitInfo();
 
-        Ecosystem ecosystem =  ecosystemManager.getEcosystem();
+        Ecosystem ecosystem = ecosystemManager.getEcosystem();
         Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(microserviceId)).findAny().get();
 
         Git git = Git.open(new java.io.File(microservice.getGitLocation()));
-        if(ecosystem.getGitCredentials()!=null){
-            git.fetch().setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials())).setRemoveDeletedRefs(true).call();
-        }else{
+        if (ecosystem.getGitCredentials().getHttpsSettings() != null) {
+            git.fetch().setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials().getHttpsSettings())).setRemoveDeletedRefs(true).call();
+        } else if (ecosystem.getGitCredentials().getSshSettings() != null) {
+            SshSessionFactory sshSessionFactory = getSshSessionFactory(ecosystem);
+            git.fetch().setTransportConfigCallback(transport -> {
+                SshTransport sshTransport = (SshTransport) transport;
+                sshTransport.setSshSessionFactory(sshSessionFactory);
+            });
+        } else {
             git.fetch().setRemoveDeletedRefs(true).call();
         }
 
@@ -54,7 +69,7 @@ public class GitManager {
 
     public void checkoutAndPull(String microserviceId, String branchName) throws IOException, GitAPIException {
         log.info("Checkout and Pulling code for microservice id: [{}] branchName: [{}]", microserviceId, branchName);
-        Ecosystem ecosystem =  ecosystemManager.getEcosystem();
+        Ecosystem ecosystem = ecosystemManager.getEcosystem();
         Microservice microservice = ecosystem.getMicroservices().stream().filter(m -> m.getId().equals(microserviceId)).findAny().get();
 
         branchName = branchName.replaceAll("refs/remotes/origin/", "");
@@ -63,23 +78,41 @@ public class GitManager {
 
         try {
             git.checkout().setCreateBranch(true).setName(branchName).setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).setStartPoint("origin/" + branchName).call();
-        }catch (RefAlreadyExistsException e){
+        } catch (RefAlreadyExistsException e) {
             git.checkout().setCreateBranch(false).setName(branchName).call();
         }
 
-        if(ecosystem.getGitCredentials()!=null){
-            git.pull().setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials())).call();
-        }else{
+        if (ecosystem.getGitCredentials().getHttpsSettings() != null) {
+            git.pull().setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials().getHttpsSettings())).call();
+        } else if (ecosystem.getGitCredentials().getSshSettings() != null) {
+            SshSessionFactory sshSessionFactory = getSshSessionFactory(ecosystem);
+            git.fetch().setTransportConfigCallback(transport -> {
+                SshTransport sshTransport = (SshTransport) transport;
+                sshTransport.setSshSessionFactory(sshSessionFactory);
+            });
+        } else {
             git.pull().call();
         }
     }
 
     public String getRegisteredUsername(Ecosystem ecosystem) {
-        return ecosystem.getGitCredentials() != null ? encryptService.decrypt(ecosystem.getGitCredentials().getUsername()) : "";
+        return ecosystem.getGitCredentials() != null
+                && ecosystem.getGitCredentials().getHttpsSettings() != null
+                ? encryptService.decrypt(ecosystem.getGitCredentials().getHttpsSettings().getUsername()) : "";
     }
 
-    public void saveCred(String user, String pass) {
-        ecosystemManager.saveGitCred(encryptService.encrypt(user), encryptService.encrypt(pass));
+    public String getSshKeyLocation(Ecosystem ecosystem) {
+        return ecosystem.getGitCredentials() != null
+                && ecosystem.getGitCredentials().getSshSettings() != null
+                ? ecosystem.getGitCredentials().getSshSettings().getSshKeyLocation() : "~/.ssh/id_rsa";
+    }
+
+    public void saveHttpsCred(String user, String pass) {
+        ecosystemManager.saveGitHttpsCred(encryptService.encrypt(user), encryptService.encrypt(pass));
+    }
+
+    public void saveSshCred(String privateKeyLocation) {
+        ecosystemManager.saveGitSshCred(privateKeyLocation);
     }
 
     public void cleanCred() {
@@ -89,16 +122,40 @@ public class GitManager {
     public void cloneRepository(String gitUrl, String destinationFolder) throws GitAPIException {
         log.info("Cloning repository gitUrl: [{}] destinationFolder: [{}]", gitUrl, destinationFolder);
 
-        Ecosystem ecosystem =  ecosystemManager.getEcosystem();
+        Ecosystem ecosystem = ecosystemManager.getEcosystem();
         CloneCommand cloneCommand = Git.cloneRepository();
 
-        if(ecosystem.getGitCredentials()!=null){
-            cloneCommand.setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials()));
+        if (ecosystem.getGitCredentials().getHttpsSettings() != null) {
+            cloneCommand.setCredentialsProvider(buildCredentialsProvider(ecosystem.getGitCredentials().getHttpsSettings()));
+        }
+
+        if (gitUrl.startsWith("ssh") || gitUrl.startsWith("git@")) {
+            SshSessionFactory sshSessionFactory = getSshSessionFactory(ecosystem);
+            cloneCommand.setTransportConfigCallback(transport -> {
+                SshTransport sshTransport = (SshTransport) transport;
+                sshTransport.setSshSessionFactory(sshSessionFactory);
+            });
         }
         cloneCommand.setURI(gitUrl).setDirectory(new File(destinationFolder)).call();
     }
 
-    private UsernamePasswordCredentialsProvider buildCredentialsProvider(GitCredentials gitCredentials) {
+    private UsernamePasswordCredentialsProvider buildCredentialsProvider(GitCredentials.HttpsSettings gitCredentials) {
         return new UsernamePasswordCredentialsProvider(encryptService.decrypt(gitCredentials.getUsername()), encryptService.decrypt(gitCredentials.getPass()));
+    }
+
+    private SshSessionFactory getSshSessionFactory(Ecosystem ecosystem) {
+        return new JschConfigSessionFactory() {
+            @Override
+            protected void configure(OpenSshConfig.Host host, Session session) {
+                // do nothing
+            }
+
+            @Override
+            protected JSch createDefaultJSch(FS fs) throws JSchException {
+                JSch defaultJSch = super.createDefaultJSch(fs);
+                defaultJSch.addIdentity(ecosystem.getGitCredentials().getSshSettings().getSshKeyLocation());
+                return defaultJSch;
+            }
+        };
     }
 }

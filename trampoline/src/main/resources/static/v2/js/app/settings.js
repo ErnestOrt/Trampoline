@@ -348,12 +348,26 @@ function removeGroup(groupId){
 	});
 }
 
-function saveGitCred(){
+function saveGitHttpsCred(){
     $('.front-loading').show();
 	$.ajax({
-	    url : "/settings/git/config/save",
+	    url : "/settings/git/https/config/save",
 	    type: "POST",
 	    data : {user: $("#input-git-user").val(), pass: $("#input-git-pass").val()},
+	    success: function(data, textStatus, jqXHR) { location.reload(); },
+        error: function (request, status, error) {
+              $('.front-loading').hide();
+               showNotification('danger', "Error occurred when trying to remove group. Check Logs for more info");
+           }
+	});
+}
+
+function saveGitSshCred(){
+    $('.front-loading').show();
+	$.ajax({
+	    url : "/settings/git/ssh/config/save",
+	    type: "POST",
+	    data : { sshKeyLocation: $("#input-git-ssh-key-location").val()},
 	    success: function(data, textStatus, jqXHR) { location.reload(); },
         error: function (request, status, error) {
               $('.front-loading').hide();
@@ -394,7 +408,19 @@ $(document).ready(function(){
     $('[data-toggle="git-popover"]').popover();
     $("#tab-newmicroservice-git-repo").addClass("active");
     $('#content-file-system').hide();
+    $("#tab-git-https-settings").addClass("active");
+    $("#content-git-ssh-settings").hide();
 });
+
+function showGitSettings(component){
+    $('#content-git-https-settings').hide();
+    $('#content-git-ssh-settings').hide();
+    $('#content-'+component).show();
+
+    $("#tab-git-https-settings").removeClass("active");
+    $("#tab-git-ssh-settings").removeClass("active");
+    $("#tab-"+component).addClass("active");
+}
 
 function showNewMsForm(component){
      $('#content-file-system').hide();

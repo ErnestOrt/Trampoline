@@ -206,17 +206,42 @@ public class EcosystemManager {
 		startInstance(instance.getMicroserviceId(), instance.getPort(), instance.getVmArguments(), 0);
 	}
 
-	public void saveGitCred(String user, String pass) {
-		log.info("Saving GIT Credentials");
+	public void saveGitCred(String user, String pass, String privateKeyLocation) {
+		log.info("Saving GIT HTTPS Credentials");
 		Ecosystem ecosystem = fileManager.getEcosystem();
-		ecosystem.setGitCredentials(new GitCredentials(user, pass));
+		ecosystem.setGitCredentials(new GitCredentials(user, pass, privateKeyLocation));
+		fileManager.saveEcosystem(ecosystem);
+	}
+
+	public void saveGitHttpsCred(String user, String pass) {
+		log.info("Saving GIT HTTPS Credentials");
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		GitCredentials gitCredentials = ecosystem.getGitCredentials();
+		if (gitCredentials.getHttpsSettings() != null) {
+			gitCredentials.getHttpsSettings().setUsername(user);
+			gitCredentials.getHttpsSettings().setPass(pass);
+		} else {
+			ecosystem.setGitCredentials(new GitCredentials(user, pass));
+		}
+		fileManager.saveEcosystem(ecosystem);
+	}
+
+	public void saveGitSshCred(String privateKeyLocation) {
+		log.info("Saving GIT SSH Credentials");
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		GitCredentials gitCredentials = ecosystem.getGitCredentials();
+		if (gitCredentials.getSshSettings() != null) {
+			gitCredentials.getSshSettings().setSshKeyLocation(privateKeyLocation);
+		} else {
+			ecosystem.setGitCredentials(new GitCredentials(privateKeyLocation));
+		}
 		fileManager.saveEcosystem(ecosystem);
 	}
 
 	public void cleanGitCred() {
 		log.info("Cleaning GIT Credentials");
 		Ecosystem ecosystem = fileManager.getEcosystem();
-		ecosystem.setGitCredentials(null);
+		ecosystem.setGitCredentials(new GitCredentials());
 		fileManager.saveEcosystem(ecosystem);
 	}
 

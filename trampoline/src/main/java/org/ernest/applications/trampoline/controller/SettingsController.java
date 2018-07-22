@@ -49,6 +49,7 @@ public class SettingsController {
 		model.addAttribute("mavenBinaryLocationMessage", ecosystem.getMavenBinaryLocation() == null ? "Set Maven Binary Location if necessary. Otherwise it will automatically be searched in a bin folder inside your Maven Home Location" : ecosystem.getMavenBinaryLocation());
 		model.addAttribute("mavenHomeLocationMessage", ecosystem.getMavenHomeLocation() == null ? "Please set maven Home Location. Ex: /Users/ernest/Documents/workspace/tools/apache-maven-3.2.1" : ecosystem.getMavenHomeLocation());
 		model.addAttribute("gitUsername", gitManager.getRegisteredUsername(ecosystem));
+		model.addAttribute("gitSshKeyLocation", gitManager.getSshKeyLocation(ecosystem));
 		model.addAttribute("settingsFolder", fileManager.getSettingsFolder());
 
 		return SETTINGS_VIEW;
@@ -158,11 +159,18 @@ public class SettingsController {
 		});
 	}
 
-	@RequestMapping(value= "/git/config/save", method = RequestMethod.POST)
-	@ResponseBody
-	public void saveGitCred(@RequestParam(value="user") String user,@RequestParam(value="pass") String pass) {
-		gitManager.saveCred(user, pass);
-	}
+    @RequestMapping(value = "/git/https/config/save", method = RequestMethod.POST)
+    @ResponseBody
+    public void saveGitHttpsCred(@RequestParam(value = "user") String user,
+                                 @RequestParam(value = "pass") String pass) {
+        gitManager.saveHttpsCred(user, pass);
+    }
+
+    @RequestMapping(value = "/git/ssh/config/save", method = RequestMethod.POST)
+    @ResponseBody
+    public void saveGitCred(@RequestParam(value = "sshKeyLocation", defaultValue = "~/.ssh/id_rsa") String privateKeyLocation) {
+        gitManager.saveSshCred(privateKeyLocation);
+    }
 
 	@RequestMapping(value= "/git/config/clean", method = RequestMethod.GET)
 	@ResponseBody
@@ -182,7 +190,6 @@ public class SettingsController {
 	public void removeExternalInstance(@RequestParam(value="id") String id) throws CreatingSettingsFolderException, ReadingEcosystemException, SavingEcosystemException{
 		ecosystemManager.removeExternalInstance(id);
 	}
-
 
 
 }
