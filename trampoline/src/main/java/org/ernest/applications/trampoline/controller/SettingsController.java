@@ -168,8 +168,9 @@ public class SettingsController {
 
     @RequestMapping(value = "/git/ssh/config/save", method = RequestMethod.POST)
     @ResponseBody
-    public void saveGitCred(@RequestParam(value = "sshKeyLocation", defaultValue = "~/.ssh/id_rsa") String privateKeyLocation) {
-        gitManager.saveSshCred(privateKeyLocation);
+    public void saveGitSshCred(@RequestParam(value = "sshKeyLocation", defaultValue = "~/.ssh/id_rsa") String privateKeyLocation,
+                               @RequestParam(value = "sshKeyPassword", required = false) String privateKeyPassword) {
+        gitManager.saveSshCred(privateKeyLocation, privateKeyPassword);
     }
 
 	@RequestMapping(value= "/git/config/clean", method = RequestMethod.GET)

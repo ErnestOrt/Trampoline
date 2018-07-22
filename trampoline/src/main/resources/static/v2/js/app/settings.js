@@ -367,7 +367,7 @@ function saveGitSshCred(){
 	$.ajax({
 	    url : "/settings/git/ssh/config/save",
 	    type: "POST",
-	    data : { sshKeyLocation: $("#input-git-ssh-key-location").val()},
+	    data : { sshKeyLocation: $("#input-git-ssh-key-location").val(), sshKeyPassword: $("#input-git-ssh-key-password").val()},
 	    success: function(data, textStatus, jqXHR) { location.reload(); },
         error: function (request, status, error) {
               $('.front-loading').hide();

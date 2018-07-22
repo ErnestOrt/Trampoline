@@ -6,11 +6,16 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.transport.CredentialItem;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.CredentialsProviderUserInfo;
 import org.eclipse.jgit.transport.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.OpenSshConfig;
 import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.transport.SshTransport;
+import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.util.FS;
 import org.ernest.applications.trampoline.entities.Ecosystem;
@@ -29,6 +34,7 @@ import java.util.stream.Collectors;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 
 @Component
 public class GitManager {
@@ -111,8 +117,8 @@ public class GitManager {
         ecosystemManager.saveGitHttpsCred(encryptService.encrypt(user), encryptService.encrypt(pass));
     }
 
-    public void saveSshCred(String privateKeyLocation) {
-        ecosystemManager.saveGitSshCred(privateKeyLocation);
+    public void saveSshCred(String privateKeyLocation, String sshKeyPassword) {
+        ecosystemManager.saveGitSshCred(privateKeyLocation, encryptService.encrypt(sshKeyPassword));
     }
 
     public void cleanCred() {
@@ -145,15 +151,40 @@ public class GitManager {
 
     private SshSessionFactory getSshSessionFactory(Ecosystem ecosystem) {
         return new JschConfigSessionFactory() {
+            private final GitCredentials.SshSettings sshSettings = ecosystem.getGitCredentials().getSshSettings();
+
             @Override
             protected void configure(OpenSshConfig.Host host, Session session) {
                 // do nothing
+                if (sshSettings != null && !sshSettings.getSshKeyPassword().isEmpty()) {
+                    CredentialsProvider provider = new CredentialsProvider() {
+                        @Override
+                        public boolean isInteractive() {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean supports(CredentialItem... items) {
+                            return true;
+                        }
+
+                        @Override
+                        public boolean get(URIish uri, CredentialItem... items) throws UnsupportedCredentialItem {
+                            for (CredentialItem item: items) {
+                                ((CredentialItem.StringType) item).setValue(encryptService.decrypt(sshSettings.getSshKeyPassword()));
+                            }
+                            return true;
+                        }
+                    };
+                    UserInfo userInfo = new CredentialsProviderUserInfo(session, provider);
+                    session.setUserInfo(userInfo);
+                }
             }
 
             @Override
             protected JSch createDefaultJSch(FS fs) throws JSchException {
                 JSch defaultJSch = super.createDefaultJSch(fs);
-                defaultJSch.addIdentity(ecosystem.getGitCredentials().getSshSettings().getSshKeyLocation());
+                defaultJSch.addIdentity(sshSettings.getSshKeyLocation());
                 return defaultJSch;
             }
         };

@@ -8,17 +8,17 @@ public class GitCredentials {
     public GitCredentials() {
     }
 
-    public GitCredentials(String username, String pass, String sshKeyLocation) {
+    public GitCredentials(String username, String pass, String sshKeyLocation, String sshKeyPassword) {
         httpsSettings = new HttpsSettings(username, pass);
-        sshSettings = new SshSettings(sshKeyLocation);
+        sshSettings = new SshSettings(sshKeyLocation, sshKeyPassword);
     }
 
-    public GitCredentials(String username, String pass) {
-        httpsSettings = new HttpsSettings(username, pass);
+    public GitCredentials(HttpsSettings httpsSettings) {
+        this.httpsSettings = httpsSettings;
     }
 
-    public GitCredentials(String sshKeyLocation) {
-        sshSettings = new SshSettings(sshKeyLocation);
+    public GitCredentials(SshSettings sshSettings) {
+        this.sshSettings = sshSettings;
     }
 
     public HttpsSettings getHttpsSettings() {
@@ -37,7 +37,7 @@ public class GitCredentials {
         this.sshSettings = sshSettings;
     }
 
-    public class HttpsSettings {
+    public static class HttpsSettings {
         private String username;
         private String pass;
 
@@ -64,10 +64,11 @@ public class GitCredentials {
 
     }
 
-    public class SshSettings {
+    public static class SshSettings {
         private String sshKeyLocation;
+        private String sshKeyPassword;
 
-        public SshSettings(String sshKeyLocation) {
+        public SshSettings(String sshKeyLocation, String sshKeyPassword) {
             this.sshKeyLocation = sshKeyLocation;
         }
 
@@ -79,5 +80,12 @@ public class GitCredentials {
             this.sshKeyLocation = sshKeyLocation;
         }
 
+        public String getSshKeyPassword() {
+            return sshKeyPassword;
+        }
+
+        public void setSshKeyPassword(String sshKeyPassword) {
+            this.sshKeyPassword = sshKeyPassword;
+        }
     }
 }
