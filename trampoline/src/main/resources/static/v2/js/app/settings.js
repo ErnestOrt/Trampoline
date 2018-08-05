@@ -357,7 +357,7 @@ function saveGitHttpsCred(){
 	    success: function(data, textStatus, jqXHR) { location.reload(); },
         error: function (request, status, error) {
               $('.front-loading').hide();
-               showNotification('danger', "Error occurred when trying to remove group. Check Logs for more info");
+               showNotification('danger', "Error occurred when trying to store HTTPS git Credentials. Check Logs for more info");
            }
 	});
 }
@@ -371,7 +371,7 @@ function saveGitSshCred(){
 	    success: function(data, textStatus, jqXHR) { location.reload(); },
         error: function (request, status, error) {
               $('.front-loading').hide();
-               showNotification('danger', "Error occurred when trying to remove group. Check Logs for more info");
+               showNotification('danger', "Error occurred when trying to store HTTPS git Credentials. Check Logs for more info");
            }
 	});
 }

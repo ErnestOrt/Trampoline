@@ -207,13 +207,6 @@ public class EcosystemManager {
 		startInstance(instance.getMicroserviceId(), instance.getPort(), instance.getVmArguments(), 0);
 	}
 
-	public void saveGitCred(String user, String pass, String privateKeyLocation, String sshKeyPassword) {
-		log.info("Saving GIT HTTPS Credentials");
-		Ecosystem ecosystem = fileManager.getEcosystem();
-		ecosystem.setGitCredentials(new GitCredentials(user, pass, privateKeyLocation, sshKeyPassword));
-		fileManager.saveEcosystem(ecosystem);
-	}
-
 	public void saveGitHttpsCred(String user, String pass) {
 		log.info("Saving GIT HTTPS Credentials");
 		Ecosystem ecosystem = fileManager.getEcosystem();

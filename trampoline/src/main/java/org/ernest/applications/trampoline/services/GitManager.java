@@ -155,7 +155,6 @@ public class GitManager {
 
             @Override
             protected void configure(OpenSshConfig.Host host, Session session) {
-                // do nothing
                 if (sshSettings != null && !sshSettings.getSshKeyPassword().isEmpty()) {
                     CredentialsProvider provider = new CredentialsProvider() {
                         @Override
