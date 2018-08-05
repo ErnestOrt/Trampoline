@@ -13,7 +13,7 @@ Are you Admin Spring Boot locally? Are you **tired of that set of scripts**? Rel
 
 The aim is to **help during the course of developing an application based on the paradigm of microservices with _Spring Boot_**. How? Easy, thanks to a **comfortable interface** you can **declare new microservices**, **start instances**, **restart** and **kill them**.
 
-![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_14.png)
+![Alt text](https://github.com/ErnestOrt/Trampoline/blob/master/TrampolineUI_3_17.png)
 
 Also you will be able to:
 
@@ -52,7 +52,7 @@ To Admin Spring Boot locally:
 
 * How microservices groups are launched?
 
-All microservices are launched secuantially, folowing the order specified, applying defined delay for each instance. 
+All microservices are launched secuantially, folowing the order specified, applying defined delay for each instance.
 
 * Which build tools are Trampoline compatible with in my microservices?
 
