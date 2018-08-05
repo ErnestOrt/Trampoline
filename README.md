@@ -22,6 +22,7 @@ Also you will be able to:
 * Register microservices directly from a GIT URL
 * Monitor memory usage for each instance, capturing their metrics every 30 seconds
 * Monitor instances and trace information at any point in time
+* Interact with Git using HTTPS or SSH
 * See Git branch and last commit on instances
 * Checkout branch, pull code and restart instances with a single mouse click
 * Define microservices groups and launch them all with one click
