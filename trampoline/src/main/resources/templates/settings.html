@@ -149,7 +149,12 @@
                                     <div class="header">
                                         <h4 class="title">GIT Settings <i class="fa fa-info-circle" data-toggle="git-popover" data-content="If GIT is installed on your system, you don't need it to enjoy GIT features, otherwise yes. Credentials will be secured and not published."></i></h4>
                                     </div>
-                                    <div class="content">
+
+                                    <ul class="nav nav-tabs">
+                                        <li role="presentation" id="tab-git-https-settings" onclick="showGitSettings('git-https-settings')"><a>HTTPS Settings</a></li>
+                                        <li role="presentation" id="tab-git-ssh-settings" onclick="showGitSettings('git-ssh-settings')"><a>SSH Settings</a></li>
+                                    </ul>
+                                    <div id="content-git-https-settings" class="content">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group" id="form-git-user">
@@ -165,7 +170,28 @@
                                             </div>
                                         </div>
                                         <div class="text-center">
-                                            <button onclick="saveGitCred()" class="btn btn-success btn-fill btn-wd">Save</button>
+                                            <button onclick="saveGitHttpsCred()" class="btn btn-success btn-fill btn-wd">Save</button>
+                                            <button onclick="cleanGitCred()" class="btn btn-danger btn-fill btn-wd">Clean</button>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div id="content-git-ssh-settings" class="content">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="form-git-ssh-key-location">
+                                                    <label>SSH Private Key Location</label>
+                                                    <input id="input-git-ssh-key-location" type="text" class="form-control border-input" th:placeholder="${gitSshKeyLocation}"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group" id="form-git-ssh-key-password">
+                                                    <label>SSH Private Key Password (if needed)</label>
+                                                    <input id="input-git-ssh-key-password" type="password" class="form-control border-input"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button onclick="saveGitSshCred()" class="btn btn-success btn-fill btn-wd">Save</button>
                                             <button onclick="cleanGitCred()" class="btn btn-danger btn-fill btn-wd">Clean</button>
                                         </div>
                                         <div class="clearfix"></div>

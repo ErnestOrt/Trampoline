@@ -18,6 +18,7 @@ public class Ecosystem {
 		instances = new ArrayList<>();
 		microservicesGroups = new ArrayList<>();
 		externalInstances = new ArrayList<>();
+		gitCredentials = new GitCredentials();
 	}
 
 	public String getMavenBinaryLocation() {

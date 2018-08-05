@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.ernest.applications.trampoline.collectors.TraceCollector;
 import org.ernest.applications.trampoline.entities.*;
+import org.ernest.applications.trampoline.entities.GitCredentials.SshSettings;
 import org.ernest.applications.trampoline.exceptions.CreatingMicroserviceScriptException;
 import org.ernest.applications.trampoline.exceptions.CreatingSettingsFolderException;
 import org.ernest.applications.trampoline.exceptions.ReadingEcosystemException;
@@ -206,17 +207,43 @@ public class EcosystemManager {
 		startInstance(instance.getMicroserviceId(), instance.getPort(), instance.getVmArguments(), 0);
 	}
 
-	public void saveGitCred(String user, String pass) {
-		log.info("Saving GIT Credentials");
+	public void saveGitCred(String user, String pass, String privateKeyLocation, String sshKeyPassword) {
+		log.info("Saving GIT HTTPS Credentials");
 		Ecosystem ecosystem = fileManager.getEcosystem();
-		ecosystem.setGitCredentials(new GitCredentials(user, pass));
+		ecosystem.setGitCredentials(new GitCredentials(user, pass, privateKeyLocation, sshKeyPassword));
+		fileManager.saveEcosystem(ecosystem);
+	}
+
+	public void saveGitHttpsCred(String user, String pass) {
+		log.info("Saving GIT HTTPS Credentials");
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		GitCredentials gitCredentials = ecosystem.getGitCredentials();
+		if (gitCredentials.getHttpsSettings() != null) {
+			gitCredentials.getHttpsSettings().setUsername(user);
+			gitCredentials.getHttpsSettings().setPass(pass);
+		} else {
+			ecosystem.setGitCredentials(new GitCredentials(new GitCredentials.HttpsSettings(user, pass)));
+		}
+		fileManager.saveEcosystem(ecosystem);
+	}
+
+	public void saveGitSshCred(String privateKeyLocation, String sshKeyPassword) {
+		log.info("Saving GIT SSH Credentials");
+		Ecosystem ecosystem = fileManager.getEcosystem();
+		GitCredentials gitCredentials = ecosystem.getGitCredentials();
+		if (gitCredentials.getSshSettings() != null) {
+			gitCredentials.getSshSettings().setSshKeyLocation(privateKeyLocation);
+			gitCredentials.getSshSettings().setSshKeyPassword(sshKeyPassword);
+		} else {
+			ecosystem.setGitCredentials(new GitCredentials(new SshSettings(privateKeyLocation, sshKeyPassword)));
+		}
 		fileManager.saveEcosystem(ecosystem);
 	}
 
 	public void cleanGitCred() {
 		log.info("Cleaning GIT Credentials");
 		Ecosystem ecosystem = fileManager.getEcosystem();
-		ecosystem.setGitCredentials(null);
+		ecosystem.setGitCredentials(new GitCredentials());
 		fileManager.saveEcosystem(ecosystem);
 	}
 
