@@ -174,7 +174,7 @@ public class EcosystemManager {
 		while(!instanceStarted) {
 			final int portToBeLaunched = port;
 			if (PortsChecker.available(portToBeLaunched) && !instances.stream().anyMatch(i -> i.getPort().equals(String.valueOf(portToBeLaunched)))) {
-				startInstance(microservice.getId(), String.valueOf(port), "", startingDelay);
+				startInstance(microservice.getId(), String.valueOf(port), microservice.getVmArguments(), startingDelay);
 				instanceStarted = true;
 			}else{
 				port++;
