@@ -5,6 +5,9 @@
 
 *NOTE: If you want to use examples provided (microservice-example-gradle & microservice-example-maven), please, clone the repository instead of downloading release zip. They need .git folder due to git related plugins specified on pom.xml and build.gradle*
 
+### Wiki
+[Check Trampoline's wiki: English & Spanish](https://github.com/ErnestOrt/Trampoline/wiki)
+
 ### Description
 
 Welcome to **Trampoline**.
