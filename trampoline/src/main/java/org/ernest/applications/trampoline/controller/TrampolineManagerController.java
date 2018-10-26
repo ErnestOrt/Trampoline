@@ -17,4 +17,9 @@ public class TrampolineManagerController {
         new Thread(() -> trampolineManager.shutdown()).start();
         return "shutdown";
     }
+
+    @RequestMapping("/project-examples")
+    public String getProjectExamples() {
+        return "projectsexamples";
+    }
 }
