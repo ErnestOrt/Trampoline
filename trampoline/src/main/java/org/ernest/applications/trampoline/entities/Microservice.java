@@ -46,7 +46,7 @@ public class Microservice {
 		this.vmArguments = vmArguments;
 	}
 	public void setActuatorPrefix(String actuatorPrefix) {
-		this.actuatorPrefix = actuatorPrefix;
+		this.actuatorPrefix = actuatorPrefix.replaceFirst("^/","");
 	}
 
 	public BuildTools getBuildTool() {
