@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @RunWith(Parameterized.class)
-public class SanitizeActuatorPrefix {
+public class SanitizeActuatorPrefixTest {
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
