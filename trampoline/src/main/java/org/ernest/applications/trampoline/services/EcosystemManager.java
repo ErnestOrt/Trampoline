@@ -125,7 +125,7 @@ public class EcosystemManager {
 		if (instance.getIp().equals("127.0.0.1")) {
 			log.info("Stopping instance id: [{}]", id);
 			try {
-				new ClientRequest("http://"+instance.getIp()+":" + instance.getPort() + instance.getActuatorPrefix() + "/shutdown").post(String.class);
+				new ClientRequest(instance.buildActuatorUrl() + "/shutdown").post(String.class);
 			} catch (Exception e) {
 				log.error("Stopping instance id: [{}]", id);
 			}
@@ -147,7 +147,7 @@ public class EcosystemManager {
 
 	private boolean isDeployed(Instance instance) {
 		try{
-			new ClientRequest("http://"+instance.getIp()+":" + instance.getPort() + instance.getActuatorPrefix() + "/env").get(String.class);
+			new ClientRequest(instance.buildActuatorUrl() + "/env").get(String.class);
 		}catch(Exception e){
 			return false;
 		}

@@ -46,7 +46,7 @@ public class Instance {
 		return actuatorPrefix.replaceFirst("^/","");
 	}
 	public void setActuatorPrefix(String actuatorPrefix) {
-		this.actuatorPrefix = actuatorPrefix;
+		this.actuatorPrefix = actuatorPrefix.replaceFirst("^/","");;
 	}
 	public String getVmArguments() {
 		return vmArguments;
@@ -61,6 +61,10 @@ public class Instance {
 
 	public void setMicroserviceId(String microserviceId) {
 		this.microserviceId = microserviceId;
+	}
+
+	public String buildActuatorUrl(){
+		return "http://"+getIp()+":" + getPort() + "/" + getActuatorPrefix();
 	}
 
 	@Override

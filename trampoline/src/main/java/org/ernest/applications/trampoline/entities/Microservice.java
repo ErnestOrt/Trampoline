@@ -37,7 +37,7 @@ public class Microservice {
 		this.defaultPort = defaultPort;
 	}
 	public String getActuatorPrefix() {
-		return actuatorPrefix;
+		return actuatorPrefix.replaceFirst("^/","");
 	}
 	public String getVmArguments() {
 		return vmArguments;
