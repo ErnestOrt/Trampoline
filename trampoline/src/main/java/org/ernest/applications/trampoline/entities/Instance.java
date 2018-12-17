@@ -43,7 +43,7 @@ public class Instance {
 		this.port = port;
 	}
 	public String getActuatorPrefix() {
-		return actuatorPrefix;
+		return actuatorPrefix.replaceFirst("^/","");
 	}
 	public void setActuatorPrefix(String actuatorPrefix) {
 		this.actuatorPrefix = actuatorPrefix;
