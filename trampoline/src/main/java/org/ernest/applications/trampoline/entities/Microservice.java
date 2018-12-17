@@ -1,5 +1,7 @@
 package org.ernest.applications.trampoline.entities;
 
+import org.ernest.applications.trampoline.utils.SanitizeActuatorPrefix;
+
 public class Microservice {
 
 	private String id;
@@ -37,7 +39,7 @@ public class Microservice {
 		this.defaultPort = defaultPort;
 	}
 	public String getActuatorPrefix() {
-		return actuatorPrefix.replaceFirst("^/","");
+		return SanitizeActuatorPrefix.clean(actuatorPrefix);
 	}
 	public String getVmArguments() {
 		return vmArguments;
@@ -46,7 +48,7 @@ public class Microservice {
 		this.vmArguments = vmArguments;
 	}
 	public void setActuatorPrefix(String actuatorPrefix) {
-		this.actuatorPrefix = actuatorPrefix.replaceFirst("^/","");
+		this.actuatorPrefix = SanitizeActuatorPrefix.clean(actuatorPrefix);
 	}
 
 	public BuildTools getBuildTool() {

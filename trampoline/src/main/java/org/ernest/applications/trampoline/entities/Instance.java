@@ -1,5 +1,7 @@
 package org.ernest.applications.trampoline.entities;
 
+import org.ernest.applications.trampoline.utils.SanitizeActuatorPrefix;
+
 public class Instance {
 
 	private String id;
@@ -43,10 +45,10 @@ public class Instance {
 		this.port = port;
 	}
 	public String getActuatorPrefix() {
-		return actuatorPrefix.replaceFirst("^/","");
+		return SanitizeActuatorPrefix.clean(actuatorPrefix);
 	}
 	public void setActuatorPrefix(String actuatorPrefix) {
-		this.actuatorPrefix = actuatorPrefix.replaceFirst("^/","");;
+		this.actuatorPrefix = SanitizeActuatorPrefix.clean(actuatorPrefix);
 	}
 	public String getVmArguments() {
 		return vmArguments;
