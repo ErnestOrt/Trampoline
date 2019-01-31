@@ -10,7 +10,7 @@
 
 ### Description
 
-Welcome to **Trampoline**.
+Welcome to **Trampoline**!
 
 Are you Admin Spring Boot locally? Are you **tired of that set of scripts**? Relax, Trampoline has come into your life.
 
