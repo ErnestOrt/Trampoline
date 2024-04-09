@@ -2,3 +2,4 @@
 *.gz
 *.log
 *.log
+\trampoline\target\*
